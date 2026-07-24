@@ -1,0 +1,3324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bagel Relay Japan 2026 — Mission Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#EBF6F7;--bg2:#DFF0F2;--bg3:#CDE6E9;
+  --txt:#1C2A2C;--txt2:#3E6068;--txt3:#6A909A;
+  --bdr:rgba(48,120,130,.12);--bdr2:rgba(48,120,130,.20);
+  --r:10px;--rl:16px;
+  --shadow:0 1px 3px rgba(26,70,76,.07),0 1px 2px rgba(26,70,76,.05);
+  --shadow-lg:0 4px 12px rgba(26,70,76,.10),0 1px 3px rgba(26,70,76,.07);
+  --bg-glass:rgba(235,246,247,0.92);
+  --green:#48929B;--gbg:#D4EDF0;--gtxt:#006C7F;
+  --amber:#D4900A;--abg:#FFF3D0;--atxt:#7A5000;
+  --bbg:#D8E8F8;--btxt:#1F4788;
+  --rbg:#FDEAEC;--rtxt:#C03048;
+}
+/* ── Ai-iro Dark (藍色) — Deep indigo textile ── */
+@media(prefers-color-scheme:dark){:root{
+  --bg:#111C20;--bg2:#182630;--bg3:#132028;
+  --txt:#E4F2F4;--txt2:#7AAAB8;--txt3:#486878;
+  --bdr:rgba(72,146,155,.09);--bdr2:rgba(72,146,155,.16);
+  --shadow:0 1px 3px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.28);
+  --shadow-lg:0 4px 12px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.35);
+  --bg-glass:rgba(17,28,32,0.92);
+  --green:#5AADB8;--gbg:#082830;--gtxt:#7ECAD6;
+  --amber:#F0B030;--abg:#221800;--atxt:#F5D060;
+  --bbg:#0A1C38;--btxt:#6A90C8;
+  --rbg:#2A1020;--rtxt:#E87080;
+}}
+[data-theme="dark"]{
+  --bg:#111C20;--bg2:#182630;--bg3:#132028;
+  --txt:#E4F2F4;--txt2:#7AAAB8;--txt3:#486878;
+  --bdr:rgba(72,146,155,.09);--bdr2:rgba(72,146,155,.16);
+  --shadow:0 1px 3px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.28);
+  --shadow-lg:0 4px 12px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.35);
+  --bg-glass:rgba(17,28,32,0.92);
+  --green:#5AADB8;--gbg:#082830;--gtxt:#7ECAD6;
+  --amber:#F0B030;--abg:#221800;--atxt:#F5D060;
+  --bbg:#0A1C38;--btxt:#6A90C8;
+  --rbg:#2A1020;--rtxt:#E87080;
+}
+/* ── Aijiro Light (藍白) — Palest indigo wash ── */
+[data-theme="light"]{
+  --bg:#EBF6F7;--bg2:#DFF0F2;--bg3:#CDE6E9;
+  --txt:#1C2A2C;--txt2:#3E6068;--txt3:#6A909A;
+  --bdr:rgba(48,120,130,.12);--bdr2:rgba(48,120,130,.20);
+  --shadow:0 1px 3px rgba(26,70,76,.07),0 1px 2px rgba(26,70,76,.05);
+  --shadow-lg:0 4px 12px rgba(26,70,76,.10),0 1px 3px rgba(26,70,76,.07);
+  --bg-glass:rgba(235,246,247,0.92);
+  --green:#48929B;--gbg:#D4EDF0;--gtxt:#006C7F;
+  --amber:#D4900A;--abg:#FFF3D0;--atxt:#7A5000;
+  --bbg:#D8E8F8;--btxt:#1F4788;
+  --rbg:#FDEAEC;--rtxt:#C03048;
+}
+body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-height:100vh;padding:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:1.5rem 1.25rem}
+@media(min-width:768px){.wrap{padding-top:84px}}
+@media(max-width:767px){.wrap{padding-bottom:96px}}
+
+/* ── Tubelight Nav ── */
+.tubelight-nav{position:fixed;top:1.25rem;left:50%;transform:translateX(-50%);z-index:500}
+@media(max-width:767px){.tubelight-nav{top:auto;bottom:1.25rem;width:calc(100% - 2rem);max-width:440px}}
+.tl-track{display:flex;align-items:center;gap:0;background:var(--bg-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:0.5px solid var(--bdr);border-radius:100px;padding:5px;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.12),0 1px 4px rgba(0,0,0,.08)}
+.tl-pill{position:absolute;top:5px;height:calc(100% - 10px);background:var(--bg2);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none}
+.tl-lamp{position:absolute;top:5px;height:calc(100% - 10px);border-radius:100px;pointer-events:none;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:1;overflow:visible}
+.tl-lamp::before{content:'';position:absolute;top:-3px;left:20%;right:20%;height:5px;background:var(--green);border-radius:50%;filter:blur(2.5px);opacity:.9}
+.tl-lamp::after{content:'';position:absolute;top:-3px;left:5%;right:5%;height:24px;background:var(--green);opacity:.16;filter:blur(12px);border-radius:50%}
+@media(max-width:767px){
+  .tl-lamp::before{top:auto;bottom:-3px}
+  .tl-lamp::after{top:auto;bottom:-3px}
+}
+.tl-btn{position:relative;z-index:2;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;padding:9px 18px;border-radius:100px;border:none;cursor:pointer;background:transparent;color:var(--txt3);white-space:nowrap;transition:color .2s ease;display:flex;align-items:center;gap:6px}
+.tl-btn:hover{color:var(--txt2)}
+.tl-btn.active{color:var(--txt)}
+.tl-btn:active{transform:scale(0.96)}
+.tl-icon{display:none;flex-shrink:0}
+.tl-label{}
+@media(max-width:767px){
+  .tl-track{justify-content:space-around}
+  .tl-btn{padding:10px 0;flex:1;justify-content:center}
+  .tl-icon{display:flex}
+  .tl-label{display:none}
+  .tab-badge{display:none!important}
+}
+.countdown-timer{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--txt);letter-spacing:.02em}
+.countdown-timer .cd-unit{font-size:10px;font-weight:400;color:var(--txt3);letter-spacing:.04em}
+@media(max-width:600px){.countdown-timer{font-size:20px}}
+/* ── Mission sub-tabs ── */
+.mtab-row{display:flex;position:relative;gap:0;padding:4px;background:var(--bg-glass);backdrop-filter:blur(12px);border-radius:100px;margin-bottom:0;border:0.5px solid var(--bdr);box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.mtab-pill{position:absolute;top:4px;height:calc(100% - 8px);background:var(--bg2);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none;box-shadow:var(--shadow)}
+.mtab-lamp{position:absolute;top:4px;height:calc(100% - 8px);border-radius:100px;pointer-events:none;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:1;overflow:visible}
+.mtab-lamp::before{content:'';position:absolute;top:-3px;left:20%;right:20%;height:4px;background:var(--green);border-radius:50%;filter:blur(2px);opacity:.8}
+.mtab-lamp::after{content:'';position:absolute;top:-3px;left:5%;right:5%;height:20px;background:var(--green);opacity:.14;filter:blur(10px);border-radius:50%}
+.mtab-btn{flex:1;position:relative;z-index:2;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:8px 10px;border-radius:100px;border:none;cursor:pointer;background:transparent;color:var(--txt3);transition:color .18s ease;white-space:nowrap;text-align:center}
+.mtab-btn:hover{color:var(--txt2)}
+.mtab-btn.active{color:var(--txt);background:transparent;box-shadow:none}
+.mtab-btn:active{transform:scale(0.97)}
+.mtab-panel{display:none}
+.mtab-panel.active{display:block}
+/* ── Weather (in Next Up card) ── */
+.wi{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--txt2)}
+.wi-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--txt3)}
+/* ── Next runner card ── */
+.next-runner{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.next-runner-avatars{display:flex;gap:6px;flex-shrink:0}
+.next-runner-info{flex:1;min-width:0}
+.next-runner-leg{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--txt3);margin-bottom:4px}
+.next-runner-names{font-size:14px;font-weight:600;color:var(--txt);line-height:1.4;margin-bottom:8px}
+.next-runner-meta{display:flex;gap:12px;flex-wrap:wrap}
+.next-meta-item{display:flex;flex-direction:column;gap:1px}
+.next-meta-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--txt3)}
+.next-meta-val{font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--txt)}
+.next-meta-sub{font-size:11px;color:var(--txt2)}
+/* ── Rest tracker ── */
+.rest-grid{display:flex;flex-direction:column;gap:0}
+.rest-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:0.5px solid var(--bdr)}
+.rest-row:last-child{border-bottom:none}
+.rest-name{font-size:13px;font-weight:500;color:var(--txt);width:80px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rest-timeline{flex:1;display:flex;align-items:center;gap:6px;min-width:0}
+.rest-chip{font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:100px;white-space:nowrap;flex-shrink:0}
+.rest-chip-done{background:var(--gbg);color:var(--gtxt)}
+.rest-chip-next{background:var(--bbg);color:var(--btxt)}
+.rest-chip-rest{background:var(--bg2);color:var(--txt3);font-size:9px}
+.rest-line{flex:1;height:1px;background:var(--bdr2);min-width:8px}
+.theme-toggle{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:var(--r);border:0.5px solid var(--bdr);background:var(--bg2);cursor:pointer;font-size:16px;transition:all .25s ease}
+.theme-toggle:hover{background:var(--bg3)}
+.theme-toggle:active{transform:scale(0.9) rotate(20deg)}
+.settle-row{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:0.5px solid var(--bdr);transition:background .15s}
+.settle-row:nth-child(even){background:var(--bg2)}
+.settle-row:last-child{border-bottom:none}
+.settle-name{font-family:'Space Mono',monospace;font-size:12px;font-weight:600;color:var(--txt)}
+.settle-arrow{font-family:'Space Mono',monospace;font-size:12px;color:var(--txt3);flex-shrink:0}
+.settle-amount{margin-left:auto;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--btxt)}
+.tab-btn.active{background:var(--txt);color:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.tab-soon{opacity:.45;cursor:default}
+.tab-soon:hover{background:transparent;color:var(--txt3)}
+
+/* ── Header ── */
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.hdr-left{display:flex;flex-direction:column;gap:5px;min-width:0}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
+.hdr-countdown{text-align:right}
+.hdr-controls{display:flex;align-items:center;gap:12px}
+.eyebrow{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--txt3)}
+.pg-title{font-size:21px;font-weight:600}
+.pg-title span{color:var(--txt3);font-weight:300}
+.day-pill{display:inline-block;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--green);background:var(--gbg);border:0.5px solid rgba(29,158,117,.3);border-radius:20px;padding:3px 10px;width:fit-content}
+.live{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.06em}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.countdown-label{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--txt3)}
+.countdown-timer{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--txt);letter-spacing:.02em;line-height:1.1}
+.countdown-timer .cd-unit{font-size:9px;font-weight:400;color:var(--txt3);letter-spacing:.04em}
+
+/* ── Banner ── */
+.banner{border-radius:var(--r);padding:11px 16px;font-size:12px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.banner.info{background:var(--bbg);color:var(--btxt);border:0.5px solid rgba(24,95,165,.2)}
+.banner.ok{background:var(--gbg);color:var(--gtxt);border:0.5px solid rgba(29,158,117,.2)}
+.banner.err{background:var(--rbg);color:var(--rtxt);border:0.5px solid rgba(163,45,45,.2)}
+
+/* ── Stat grid ── */
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:1rem}
+@media(max-width:600px){.g4{grid-template-columns:repeat(2,1fr)}}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:1rem}
+.scard{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:16px 18px;box-shadow:var(--shadow);transition:transform .2s ease,box-shadow .2s ease}
+.scard:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg)}
+.slabel{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px}
+.sval{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;line-height:1}
+.ssub{font-size:11px;color:var(--txt2);margin-top:5px}
+@media(max-width:600px){.sval{font-size:20px}.lag-num{font-size:20px}}
+
+/* ── Section label ── */
+.sec{font-size:15px;font-weight:600;color:var(--txt);margin:1.5rem 0 .75rem;padding-bottom:.5rem;border-bottom:0.5px solid var(--bdr)}
+
+/* ── Card ── */
+.card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:1.25rem 1.5rem;box-shadow:var(--shadow)}
+
+/* ── Progress ── */
+.prog-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.prog-hdr span{font-size:13px;font-weight:500;color:var(--txt2)}
+.track{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;border:0.5px solid var(--bdr);margin-bottom:6px}
+.fill{height:100%;background:linear-gradient(90deg,var(--green),#2abe8c);border-radius:4px;transition:width .6s ease}
+.axis{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--txt3);margin-bottom:12px}
+
+/* ── Day rows — grid so stats are always pinned to the right ── */
+.days-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:4px}
+.day-row{display:grid;grid-template-columns:64px 1fr 100px;align-items:center;gap:8px}
+.day-meta{text-align:right}
+.day-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.05em}
+.day-sub{font-size:10px;color:var(--txt3);margin-top:1px}
+.day-pips{display:flex;gap:3px;align-items:stretch;min-width:0}
+.pip{height:18px;border-radius:4px;cursor:pointer;transition:all .15s ease;flex:1 1 0}
+.pip:hover{opacity:.7;transform:scaleY(1.15)}
+.pip.done{background:var(--green)}
+.pip.active{background:var(--amber);animation:glow 1.5s infinite}
+.pip.todo{background:var(--bg2);border:0.5px solid var(--bdr2)}
+.day-stats{text-align:left;padding-left:4px}
+.day-stat-km{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--txt2)}
+.day-stat-legs{font-size:10px;color:var(--txt3)}
+@keyframes glow{0%,100%{opacity:1}50%{opacity:.55}}
+.tip{position:fixed;background:var(--bg);border:0.5px solid var(--bdr2);border-radius:var(--r);padding:6px 10px;font-size:11px;font-family:'Space Mono',monospace;white-space:nowrap;pointer-events:none;z-index:200;display:none;line-height:1.6;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--txt2)}
+.sw{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* ── Daily lead/lag display ── */
+.lag-num{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;line-height:1}
+.lag-num.ahead{color:var(--green)}
+.lag-num.behind{color:var(--red)}
+.lag-num.even{color:var(--txt)}
+.lag-sub{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--txt3);margin-top:5px}
+#lag-card{transition:border-color .3s ease,background .3s ease}
+#lag-card.lag-ahead{border-color:rgba(29,158,117,.4);background:var(--gbg)}
+#lag-card.lag-behind{border-color:rgba(163,45,45,.4);background:var(--rbg)}
+#lag-card.lag-even{border-color:var(--bdr);background:var(--bg)}
+/* ── Pills ── */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;font-family:'Space Mono',monospace}
+#status-pill .pill{font-size:18px;padding:8px 18px;border-radius:100px}
+.pill-on{background:var(--bbg);color:var(--btxt)}
+.pill-ok{background:var(--gbg);color:var(--gtxt)}
+.pill-beh{background:var(--rbg);color:var(--rtxt)}
+.pill-run{background:var(--abg);color:var(--atxt)}
+.pill-up{background:var(--bg2);color:var(--txt3)}
+
+/* ── Current leg ── */
+.cur-layout{display:grid;grid-template-columns:1fr 1fr;gap:0}
+@media(max-width:640px){.cur-layout{grid-template-columns:1fr}}
+.cur-left{padding-right:1.25rem;border-right:0.5px solid var(--bdr)}
+@media(max-width:640px){.cur-left{padding-right:0;border-right:none;border-bottom:0.5px solid var(--bdr);padding-bottom:1rem;margin-bottom:1rem}}
+.cur-right{padding-left:1.25rem;display:flex;flex-direction:column;gap:10px;height:100%}
+@media(max-width:640px){.cur-right{padding-left:0}}
+.cur-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--txt3);letter-spacing:.06em;margin-bottom:5px}
+.cur-title{font-size:20px;font-weight:600;margin-bottom:4px}
+.cur-sub{font-size:12px;color:var(--txt2);margin-bottom:0}
+.runners{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{display:inline-flex;align-items:center;gap:10px;background:var(--bg2);border-radius:var(--rl);padding:10px 16px}
+.chip-lg{padding:12px 18px}
+.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Space Mono',monospace;flex-shrink:0;overflow:hidden}
+.av-lg{width:42px;height:42px;font-size:14px}
+.av-lg img{width:42px;height:42px}
+.av-md{width:36px;height:36px;font-size:12px}
+.av-md img{width:36px;height:36px}
+.av-sm{width:28px;height:28px;font-size:10px}
+.av-sm img{width:28px;height:28px}
+.av-t{background:#E1F5EE;color:#0F6E56}
+.av-b{background:#E6F1FB;color:#185FA5}
+.av-a{background:#FAEEDA;color:#854F0B}
+.av-p{background:#EEEDFE;color:#3C3489}
+.av-c{background:#FAECE7;color:#712B13}
+.rname{font-size:15px;font-weight:600}
+.rrole{font-size:11px;color:var(--txt3)}
+.links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.lbtn{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--btxt);background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);padding:6px 12px;text-decoration:none;font-family:'Space Mono',monospace}
+.lbtn:hover{opacity:.75}
+.cdown-block{text-align:center;padding:10px 0}
+.cdown{font-family:'Space Mono',monospace;font-size:36px;font-weight:700;line-height:1;color:var(--txt)}
+.cdown-lbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-top:4px}
+
+/* ── Map + Elevation ── */
+.cur-map-wrap{border-radius:6px;overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);flex:1;min-height:180px;position:relative}
+.cur-map-wrap iframe{display:block;width:100%;height:160px;border:none}
+.poi-map-wrap{border-radius:var(--rl);overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);height:480px;position:relative;box-shadow:var(--shadow)}
+.elev-wrap{background:var(--bg2);border:0.5px solid var(--bdr);border-radius:6px;padding:10px 10px 6px}
+.elev-wrap svg{width:100%;height:140px;display:block}
+.elev-stats{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:4px;padding:0 2px}
+
+/* ── Tables ── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--rl);box-shadow:var(--shadow)}
+@media(max-width:640px){
+  .tbl th,.tbl td{padding:10px 10px;font-size:12px;white-space:nowrap}
+}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--txt3);padding:11px 12px;border-bottom:0.5px solid var(--bdr);background:var(--bg2)}
+.tbl td{padding:11px 12px;border-bottom:0.5px solid var(--bdr);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--bg2)}
+.mono{font-family:'Space Mono',monospace;font-size:12px}
+.mbar-wrap{display:flex;align-items:center;gap:8px}
+.mbar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;width:70px;flex-shrink:0}
+.mbar-fill{height:100%;background:var(--green);border-radius:3px}
+.terrain{display:inline-flex;align-items:center;font-size:10px;padding:2px 7px;border-radius:4px;font-family:'Space Mono',monospace}
+.t-protected{background:var(--gbg);color:var(--gtxt)}
+.t-mixed{background:var(--bbg);color:var(--btxt)}
+.t-exposed{background:var(--abg);color:var(--atxt)}
+.t-highexposure{background:var(--rbg);color:var(--rtxt)}
+
+/* ── Relay Passport ── */
+.tab-badge{display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;letter-spacing:0;padding:2px 6px;border-radius:10px;margin-left:6px;background:var(--bg2);color:var(--txt3);vertical-align:middle}
+.tab-btn.active .tab-badge{background:var(--bg2);color:var(--txt2)}
+.tab-badge.complete{background:var(--gbg);color:var(--gtxt)}
+@keyframes ppFlipOut{from{transform:perspective(900px) rotateY(0deg);opacity:1}to{transform:perspective(900px) rotateY(-90deg);opacity:0}}
+@keyframes ppFlipIn{from{transform:perspective(900px) rotateY(90deg);opacity:0}to{transform:perspective(900px) rotateY(0deg);opacity:1}}
+@keyframes ppFlipOutBack{from{transform:perspective(900px) rotateY(0deg);opacity:1}to{transform:perspective(900px) rotateY(90deg);opacity:0}}
+@keyframes ppFlipInBack{from{transform:perspective(900px) rotateY(-90deg);opacity:0}to{transform:perspective(900px) rotateY(0deg);opacity:1}}
+.pp-flip-out{animation:ppFlipOut .22s ease-in forwards;transform-origin:left center}
+.pp-flip-in{animation:ppFlipIn .22s ease-out forwards;transform-origin:left center}
+.pp-flip-out-back{animation:ppFlipOutBack .22s ease-in forwards;transform-origin:right center}
+.pp-flip-in-back{animation:ppFlipInBack .22s ease-out forwards;transform-origin:right center}
+.passport{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);box-shadow:var(--shadow);display:flex;flex-direction:column;height:560px}
+@media(max-width:600px){.passport{height:500px}}
+.rp-content{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg);border-radius:var(--rl) var(--rl) 0 0;min-height:0}
+.passport-cover{background:linear-gradient(135deg,var(--txt) 0%,var(--txt2) 100%);color:var(--bg);padding:2.5rem 1.5rem;text-align:center}
+.passport-stamp-icon{font-size:48px;margin-bottom:.5rem;line-height:1}
+.passport-cover-title{font-size:20px;font-weight:600;margin-bottom:6px}
+.passport-cover-sub{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.07em;opacity:.8}
+.passport-page{padding:1.25rem 1.5rem}
+.passport-page-title{font-size:19px;font-weight:600;margin-top:4px}
+.passport-item{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:0.5px solid var(--bdr)}
+.passport-item:last-child{border-bottom:none}
+.passport-item.done{opacity:.5}
+.passport-check{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--bdr2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0;transition:all .15s;font-weight:700}
+.passport-check:hover{border-color:var(--green)}
+.passport-check.checked{background:var(--green);border-color:var(--green);color:#fff}
+.passport-footer{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.5rem;border-top:0.5px solid var(--bdr);background:var(--bg2)}
+.passport-nav-btn{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;background:var(--bg);border:0.5px solid var(--bdr2);border-radius:var(--r);padding:8px 16px;cursor:pointer;color:var(--txt);transition:all .2s ease}
+.passport-nav-btn:hover{opacity:.7;transform:translateY(-1px)}
+.passport-nav-btn:active{transform:scale(0.96)}
+.passport-nav-btn:disabled{opacity:.3;cursor:default}
+.passport-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.passport-dot{width:8px;height:8px;border-radius:50%;background:var(--bg2);border:0.5px solid var(--bdr2);cursor:pointer;transition:all .15s;padding:0}
+.passport-dot.active{background:var(--txt);border-color:var(--txt)}
+.badge-case{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-top:.75rem}
+.badge{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:var(--rl);border:0.5px solid var(--bdr);background:var(--bg2);cursor:pointer;opacity:.4;filter:grayscale(1);transition:all .25s ease}
+.badge:hover{opacity:.75;transform:translateY(-2px)}
+.badge.unlocked{opacity:1;filter:none;background:var(--gbg);border-color:var(--green);box-shadow:0 0 0 2px rgba(29,158,117,.15),var(--shadow)}
+.badge-icon{font-size:28px;line-height:1}
+.badge-name{font-size:9px;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:.04em;color:var(--txt2);text-align:center}
+.lag-positive{color:var(--rtxt)}
+.lag-negative{color:var(--gtxt)}
+.lag-zero{color:var(--btxt)}
+
+/* ── Custom animated dropdown ── */
+.csel{position:relative;display:inline-block}
+.csel-btn{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:7px 10px 7px 12px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);cursor:pointer;outline:none;white-space:nowrap;transition:border-color .15s,background .15s}
+.csel-btn:hover{border-color:var(--txt3);background:var(--bg3)}
+.csel-chevron{flex-shrink:0;transition:transform .22s cubic-bezier(0.16,1,0.3,1)}
+.csel.open .csel-chevron{transform:rotate(180deg)}
+.csel-panel{position:absolute;top:calc(100% + 5px);right:0;min-width:calc(100% + 20px);background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--r);box-shadow:0 8px 24px rgba(0,0,0,.13),0 2px 6px rgba(0,0,0,.07);z-index:200;overflow:hidden;transform-origin:top right;animation:cselIn .2s cubic-bezier(0.16,1,0.3,1) both}
+.csel:not(.open) .csel-panel{display:none}
+@keyframes cselIn{from{opacity:0;transform:scale(0.94) translateY(-6px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.csel-item{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:8px 14px;cursor:pointer;color:var(--txt2);white-space:nowrap;transition:background .1s,color .1s}
+.csel-item:hover{background:var(--bg2);color:var(--txt)}
+.csel-item.selected{color:var(--txt);background:var(--bg2)}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem .75rem;border-bottom:0.5px solid var(--bdr);flex-wrap:wrap;gap:8px}
+.section-title{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
+.upcoming-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px}
+.upcoming-title{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
+
+/* ── Form / Google Form ── */
+.form-glink{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--btxt);background:var(--bbg);border:0.5px solid rgba(24,95,165,.2);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(24,95,165,.08)}
+.form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 6px rgba(24,95,165,.12)}
+.form-glink:active{transform:scale(0.98)}
+
+.tbd{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--bg2);border:0.5px dashed var(--bdr2);border-radius:var(--r);padding:20px;font-size:13px;color:var(--txt2);font-style:italic}
+.footer{text-align:center;margin-top:2rem;padding-top:1rem;border-top:0.5px solid var(--bdr);font-size:11px;color:var(--txt3);font-family:'Space Mono',monospace}
+.refresh-btn{font-family:'Space Mono',monospace;font-size:11px;background:var(--bg2);border:0.5px solid var(--bdr2);border-radius:var(--r);padding:0 14px;height:36px;cursor:pointer;color:var(--txt2);transition:all .2s ease}
+.refresh-btn:hover{background:var(--bg3)}
+.refresh-btn:active{transform:scale(0.96)}
+
+/* ── Coming soon panels ── */
+.coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:12px;color:var(--txt3);font-family:'Space Mono',monospace;font-size:12px;text-align:center}
+.coming-soon-icon{font-size:40px;margin-bottom:4px}
+/* ── Mobile overrides (must stay at end to win cascade) ── */
+@media(max-width:600px){
+  .hdr{padding:.875rem 1rem;flex-wrap:wrap;gap:10px}
+  .hdr{flex-direction:column;align-items:flex-start;gap:10px;padding:.875rem 1rem}
+  .hdr-right{flex-direction:row;align-items:center;justify-content:space-between;width:100%;gap:10px}
+  .hdr-countdown{text-align:left}
+  .eyebrow{display:none}
+  .pg-title{font-size:17px}
+  .countdown-timer{font-size:16px}
+  .refresh-btn{font-size:11px;padding:0 10px;height:32px}
+  .theme-toggle{width:32px;height:32px}
+  .live{font-size:10px}
+  .card{padding:.875rem 1rem}
+  .scard{padding:12px 14px}
+  .sec{font-size:13px;margin-top:1.25rem}
+  #nr-weather{flex-direction:row;width:100%;justify-content:space-around;padding:10px 12px;min-width:unset;gap:10px}
+  .rest-row{flex-wrap:wrap;gap:6px;padding:10px 0}
+  .rest-name{width:100%;font-size:12px;margin-bottom:0}
+  .rest-timeline{width:100%;gap:4px;flex-wrap:wrap}
+  .rest-chip{font-size:9px;padding:3px 7px}
+  .rest-line{display:none}
+  .mtab-row{overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0;padding:3px;scrollbar-width:none}
+  .mtab-row::-webkit-scrollbar{display:none}
+  .mtab-btn{padding:7px 8px;font-size:9px;flex-shrink:0;flex:0 0 auto}
+  #leg-mtab-row .mtab-btn{flex:1;flex-shrink:1;padding:8px 6px}
+  .tbl th,.tbl td{font-size:11px;padding:9px 8px}
+  .elev-wrap svg{height:150px}
+  #team-delta-svg,#team-pace-svg{height:auto}
+  .elev-stats{font-size:10px;gap:6px;flex-wrap:wrap}
+}
+/* ── Runner profile modal ── */
+.runner-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s ease}
+.runner-modal-overlay.open{opacity:1;pointer-events:all}
+.runner-modal{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);box-shadow:0 20px 60px rgba(0,0,0,.25);padding:2rem 2rem 1.75rem;width:min(340px,90vw);text-align:center;transform:scale(.92);transition:transform .18s cubic-bezier(0.34,1.56,0.64,1)}
+.runner-modal-overlay.open .runner-modal{transform:scale(1)}
+.runner-modal-av{width:96px;height:96px;border-radius:50%;margin:0 auto 1rem;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;flex-shrink:0}
+.runner-modal-av img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.runner-modal-name{font-size:20px;font-weight:600;margin-bottom:1.25rem}
+.runner-modal-stats{display:flex;flex-direction:column;gap:6px;border-top:0.5px solid var(--bdr);padding-top:1.25rem}
+.runner-modal-stat{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.runner-modal-stat-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--txt3)}
+.runner-modal-stat-val{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
+.runner-modal-close{margin-top:1.25rem;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:7px 18px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);cursor:pointer;transition:background .15s}
+.runner-modal-close:hover{background:var(--bg3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Tubelight navigation -->
+  <nav class="tubelight-nav" id="tubelight-nav" role="tablist">
+    <div class="tl-track" id="tl-track">
+      <div class="tl-pill" id="tl-pill"></div>
+      <div class="tl-lamp" id="tl-lamp"></div>
+      <button class="tl-btn active" data-tab="mission" onclick="switchTab('mission')" role="tab">
+        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg></span>
+        <span class="tl-label">MISSION CONTROL</span>
+      </button>
+      <button class="tl-btn" data-tab="challenges" onclick="switchTab('challenges')" role="tab">
+        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+        <span class="tl-label">RELAY PASSPORT<span id="rp-tab-badge" class="tab-badge" style="display:none"></span></span>
+      </button>
+      <button class="tl-btn" data-tab="poi" onclick="switchTab('poi')" role="tab">
+        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+        <span class="tl-label">POINTS OF INTEREST</span>
+      </button>
+      <button class="tl-btn" data-tab="financials" onclick="switchTab('financials')" role="tab">
+        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+        <span class="tl-label">FINANCIALS</span>
+      </button>
+      <button class="tl-btn" data-tab="contacts" onclick="switchTab('contacts')" role="tab">
+        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <span class="tl-label">CONTACT INFO</span>
+      </button>
+      <button class="tl-btn" data-tab="game" onclick="switchTab('game')" role="tab">
+        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg></span>
+        <span class="tl-label">🥯 CATCH THE BAGELS</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════ MISSION CONTROL TAB ═══════════════ -->
+  <div id="tab-mission" class="tab-panel active">
+
+    <!-- Header -->
+    <div class="hdr">
+      <div class="hdr-left">
+        <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; MISSION CONTROL</div>
+        <div class="pg-title">Tokyo &rarr; Osaka &nbsp;<span>Nov 1–6</span></div>
+        <div class="day-pill" id="day-pill">DAY 1 OF 6</div>
+      </div>
+      <div class="hdr-right">
+        <div class="hdr-countdown">
+          <div class="countdown-label" id="countdown-label">RACE BEGINS IN</div>
+          <div class="countdown-timer" id="countdown-timer">--</div>
+        </div>
+        <div class="hdr-controls">
+          <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">☀️</button>
+          <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+          <div class="live"><div class="dot"></div>LIVE</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="banner" class="banner info">
+      <span>⏳</span><span id="banner-msg">Loading data from Google Sheets…</span>
+    </div>
+
+    <!-- Countdown banner -->
+    <!-- Stat cards -->
+    <div class="g2">
+      <div class="scard">
+        <div class="slabel">DISTANCE COVERED</div>
+        <div class="sval" id="pct-val">--</div>
+        <div class="ssub" id="pct-sub">loading…</div>
+      </div>
+      <div class="scard" id="lag-card">
+        <div class="slabel">DAILY LEAD / LAG</div>
+        <div id="status-pill">
+          <div class="lag-num" id="lag-num">--</div>
+          <div class="lag-sub" id="lag-sub"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Route progress -->
+    <div class="sec">ROUTE PROGRESS</div>
+    <div class="card">
+      <div class="prog-hdr">
+        <span>Tokyo &rarr; Osaka</span>
+        <span class="mono" id="leg-label">Leg -- of 59</span>
+      </div>
+      <div class="track"><div class="fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="axis"><span>Day 1 · Nov 1</span><span>Day 6 · Nov 6</span></div>
+      <div id="days-grid" class="days-grid"></div>
+      <div class="tip" id="tip"></div>
+      <div class="legend">
+        <div class="li"><div class="sw" style="background:var(--green)"></div>Completed</div>
+        <div class="li"><div class="sw" style="background:var(--amber)"></div>Active</div>
+        <div class="li"><div class="sw" style="background:var(--bg2);border:0.5px solid var(--bdr2)"></div>Upcoming</div>
+      </div>
+    </div>
+
+    <!-- Current Leg / Next Leg tabbed card -->
+    <div class="sec">LEG INFORMATION</div>
+    <div style="background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);overflow:hidden;box-shadow:var(--shadow)">
+      <div style="padding:8px 8px 0">
+        <div class="mtab-row" id="leg-mtab-row">
+          <div class="mtab-pill"></div>
+          <div class="mtab-lamp"></div>
+          <button class="mtab-btn active" data-mtab="curleg" onclick="switchLegTab('curleg')">CURRENT LEG</button>
+          <button class="mtab-btn" data-mtab="nextleg" onclick="switchLegTab('nextleg')">NEXT LEG</button>
+        </div>
+      </div>
+      <!-- CURRENT LEG panel -->
+      <div class="mtab-panel active" id="legtab-curleg">
+        <div style="padding:1.25rem 1.5rem">
+          <div class="cur-layout">
+            <div class="cur-left">
+              <div class="cur-num" id="cur-num">LEG -- OF 59</div>
+              <div id="cur-leg-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"></div>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:9px 12px;background:var(--bbg);border:0.5px solid rgba(24,95,165,.25);border-radius:var(--r);color:var(--btxt);font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">
+                📋 &nbsp;LOG LEG TIME
+              </a>
+            </div>
+            <div class="cur-right">
+              <div class="cur-map-wrap" id="cur-map">
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
+              </div>
+              <div class="cdown-block" id="cdown-block">
+                <div class="cdown" id="cdown">--:--</div>
+                <div class="cdown-lbl" id="cdown-lbl">REMAINING</div>
+              </div>
+            </div>
+          </div>
+          <div class="elev-wrap" style="margin-top:14px">
+            <svg id="elev-svg" viewBox="0 0 600 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <text x="300" y="49" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="var(--txt3)">elevation loading…</text>
+            </svg>
+            <div class="elev-stats" id="elev-stats"></div>
+          </div>
+        </div>
+      </div>
+      <!-- NEXT LEG panel -->
+      <div class="mtab-panel" id="legtab-nextleg">
+        <div style="padding:1.25rem 1.5rem">
+          <div id="next-runner-card"><div style="color:var(--txt3);font-size:12px">Loading…</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabbed detail section -->
+    <div class="sec">DETAILS</div>
+    <div id="detail-card" style="background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);overflow:hidden">
+      <!-- Tab row -->
+      <div style="padding:8px 8px 0">
+        <div class="mtab-row" id="detail-mtab-row">
+          <div class="mtab-pill"></div>
+          <div class="mtab-lamp"></div>
+          <button class="mtab-btn active" data-mtab="upcoming" onclick="switchMissionTab('upcoming')">UPCOMING</button>
+          <button class="mtab-btn" data-mtab="tracker" onclick="switchMissionTab('tracker')">LIVE TRACKER</button>
+          <button class="mtab-btn" data-mtab="rest" onclick="switchMissionTab('rest')">RUNNER REST</button>
+          <button class="mtab-btn" data-mtab="leaderboard" onclick="switchMissionTab('leaderboard')">RUNNER PROGRESS</button>
+        </div>
+      </div>
+
+      <!-- UPCOMING -->
+      <div class="mtab-panel active" id="mtab-upcoming">
+        <div class="section-hdr" style="border-radius:0">
+          <div class="upcoming-title" id="upcoming-day-label">Day --</div>
+          <div class="csel" id="day-csel">
+            <button class="csel-btn" onclick="toggleCsel('day-csel')">
+              <span class="csel-val" id="day-csel-val">Day 1</span>
+              <svg class="csel-chevron" width="10" height="6" fill="none" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="csel-panel" id="day-csel-panel"></div>
+          </div>
+        </div>
+        <div class="tbl-wrap" style="border:none;border-radius:0">
+          <table class="tbl">
+            <thead><tr><th>LEG</th><th>RUNNERS</th><th>DIST</th><th>EXPOSURE</th><th>PLANNED START</th><th>ROUTE MAP</th><th>CAR START</th></tr></thead>
+            <tbody id="upcoming"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- LIVE TRACKER -->
+      <div class="mtab-panel" id="mtab-tracker">
+        <div class="section-hdr" style="border-radius:0">
+          <div class="section-title" id="tracker-day-label">Day --</div>
+          <div class="csel" id="tracker-csel">
+            <button class="csel-btn" onclick="toggleCsel('tracker-csel')">
+              <span class="csel-val" id="tracker-csel-val">Day 1</span>
+              <svg class="csel-chevron" width="10" height="6" fill="none" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="csel-panel" id="tracker-csel-panel"></div>
+          </div>
+        </div>
+        <div class="tbl-wrap" style="border:none;border-radius:0">
+          <table class="tbl">
+            <thead><tr>
+              <th>LEG</th><th>RUNNERS</th>
+              <th>REV. START</th><th>ACT. START</th><th>ACT. FINISH</th>
+              <th>ACT. DUR</th><th>LEAD/LAG</th><th>STATUS</th>
+            </tr></thead>
+            <tbody id="tracker-tbl"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RUNNER REST -->
+      <div class="mtab-panel" id="mtab-rest">
+        <div class="card" id="rest-tracker-card" style="border:none;border-radius:0;box-shadow:none"><div style="color:var(--txt3);font-size:12px">Loading…</div></div>
+      </div>
+
+      <!-- RUNNER PROGRESS -->
+      <div class="mtab-panel" id="mtab-leaderboard">
+        <div class="tbl-wrap" style="border:none;border-radius:0;margin-top:6px">
+          <table class="tbl">
+            <thead><tr><th>RUNNER</th><th>LEGS</th><th>TOTAL KM</th><th>AVERAGE PACE</th><th>KM COVERED / ASSIGNED</th></tr></thead>
+            <tbody id="runner-tbl"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tabbed detail -->
+
+
+
+    <!-- Team performance -->
+    <div class="sec">TEAM PERFORMANCE</div>
+    <div class="g2" id="team-perf-grid">
+      <div class="scard">
+        <div class="slabel">RUNNING TIME</div>
+        <div class="sval" id="team-time-val">--</div>
+      </div>
+      <div class="scard">
+        <div class="slabel">AVERAGE PACE</div>
+        <div class="sval" id="team-gap-val">--</div>
+      </div>
+    </div>
+
+    <!-- Team charts -->
+    <div class="elev-wrap" style="margin-top:12px">
+      <div class="slabel" style="margin-bottom:8px">CUMULATIVE TIME VS PLAN</div>
+      <svg id="team-delta-svg" viewBox="0 0 600 200" preserveAspectRatio="none" style="width:100%;height:200px;display:block">
+        <text x="300" y="110" text-anchor="middle" font-family="Space Mono,monospace" font-size="16" fill="var(--txt3)">No data yet</text>
+      </svg>
+      <div class="elev-stats" id="team-delta-stats"></div>
+    </div>
+    <div class="elev-wrap" style="margin-top:12px">
+      <div class="slabel" style="margin-bottom:8px">AVERAGE PACE PER LEG</div>
+      <svg id="team-pace-svg" viewBox="0 0 600 200" preserveAspectRatio="none" style="width:100%;height:200px;display:block">
+        <text x="300" y="110" text-anchor="middle" font-family="Space Mono,monospace" font-size="16" fill="var(--txt3)">No data yet</text>
+      </svg>
+      <div class="elev-stats" id="team-pace-stats"></div>
+    </div>
+
+    <div class="footer">
+      Bagel Relay Japan 2026 &nbsp;·&nbsp; Tokyo → Osaka &nbsp;·&nbsp;
+      Data: <a href="https://docs.google.com/spreadsheets/d/1FHnJZUYvD2Rr7VKjm1T4MFt6slirT3KloUHcT3m-C2E" style="color:var(--btxt)" target="_blank">Google Sheets</a>
+      &nbsp;·&nbsp; <span id="last-refresh">Never refreshed</span>
+    </div>
+
+  </div><!-- /tab-mission -->
+
+  <!-- ═══════════════ RELAY PASSPORT TAB ═══════════════ -->
+  <div id="tab-challenges" class="tab-panel">
+    <div class="hdr" style="margin-bottom:1rem">
+      <div>
+        <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; RELAY PASSPORT</div>
+        <div class="pg-title">Relay Passport &nbsp;<span>Challenges &amp; Stamps</span></div>
+      </div>
+      <button class="refresh-btn" onclick="loadPassport(true)">↻ Refresh</button>
+    </div>
+    <div id="rp-banner" class="banner info"><span>⏳</span><span>Loading relay passport…</span></div>
+    <div id="rp-passport" class="passport" style="display:none">
+      <div class="rp-content" id="rp-face-front"></div>
+      <div class="passport-footer">
+        <button id="rp-prev" class="passport-nav-btn" onclick="passportGo(-1)">← Prev</button>
+        <div id="rp-dots" class="passport-dots"></div>
+        <button id="rp-next" class="passport-nav-btn" onclick="passportGo(1)">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ POINTS OF INTEREST TAB ═══════════════ -->
+  <div id="tab-poi" class="tab-panel">
+    <div class="hdr" style="margin-bottom:1rem">
+      <div>
+        <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; POINTS OF INTEREST</div>
+        <div class="pg-title">Route POIs &nbsp;<span>Saved Places</span></div>
+      </div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 24px;text-align:center">
+      <span style="font-size:40px;line-height:1">📍</span>
+      <div style="font-size:14px;font-weight:600;color:var(--txt2)">Relay route points of interest are saved as a Google Maps list</div>
+      <a href="https://maps.app.goo.gl/JDRXx5oi72KPzAqe7" target="_blank" rel="noopener" class="form-glink">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Points of Interest in Google Maps
+      </a>
+    </div>
+
+    <!-- Full route overview map -->
+    <div class="sec">FULL ROUTE MAP</div>
+    <div class="poi-map-wrap" id="poi-map-wrap">
+      <div id="poi-route-map" style="width:100%;height:100%"></div>
+    </div>
+    <div class="legend" id="poi-map-legend"></div>
+  </div>
+
+  <!-- ═══════════════ FINANCIALS TAB ═══════════════ -->
+  <div id="tab-financials" class="tab-panel">
+    <div class="hdr" style="margin-bottom:1rem">
+      <div>
+        <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; FINANCIALS</div>
+        <div class="pg-title">Financial Tracker &nbsp;<span>Expenses &amp; Splits</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdN9C_6bfChBL8LJrlDLhjJODgXIEfiUhFIyTTcddvYYoJbjg/viewform?usp=dialog" target="_blank" rel="noopener" class="form-glink">📝 Log Expense</a>
+        <button class="refresh-btn" onclick="loadFinances(true)">↻ Refresh</button>
+      </div>
+    </div>
+    <div id="ft-banner" class="banner info"><span>⏳</span><span>Loading financial tracker…</span></div>
+    <div class="sec">SETTLE BALANCES</div>
+    <div class="card" id="ft-settle" style="padding:0;overflow:hidden">
+      <div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px">Loading…</div>
+    </div>
+    <div class="sec" style="margin-top:1rem">EXPENSE LOG</div>
+    <div class="tbl-wrap" style="background:var(--bg);border:0.5px solid var(--bdr)">
+      <table class="tbl">
+        <thead><tr id="ft-thead-row"><th colspan="10" style="color:var(--txt3);font-style:italic">Loading…</th></tr></thead>
+        <tbody id="ft-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ CONTACT INFO TAB ═══════════════ -->
+  <div id="tab-contacts" class="tab-panel">
+    <div class="hdr" style="margin-bottom:1rem">
+      <div>
+        <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; CONTACT INFO</div>
+        <div class="pg-title">Contacts &nbsp;<span>Runners &amp; Support</span></div>
+      </div>
+      <button class="refresh-btn" onclick="loadContacts(true)">↻ Refresh</button>
+    </div>
+    <div id="ci-banner" class="banner info"><span>⏳</span><span>Loading contact info…</span></div>
+    <div class="tbl-wrap" style="background:var(--bg);border:0.5px solid var(--bdr)">
+      <table class="tbl">
+        <thead><tr id="ci-thead-row"><th colspan="10" style="color:var(--txt3);font-style:italic">Loading…</th></tr></thead>
+        <tbody id="ci-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ CATCH THE BAGELS GAME TAB ═══════════════ -->
+  <div id="tab-game" class="tab-panel">
+    <div class="hdr" style="margin-bottom:1rem">
+      <div>
+        <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; MINI GAME</div>
+        <div class="pg-title">Catch the Bagels &nbsp;<span>Run the Tōkaidō, grab the goods</span></div>
+      </div>
+    </div>
+    <div style="background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;width:100%;max-width:640px">
+        <div class="mono" style="font-size:13px"><span style="color:var(--txt3)">SCORE</span> <span id="game-score" style="font-weight:700;font-size:16px">0</span></div>
+        <div class="mono" style="font-size:13px"><span style="color:var(--txt3)">BEST</span> <span id="game-best" style="font-weight:700;font-size:16px">0</span></div>
+      </div>
+      <div style="position:relative;width:100%;max-width:640px">
+        <canvas id="game-canvas" width="640" height="400" style="display:block;width:100%;height:auto;min-height:200px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;touch-action:none;cursor:pointer"></canvas>
+        <div id="game-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(0,0,0,.45);border-radius:8px;color:#fff;text-align:center;padding:16px">
+          <div style="font-size:22px">🥯</div>
+          <div style="font-weight:700;font-size:16px">Catch the Bagels</div>
+          <div style="font-size:12px;max-width:380px;color:#e8e8e6">
+            Press <b>↑ Space W</b> to jump — double-jump to reach high items.<br>
+            Tap the canvas on mobile. Obstacles are on the ground — jump over them!<br>
+            🥯 Bagels = +10 &nbsp;·&nbsp; 🍙🍈🍞 Snacks = +5 &nbsp;·&nbsp; 🚧🦝 Hit an obstacle = Game Over<br>
+            Speed increases the longer you survive. One life — don't trip!
+          </div>
+          <button class="refresh-btn" id="game-start-btn" onclick="startGame()">▶ Start Game</button>
+        </div>
+      </div>
+      <div class="mono" style="font-size:10px;color:var(--txt3);text-align:center">
+        ↑ / Space / W to jump &nbsp;·&nbsp; double-jump available &nbsp;·&nbsp; tap canvas on mobile
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+const SHEET_ID   = '1FHnJZUYvD2Rr7VKjm1T4MFt6slirT3KloUHcT3m-C2E';
+const RP_TAB     = 'Route Plan';
+const LT_TAB     = 'Live Tracker';
+const COORDS_TAB = 'Route Coordinates';   // sheet tab: Leg | Lat | Lng | Elevation (m)
+const RPASS_TAB  = 'Relay Passport';      // sheet tab: Category | Challenge | Difficulty
+const CI_TAB     = 'Contact Information';  // sheet tab name for contact information
+const FT_TAB     = 'Financial Tracker';    // sheet tab fed by the expenses Google Form
+const csvURL     = tab => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let legsData        = [];
+let trackerData     = {};
+let coordsData      = {};   // {legNum: [{x:lng, y:lat, e:elev, d:cumMetres}]}
+let runnerColors    = {};
+let cdInterval      = null;
+let allDays         = [];   // [{date, legs:[{l,i}]}]
+let selectedDay     = 0;    // index for upcoming tabs
+let selectedTracker = 0;    // index for live tracker tabs
+let currentLagTotal = 0;   // overall lag in minutes (positive = behind); used for revised time estimates
+let leafletMap      = null; // Leaflet map instance for current leg
+let contactPhotos   = {};   // {runnerName: photoThumbUrl} loaded from Contact Information tab
+let poiMap          = null; // Leaflet map instance for the full-route overview
+let nextLegMap      = null; // Leaflet map instance for the next-up card
+let nextLegPoly     = null; // stored poly for re-fitting after tab reveal
+let poiMapDrawn     = false;
+
+const DAY_COLORS = {
+  1:'#1D9E75', 2:'#185FA5', 3:'#EF9F27', 4:'#A32D2D', 5:'#7B5EC4', 6:'#C2548C'
+};
+
+const AV = ['av-t','av-b','av-a','av-p','av-c','av-t','av-b','av-a','av-p'];
+
+// ─── TAB SWITCHING ───────────────────────────────────────────────────────────
+let passportLoaded = false;
+let contactsLoaded   = false;
+let financeLoaded    = false;
+// ─── CUSTOM DROPDOWN ─────────────────────────────────────────────────────────
+function setCselVal(id,label){
+  const el=document.getElementById(id+'-val');
+  if(el) el.textContent=label;
+}
+function closeCsel(id){
+  document.getElementById(id)?.classList.remove('open');
+}
+function toggleCsel(id){
+  const el=document.getElementById(id);
+  if(!el) return;
+  const opening=!el.classList.contains('open');
+  document.querySelectorAll('.csel.open').forEach(c=>c.classList.remove('open'));
+  if(opening) el.classList.add('open');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.csel')) document.querySelectorAll('.csel.open').forEach(c=>c.classList.remove('open'));
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') document.querySelectorAll('.csel.open').forEach(c=>c.classList.remove('open'));
+});
+
+function positionTubelight(id){
+  const btn=document.querySelector(`.tl-btn[data-tab="${id}"]`);
+  const pill=document.getElementById('tl-pill');
+  const lamp=document.getElementById('tl-lamp');
+  if(!btn||!pill) return;
+  pill.style.left=btn.offsetLeft+'px';
+  pill.style.width=btn.offsetWidth+'px';
+  if(lamp){ lamp.style.left=btn.offsetLeft+'px'; lamp.style.width=btn.offsetWidth+'px'; }
+}
+
+function positionMtabPill(row){
+  const active=row.querySelector('.mtab-btn.active');
+  const pill=row.querySelector('.mtab-pill');
+  const lamp=row.querySelector('.mtab-lamp');
+  if(!active||!pill) return;
+  pill.style.left=active.offsetLeft+'px';
+  pill.style.width=active.offsetWidth+'px';
+  if(lamp){lamp.style.left=active.offsetLeft+'px';lamp.style.width=active.offsetWidth+'px';}
+}
+function switchMissionTab(id){
+  const card=document.getElementById('detail-card');
+  if(card){
+    card.querySelectorAll('.mtab-btn').forEach(b=>b.classList.remove('active'));
+    card.querySelectorAll('.mtab-panel').forEach(p=>p.classList.remove('active'));
+  }
+  const row=document.getElementById('detail-mtab-row');
+  const btn=row?.querySelector(`.mtab-btn[data-mtab="${id}"]`);
+  if(btn) btn.classList.add('active');
+  document.getElementById(`mtab-${id}`)?.classList.add('active');
+  if(row) positionMtabPill(row);
+}
+function switchLegTab(id){
+  const container=document.getElementById('legtab-'+id)?.closest('div[style*="overflow:hidden"]');
+  if(container){
+    container.querySelectorAll('.mtab-btn').forEach(b=>b.classList.remove('active'));
+    container.querySelectorAll('.mtab-panel').forEach(p=>p.classList.remove('active'));
+    container.querySelector(`.mtab-btn[data-mtab="${id}"]`)?.classList.add('active');
+  }
+  document.getElementById(`legtab-${id}`)?.classList.add('active');
+  const row=document.getElementById('leg-mtab-row');
+  if(row) positionMtabPill(row);
+  if(id==='curleg'&&leafletMap) setTimeout(()=>leafletMap.invalidateSize(),50);
+  if(id==='nextleg'&&nextLegMap) setTimeout(()=>{
+    nextLegMap.invalidateSize();
+    if(nextLegPoly) nextLegMap.fitBounds(nextLegPoly.getBounds(),{padding:[10,10]});
+  },80);
+}
+
+function switchTab(id){
+  document.querySelectorAll('.tl-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`.tl-btn[data-tab="${id}"]`)?.classList.add('active');
+  document.getElementById('tab-'+id)?.classList.add('active');
+  positionTubelight(id);
+  if(id==='challenges'&&!passportLoaded) loadPassport(false);
+  if(id==='contacts'&&!contactsLoaded)    loadContacts(false);
+  if(id==='financials'&&!financeLoaded)   loadFinances(false);
+  if(id==='poi'){
+    if(!poiMapDrawn) drawFullRouteMap();
+    else if(poiMap) setTimeout(()=>poiMap.invalidateSize(),0);
+  }
+  if(id==='game') initGame();
+}
+
+// Split a multi-choice form-cell value into individual names.
+// Google Forms checkbox responses are typically joined with ", " but
+// support a few other separators just in case (semicolons, slashes, "&", " and ").
+function splitNames(v){
+  if(!v) return [];
+  return v.split(/\s*(?:,|;|\/|&|\band\b)\s*/i).map(s=>s.trim()).filter(Boolean);
+}
+
+// ─── RELAY PASSPORT ───────────────────────────────────────────────────────────
+let passportData = null;   // [{name, challenges:[{challenge}]}]
+let passportPage = 0;      // 0 = instructions/cover page, 1..N = category pages
+const PASSPORT_STAMPS_KEY = 'bagelRelayPassportStamps';
+const CATEGORY_ICONS = {
+  'Food':'🍜','Connection':'🤝','Culture':'⛩️','Discovery':'🔍',
+  'Relay Spirit':'🎌','Comfort Zone':'🌱'
+};
+
+function getStamps(){
+  try{ return JSON.parse(localStorage.getItem(PASSPORT_STAMPS_KEY)||'{}'); }catch(e){ return {}; }
+}
+function toggleStamp(key){
+  const stamps=getStamps();
+  if(stamps[key]) delete stamps[key]; else stamps[key]=true;
+  localStorage.setItem(PASSPORT_STAMPS_KEY, JSON.stringify(stamps));
+  renderPassport();
+}
+function updatePassportTabBadge(totalDone,totalChallenges){
+  const badge=document.getElementById('rp-tab-badge');
+  if(!badge) return;
+  badge.textContent=`${totalDone}/${totalChallenges}`;
+  badge.style.display='inline-block';
+  badge.classList.toggle('complete',totalChallenges>0&&totalDone===totalChallenges);
+}
+function passportGo(delta){
+  if(!passportData) return;
+  const newPage=Math.max(0,Math.min(passportData.length,passportPage+delta));
+  if(newPage===passportPage) return;
+  passportPage=newPage;
+  renderPassport();
+}
+function passportGoTo(i){
+  if(!passportData||i===passportPage) return;
+  passportPage=i;
+  renderPassport();
+}
+function buildPassportPageHTML(page){
+  if(!passportData) return '';
+  const stamps=getStamps();
+  const totalPages=passportData.length;
+  if(page===0){
+    const badgesUnlocked=passportData.filter((cat,ci)=>cat.challenges.every((c,xi)=>stamps[`${ci}-${xi}`])).length;
+    let totalChallenges=0,totalDone=0;
+    passportData.forEach((cat,ci)=>cat.challenges.forEach((c,xi)=>{totalChallenges++;if(stamps[`${ci}-${xi}`])totalDone++;}));
+    return `
+      <div class="passport-cover">
+        <div class="passport-stamp-icon">🥯📔</div>
+        <div class="passport-cover-title">Relay Passport</div>
+        <div class="passport-cover-sub">BAGEL RELAY JAPAN 2026</div>
+      </div>
+      <div class="passport-page">
+        <div class="eyebrow">PAGE 1 OF ${totalPages+1} &nbsp;·&nbsp; INSTRUCTIONS</div>
+        <div class="passport-page-title">How it works</div>
+        <div style="font-size:13px;color:var(--txt2);line-height:1.75;margin-top:10px">
+          Each page of this passport covers one category of challenges to complete along the way.
+          Whenever you complete a challenge, tap the circle next to it to stamp your passport.<br><br>
+          Stamps are saved on this device, so check back here throughout the relay to keep track of your progress.
+          Complete every challenge in a category to unlock its badge below — collect them all!<br><br>
+          Use the arrows (or dots) below to flip between pages.
+        </div>
+        <div style="margin-top:1.25rem">
+          <div class="prog-hdr"><span>Overall progress</span><span class="mono">${totalDone} / ${totalChallenges}</span></div>
+          <div class="track"><div class="fill" style="width:${totalChallenges?(totalDone/totalChallenges*100):0}%"></div></div>
+        </div>
+        <div class="sec" style="margin-top:1.25rem">BADGES &nbsp;·&nbsp; ${badgesUnlocked} / ${passportData.length}</div>
+        <div class="badge-case">
+          ${passportData.map((cat,ci)=>{
+            const total=cat.challenges.length;
+            const done=cat.challenges.filter((c,xi)=>stamps[`${ci}-${xi}`]).length;
+            const unlocked=total>0&&done===total;
+            const icon=CATEGORY_ICONS[cat.name]||'🏅';
+            return `<div class="badge ${unlocked?'unlocked':''}" onclick="passportGoTo(${ci+1})" title="${cat.name}: ${done}/${total}">
+              <div class="badge-icon">${icon}</div><div class="badge-name">${cat.name}</div></div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  }
+  const cat=passportData[page-1];
+  const done=cat.challenges.filter((c,xi)=>stamps[`${page-1}-${xi}`]).length;
+  return `
+    <div class="passport-page">
+      <div class="eyebrow">PAGE ${page+1} OF ${totalPages+1} &nbsp;·&nbsp; CATEGORY</div>
+      <div class="passport-page-title">${CATEGORY_ICONS[cat.name]||'🏅'} ${cat.name}</div>
+      <div style="margin:12px 0 4px">
+        <div class="prog-hdr"><span>Stamps collected</span><span class="mono">${done} / ${cat.challenges.length}</span></div>
+        <div class="track"><div class="fill" style="width:${cat.challenges.length?(done/cat.challenges.length*100):0}%"></div></div>
+      </div>
+      <div>
+        ${cat.challenges.map((c,xi)=>{
+          const key=`${page-1}-${xi}`;
+          const isDone=!!stamps[key];
+          return `<div class="passport-item ${isDone?'done':''}">
+            <div style="font-size:13px;font-weight:500;${isDone?'text-decoration:line-through':''}">${c.challenge}</div>
+            <div class="passport-check ${isDone?'checked':''}" onclick="toggleStamp('${key}')">${isDone?'✓':''}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+function updatePassportNav(){
+  if(!passportData) return;
+  const totalPages=passportData.length;
+  const dots=document.getElementById('rp-dots');
+  const prevBtn=document.getElementById('rp-prev');
+  const nextBtn=document.getElementById('rp-next');
+  if(dots) dots.innerHTML=Array.from({length:totalPages+1}).map((_,i)=>
+    `<button class="passport-dot ${i===passportPage?'active':''}" onclick="passportGoTo(${i})" aria-label="Page ${i+1}"></button>`
+  ).join('');
+  if(prevBtn) prevBtn.disabled=passportPage===0;
+  if(nextBtn) nextBtn.disabled=passportPage===totalPages;
+}
+function renderPassport(){
+  if(!passportData) return;
+  const stamps=getStamps();
+  let totalChallenges=0,totalDone=0;
+  passportData.forEach((cat,ci)=>cat.challenges.forEach((c,xi)=>{
+    totalChallenges++;
+    if(stamps[`${ci}-${xi}`]) totalDone++;
+  }));
+  updatePassportTabBadge(totalDone,totalChallenges);
+  const front=document.getElementById('rp-face-front');
+  if(front){front.innerHTML=buildPassportPageHTML(passportPage);front.scrollTop=0;}
+  updatePassportNav();
+}
+
+async function loadPassport(force){
+  if(passportLoaded&&!force) return;
+  const banner=document.getElementById('rp-banner');
+  const wrap=document.getElementById('rp-passport');
+  banner.className='banner info';
+  banner.innerHTML='<span>⏳</span><span>Loading relay passport…</span>';
+  try{
+    const res=await fetch(csvURL(RPASS_TAB)+'&cachebust='+Date.now());
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const rows=parseCSV(await res.text());
+    if(rows.length<2) throw new Error('No data found in relay passport.');
+    const categories=[];
+    const byName={};
+    rows.slice(1).forEach(r=>{
+      const cat=(r[0]||'').replace(/^"|"$/g,'').trim();
+      const challenge=(r[1]||'').replace(/^"|"$/g,'').trim();
+      if(!cat||!challenge) return;
+      if(!byName[cat]){ byName[cat]={name:cat,challenges:[]}; categories.push(byName[cat]); }
+      byName[cat].challenges.push({challenge});
+    });
+    if(!categories.length) throw new Error('No categories found in relay passport.');
+    passportData=categories;
+    passportPage=0;
+    banner.style.display='none';
+    wrap.style.display='flex';
+    renderPassport();
+    passportLoaded=true;
+  }catch(err){
+    wrap.style.display='none';
+    banner.className='banner err';
+    banner.innerHTML=`<span>⚠️</span><span>Could not load relay passport: ${err.message}</span>`;
+    console.error(err);
+  }
+}
+
+// ─── CONTACT INFO ────────────────────────────────────────────────────────────
+// Converts a Google Drive share URL to a thumbnail src.
+// Accepts: https://drive.google.com/file/d/FILE_ID/view?...
+//      or: https://drive.google.com/open?id=FILE_ID
+//      or: already a direct thumbnail URL — passed through unchanged.
+function driveThumb(url,sz){
+  if(!url) return '';
+  const m=url.match(/\/d\/([a-zA-Z0-9_-]{20,})/)||url.match(/[?&]id=([a-zA-Z0-9_-]{20,})/);
+  if(m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w${sz||120}`;
+  return url; // assume already a direct image URL
+}
+
+async function loadContacts(force){
+  if(contactsLoaded&&!force) return;
+  const banner  =document.getElementById('ci-banner');
+  const theadRow=document.getElementById('ci-thead-row');
+  const tbody   =document.getElementById('ci-tbody');
+  banner.className='banner info';
+  banner.innerHTML='<span>⏳</span><span>Loading contact info…</span>';
+  try{
+    const res=await fetch(csvURL(CI_TAB)+'&cachebust='+Date.now());
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const rows=parseCSV(await res.text());
+    if(rows.length<2) throw new Error('No data found in contact info tab.');
+    const hdr=rows[0].map(c=>c.replace(/^"|"$/g,'').trim());
+
+    // Find special columns — photo and name — by header keyword (case-insensitive)
+    const photoIdx=hdr.findIndex(h=>/photo|image|picture/i.test(h));
+    const nameIdx =hdr.findIndex(h=>/^name$|^runner$|^contact/i.test(h));
+
+    // Build visible headers: skip the photo column (rendered inline with name)
+    const visibleHdr=hdr.filter((_,i)=>i!==photoIdx);
+    theadRow.innerHTML=hdr.map((h,i)=>{
+      if(i===photoIdx) return null;
+      return i===nameIdx?`<th style="min-width:180px">${h}</th>`:`<th>${h}</th>`;
+    }).filter(th=>th!==null).join('');
+
+    tbody.innerHTML='';
+    rows.slice(1).filter(r=>r.some(c=>c.replace(/^"|"$/g,'').trim())).forEach(r=>{
+      const cells=r.map(c=>c.replace(/^"|"$/g,'').trim());
+      const photoUrl=photoIdx>=0?driveThumb(cells[photoIdx]||'',200):'';
+      const tr=document.createElement('tr');
+
+      const tds=hdr.map((h,i)=>{
+        if(i===photoIdx) return null; // handled inline with name
+        const v=cells[i]||'';
+
+        // Name cell — prepend avatar circle (photo or initials)
+        if(i===nameIdx){
+          const initials=v.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+          const avatarColor=AV[Object.keys(runnerColors).length%AV.length];
+          if(!runnerColors[v]) runnerColors[v]=avatarColor;
+          const avClass=runnerColors[v]||'av-t';
+          const avatar=photoUrl
+            ?`<div class="av" style="background:var(--bg2);overflow:hidden;flex-shrink:0;width:48px;height:48px">
+                <img src="${photoUrl}" alt="${initials}" width="48" height="48"
+                  style="width:48px;height:48px;object-fit:cover;border-radius:50%;display:block"
+                  onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}'"/>
+              </div>`
+            :`<div class="av ${avClass}" style="width:48px;height:48px;font-size:16px">${initials}</div>`;
+          return `<td style="font-size:14px;font-weight:600;min-width:180px">
+            <div style="display:flex;align-items:center;gap:12px">${avatar}<span>${v||'—'}</span></div></td>`;
+        }
+
+        // Phone
+        if(/^[\+\d\s\-\(\)]{7,}$/.test(v)&&v.replace(/\D/g,'').length>=7)
+          return `<td style="font-size:13px"><a href="tel:${v.replace(/\s/g,'')}" style="color:var(--btxt);text-decoration:none">${v}</a></td>`;
+        // Email
+        if(/@/.test(v))
+          return `<td style="font-size:13px"><a href="mailto:${v}" style="color:var(--btxt);text-decoration:none">${v}</a></td>`;
+
+        return `<td style="font-size:13px">${v||'—'}</td>`;
+      }).filter(td=>td!==null);
+
+      tr.innerHTML=tds.join('');
+      tbody.appendChild(tr);
+    });
+    banner.className='banner ok';
+    banner.innerHTML=`<span>✅</span><span>Loaded — ${rows.length-1} contacts.</span>`;
+    contactsLoaded=true;
+  }catch(err){
+    banner.className='banner err';
+    banner.innerHTML=`<span>⚠️</span><span>Could not load contact info: ${err.message}</span>`;
+    console.error(err);
+  }
+}
+
+// ─── FINANCIAL TRACKER ───────────────────────────────────────────────────────
+async function loadFinances(force){
+  if(financeLoaded&&!force) return;
+  const banner   = document.getElementById('ft-banner');
+  const theadRow = document.getElementById('ft-thead-row');
+  const tbody    = document.getElementById('ft-tbody');
+  banner.className='banner info';
+  banner.innerHTML='<span>⏳</span><span>Loading financial tracker…</span>';
+  try{
+    const res=await fetch(csvURL(FT_TAB)+'&cachebust='+Date.now());
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const rows=parseCSV(await res.text());
+    if(rows.length<2) throw new Error('No data found in financial tracker tab.');
+    const hdr=rows[0].map(c=>c.replace(/^"|"$/g,'').trim());
+
+    // Locate key columns by keyword (case-insensitive) — robust to header wording
+    const amountIdx = hdr.findIndex(h=>/amount|cost|price|total|\$|¥|yen/i.test(h));
+    // Detect currency from the amount column header, e.g. "How much did it cost (CAD)" → "CAD"
+    const currMatch = amountIdx>=0 ? hdr[amountIdx].match(/\(([A-Za-z]{3})\)|([¥$€£])/) : null;
+    const currCode  = currMatch ? (currMatch[1]||'').toUpperCase() : '';
+    const currSym   = currMatch ? (currMatch[2]||'') : '';
+    const fmtMoney  = n => currSym
+      ? `${currSym}${n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`
+      : currCode
+        ? `${n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})} ${currCode}`
+        : `$${n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+    const forIdx    = hdr.findIndex(h=>/who was it purchased for|purchased for|for whom/i.test(h));
+    const byIdx     = hdr.findIndex(h=>/purchased by|paid by|who paid|who bought|spent by/i.test(h));
+    const itemIdx   = hdr.findIndex(h=>/item|description|what was/i.test(h));
+
+    // Hide Timestamp and Notes columns from the table
+    const hiddenIdx = new Set(hdr.map((h,i)=>/^timestamp$|^notes$/i.test(h)?i:-1).filter(i=>i>=0));
+    const visibleIdx = hdr.map((_,i)=>i).filter(i=>!hiddenIdx.has(i));
+
+    const dataRows=rows.slice(1).filter(r=>r.some(c=>c.replace(/^"|"$/g,'').trim()));
+
+    theadRow.innerHTML=visibleIdx.map(i=>`<th>${hdr[i]}</th>`).join('');
+    tbody.innerHTML='';
+
+    let grandTotal=0;
+    const perPerson={}; // {name: amountOwed}
+    const paidBy={};    // {name: amountPaid}
+
+    dataRows.forEach(r=>{
+      const cells=r.map(c=>c.replace(/^"|"$/g,'').trim());
+      const amount=amountIdx>=0?parseFloat(cells[amountIdx].replace(/[^0-9.\-]/g,''))||0:0;
+      grandTotal+=amount;
+
+      const buyer=byIdx>=0?cells[byIdx].trim():'';
+      if(buyer) paidBy[buyer]=(paidBy[buyer]||0)+amount;
+
+      const names=forIdx>=0?splitNames(cells[forIdx]):[];
+      if(names.length){
+        const share=amount/names.length;
+        names.forEach(n=>{ perPerson[n]=(perPerson[n]||0)+share; });
+      }
+
+      const tr=document.createElement('tr');
+      tr.innerHTML=visibleIdx.map(i=>{
+        const v=cells[i]||'';
+        // "Who was it purchased for?" — render as name tag chips (handles any combo of names)
+        if(i===forIdx){
+          const tags=splitNames(v);
+          if(!tags.length) return `<td>—</td>`;
+          return `<td><div style="display:flex;flex-wrap:wrap;gap:4px">${tags.map(n=>{
+            if(!runnerColors[n]) runnerColors[n]=AV[Object.keys(runnerColors).length%AV.length];
+            return `<span class="pill pill-up" style="font-size:10px">${n}</span>`;
+          }).join('')}</div></td>`;
+        }
+        // Amount column — monospace, right-aligned, formatted
+        if(i===amountIdx){
+          const num=parseFloat(v.replace(/[^0-9.\-]/g,''));
+          return `<td class="mono" style="text-align:right;font-weight:700">${isNaN(num)?(v||'—'):fmtMoney(num)}</td>`;
+        }
+        if(i===itemIdx) return `<td style="font-weight:500">${v||'—'}</td>`;
+        if(i===byIdx)   return `<td>${v||'—'}</td>`;
+        return `<td style="font-size:13px;color:var(--txt2)">${v||'—'}</td>`;
+      }).join('');
+      tbody.appendChild(tr);
+    });
+
+    // Summary cards removed — settlement section is the primary summary
+
+    // Settle debts — compute net balances (paid - owed), then greedily match creditors to debtors
+    const allPeople=new Set([...Object.keys(paidBy),...Object.keys(perPerson)]);
+    const net={};
+    allPeople.forEach(n=>{ net[n]=(paidBy[n]||0)-(perPerson[n]||0); });
+    const creditors=[], debtors=[];
+    Object.entries(net).forEach(([n,v])=>{
+      if(v>0.01) creditors.push({name:n,amount:v});
+      else if(v<-0.01) debtors.push({name:n,amount:-v});
+    });
+    creditors.sort((a,b)=>b.amount-a.amount);
+    debtors.sort((a,b)=>b.amount-a.amount);
+    const settlements=[];
+    let ci=0,di=0;
+    while(ci<creditors.length&&di<debtors.length){
+      const transfer=Math.min(creditors[ci].amount,debtors[di].amount);
+      if(transfer>0.01) settlements.push({from:debtors[di].name,to:creditors[ci].name,amount:transfer});
+      creditors[ci].amount-=transfer;
+      debtors[di].amount-=transfer;
+      if(creditors[ci].amount<0.01) ci++;
+      if(debtors[di].amount<0.01) di++;
+    }
+
+    const settleEl=document.getElementById('ft-settle');
+    if(settleEl){
+      if(!settlements.length){
+        settleEl.innerHTML='<div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px">All settled up — no payments needed</div>';
+      } else {
+        settleEl.innerHTML=settlements.map(s=>
+          `<div class="settle-row">
+            <span class="settle-name">${s.from}</span>
+            <span class="settle-arrow">→</span>
+            <span class="settle-name">${s.to}</span>
+            <span class="settle-amount">${fmtMoney(s.amount)}</span>
+          </div>`
+        ).join('');
+      }
+    }
+
+    banner.className='banner ok';
+    banner.innerHTML=`<span>✅</span><span>Loaded — ${dataRows.length} expense${dataRows.length===1?'':'s'} · ${fmtMoney(grandTotal)} total.</span>`;
+    financeLoaded=true;
+  }catch(err){
+    banner.className='banner err';
+    banner.innerHTML=`<span>⚠️</span><span>Could not load financial tracker: ${err.message}</span>`;
+    console.error(err);
+  }
+}
+
+// ─── CSV PARSE ───────────────────────────────────────────────────────────────
+function parseCSV(text){
+  const rows=[];let cur='',inQ=false;const cells=[];
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(ch==='"'){inQ=!inQ;}
+    else if(ch===','&&!inQ){cells.push(cur.trim());cur='';}
+    else if((ch==='\n'||ch==='\r')&&!inQ){
+      if(cur||cells.length){cells.push(cur.trim());rows.push([...cells]);cells.length=0;cur='';}
+    } else {cur+=ch;}
+  }
+  if(cur||cells.length){cells.push(cur.trim());rows.push([...cells]);}
+  return rows;
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function setBanner(type,msg){
+  const el=document.getElementById('banner');
+  el.className='banner '+type;
+  el.innerHTML=`<span>${type==='ok'?'✅':type==='err'?'⚠️':'⏳'}</span><span>${msg}</span>`;
+}
+function exposureBadge(t){
+  const k=(t||'').toLowerCase();
+  if(k.includes('high exposure')) return `<span class="terrain t-highexposure">⛔ High Exposure</span>`;
+  if(k.includes('exposed')) return `<span class="terrain t-exposed">⚠️ Exposed</span>`;
+  if(k.includes('mixed')) return `<span class="terrain t-mixed">◐ Mixed</span>`;
+  if(k.includes('protected')) return `<span class="terrain t-protected">🛡 Protected</span>`;
+  return `<span style="color:var(--txt3);font-size:11px">—</span>`;
+}
+// Format a time string (e.g. "6:05:00 AM", "06:05:00", "6:05 AM") → "06:05" (24-hr, no seconds)
+function fmt24(timeStr, dateStr){
+  if(!timeStr) return '—';
+  const d=parseDateTime(dateStr||'2000-01-01', timeStr);
+  if(!d) return timeStr; // fallback: show as-is if unparseable
+  return d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+function fmtLag(min, isCompleted){
+  if(min===''||min===null||min===undefined) return '—';
+  const m=parseFloat(min);
+  if(isNaN(m)) return '—';
+  const abs=Math.round(Math.abs(m));
+  if(m<-0.5) return `<span class="lag-negative">▲ ${abs} min ahead</span>`;
+  if(m>0.5)  return `<span class="lag-positive">▼ ${abs} min behind</span>`;
+  return isCompleted ? `<span class="lag-zero">— On time</span>` : '—';
+}
+function statusPill(s){
+  const v=(s||'').toLowerCase();
+  if(v.includes('ahead'))   return `<span class="pill pill-ok">▲ Ahead</span>`;
+  if(v.includes('behind'))  return `<span class="pill pill-beh">▼ Behind</span>`;
+  if(v.includes('running')||v.includes('run')) return `<span class="pill pill-run">🏃 Running</span>`;
+  if(v.includes('on time')) return `<span class="pill pill-ok">✅ On time</span>`;
+  if(v.includes('upcoming'))return `<span class="pill pill-up">Upcoming</span>`;
+  return `<span class="pill pill-up">${s||'—'}</span>`;
+}
+function lagPill(lag){
+  if(lag<-0.5) return `<span class="pill pill-ok">▲ ${Math.round(Math.abs(lag))} min ahead</span>`;
+  if(lag>0.5)  return `<span class="pill pill-beh">▼ ${Math.round(lag)} min behind</span>`;
+  return `<span class="pill pill-ok">On schedule</span>`;
+}
+function setLagDisplay(lag){
+  const numEl=document.getElementById('lag-num');
+  const subEl=document.getElementById('lag-sub');
+  const card=document.getElementById('lag-card');
+  if(!numEl||!subEl) return;
+  if(lag<-0.5){
+    numEl.className='lag-num ahead';
+    numEl.textContent=`+${Math.round(Math.abs(lag))} min`;
+    subEl.textContent='AHEAD OF PACE';
+    if(card){card.classList.remove('lag-behind','lag-even');card.classList.add('lag-ahead');}
+  } else if(lag>0.5){
+    numEl.className='lag-num behind';
+    numEl.textContent=`−${Math.round(lag)} min`;
+    subEl.textContent='BEHIND PACE';
+    if(card){card.classList.remove('lag-ahead','lag-even');card.classList.add('lag-behind');}
+  } else {
+    numEl.className='lag-num even';
+    numEl.textContent='On time';
+    subEl.textContent='ON PACE';
+    if(card){card.classList.remove('lag-ahead','lag-behind');card.classList.add('lag-even');}
+  }
+}
+function startCountdown(secs){
+  if(cdInterval) clearInterval(cdInterval);
+  let s=Math.max(0,secs);
+  function tick(){
+    const m=Math.floor(s/60),sc=s%60;
+    document.getElementById('cdown').textContent=String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');
+    if(s<=0) return;
+    s--;
+  }
+  tick();
+  cdInterval=setInterval(tick,1000);
+}
+function parseTimeToday(str){
+  if(!str) return null;
+  const match=str.trim().match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?/i);
+  if(!match) return null;
+  let h=parseInt(match[1]);
+  const m=parseInt(match[2]);
+  const ampm=(match[4]||'').toUpperCase();
+  if(ampm==='PM'&&h!==12) h+=12;
+  if(ampm==='AM'&&h===12) h=0;
+  const now=new Date();
+  return new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0);
+}
+function parseDateTime(dateStr,timeStr){
+  if(!timeStr) return null;
+  const match=timeStr.trim().match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?/i);
+  if(!match) return null;
+  let h=parseInt(match[1]);
+  const m=parseInt(match[2]);
+  const ampm=(match[4]||'').toUpperCase();
+  if(ampm==='PM'&&h!==12) h+=12;
+  if(ampm==='AM'&&h===12) h=0;
+  if(dateStr){
+    const base=new Date(dateStr);
+    if(!isNaN(base)) return new Date(base.getFullYear(),base.getMonth(),base.getDate(),h,m,0);
+  }
+  const now=new Date();
+  return new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0);
+}
+
+// ─── HAVERSINE DISTANCE ──────────────────────────────────────────────────────
+function haversine(lat1,lng1,lat2,lng2){
+  const R=6371000,r=Math.PI/180;
+  const dLat=(lat2-lat1)*r, dLng=(lng2-lng1)*r;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// ─── TRACKER FIELD HELPERS ───────────────────────────────────────────────────
+function tGet(t,...keys){
+  for(const k of keys){const v=t[k];if(v!==undefined&&v!=='') return v;}
+  return '';
+}
+function trackerActStart(t){ return tGet(t,'Actual Start Time','Actual Start','Act. Start Time','actual_start','Act. Start'); }
+function trackerActEnd(t)  { return tGet(t,'Actual End Time','Actual Finish','Act. End Time','Actual End','actual_end','Act. End'); }
+function trackerDur(t)     { return tGet(t,'Total Elapsed Time (Moving + Stopping Time)','Act. Duration','Act. Dur (min)','Actual Duration (min)','actual_duration'); }
+function trackerLag(t)     { return tGet(t,'Leg Lead/Lag (min)','Lead/Lag','Lead / Lag (min)','lag'); }
+function trackerPace(t)    { return tGet(t,'Actual Pace (min/km)','Act. Pace (min/km)','Act. Pace','actual_pace'); }
+function trackerStatus(t)  { return tGet(t,'Status','status'); }
+
+// ─── LEAD/LAG: actual_end of last completed leg vs expected_end of that leg ──
+function calcTotalLag(legs,tracker){
+  let lastCompIdx=-1;
+  legs.forEach((l,i)=>{
+    const legNum=parseInt(l['Leg']||'');
+    const t=tracker[legNum]||{};
+    if(trackerActEnd(t)) lastCompIdx=i;
+  });
+  if(lastCompIdx<0) return {total:0,count:0};
+
+  const lastLeg=legs[lastCompIdx];
+  const lastLegNum=parseInt(lastLeg['Leg']||'');
+  const lastT=tracker[lastLegNum]||{};
+  const dateStr=lastLeg['Date']||'';
+
+  const actEnd=parseDateTime(dateStr,trackerActEnd(lastT));
+  const expStart=parseDateTime(dateStr,lastLeg['Exp. Start']||'');
+  const expDur=parseFloat(lastLeg['Exp. Duration (min)']||'');
+  if(actEnd&&expStart&&!isNaN(expDur)){
+    const expEnd=new Date(expStart.getTime()+expDur*60000);
+    return {total:(actEnd-expEnd)/60000,count:lastCompIdx+1};
+  }
+
+  // Fallback: first-leg start delay + sum of per-leg pace deltas
+  let total=0,count=0,firstDone=true;
+  legs.forEach(l=>{
+    const legNum=parseInt(l['Leg']||'');
+    const t=tracker[legNum]||{};
+    if(!trackerActEnd(t)) return;
+    if(firstDone){
+      const actS=parseDateTime(l['Date']||'',trackerActStart(t));
+      const expS=parseDateTime(l['Date']||'',l['Exp. Start']||'');
+      if(actS&&expS) total+=(actS-expS)/60000;
+      firstDone=false;
+    }
+    const sheetLag=parseFloat(trackerLag(t));
+    if(!isNaN(sheetLag)){total+=sheetLag;}
+    else{
+      const actDur=parseFloat(trackerDur(t));
+      const expD=parseFloat(l['Exp. Duration (min)']||'');
+      if(!isNaN(actDur)&&!isNaN(expD)) total+=(actDur-expD);
+    }
+    count++;
+  });
+  return {total,count};
+}
+
+// ─── FIND CURRENT LEG ────────────────────────────────────────────────────────
+function findCurrentIdx(legs,tracker){
+  for(let i=0;i<legs.length;i++){
+    const legNum=parseInt(legs[i]['Leg']||'');
+    const t=tracker[legNum]||{};
+    if(!trackerActEnd(t)) return i;
+  }
+  return legs.length-1;
+}
+
+// ─── GROUP LEGS BY DAY ───────────────────────────────────────────────────────
+function groupByDay(legs){
+  const days=[];let prevDate=null;
+  legs.forEach((l,i)=>{
+    const d=l['Date']||'';
+    if(d!==prevDate){days.push({date:d,legs:[]});prevDate=d;}
+    days[days.length-1].legs.push({l,i});
+  });
+  return days;
+}
+
+// ─── BUILD DAY GRID ──────────────────────────────────────────────────────────
+function buildDayGrid(legs,currentIdx){
+  const grid=document.getElementById('days-grid');
+  const tip=document.getElementById('tip');
+  grid.innerHTML='';
+  const days=groupByDay(legs);
+
+  days.forEach((day,di)=>{
+    const dayKm=day.legs.reduce((s,{l})=>s+(parseFloat(l['Distance (km)'])||0),0);
+    const done=day.legs.filter(({i})=>i<currentIdx).length;
+    const dateStr=day.date?new Date(day.date).toLocaleDateString('en-CA',{month:'short',day:'numeric'}):`Day ${di+1}`;
+
+    const row=document.createElement('div');
+    row.className='day-row';
+
+    const meta=document.createElement('div');
+    meta.className='day-meta';
+    meta.innerHTML=`<div class="day-label">DAY ${di+1}</div><div class="day-sub">${dateStr}</div>`;
+    row.appendChild(meta);
+
+    const pipsWrap=document.createElement('div');
+    pipsWrap.className='day-pips';
+    day.legs.forEach(({l,i})=>{
+      const km=parseFloat(l['Distance (km)'])||4;
+      const pip=document.createElement('div');
+      pip.className='pip '+(i<currentIdx?'done':i===currentIdx?'active':'todo');
+      pip.style.flex=`${Math.max(1,(km/dayKm*100)).toFixed(1)} 1 0`;
+      pip.addEventListener('mouseenter',e=>{
+        tip.style.display='block';
+        tip.innerHTML=`Leg ${l['Leg']} · ${km} km<br>${l['Runner 1 (Pacer)']} + ${l['Runner 2']}`;
+        tip.style.left=(e.clientX+12)+'px';
+        tip.style.top=(e.clientY-10)+'px';
+      });
+      pip.addEventListener('mousemove',e=>{
+        tip.style.left=(e.clientX+12)+'px';
+        tip.style.top=(e.clientY-10)+'px';
+      });
+      pip.addEventListener('mouseleave',()=>{tip.style.display='none';});
+      pipsWrap.appendChild(pip);
+    });
+    row.appendChild(pipsWrap);
+
+    const stats=document.createElement('div');
+    stats.className='day-stats';
+    stats.innerHTML=`<div class="day-stat-km">${dayKm.toFixed(1)} km</div><div class="day-stat-legs">${day.legs.length} legs${done>0?' · '+done+' done':''}</div>`;
+    row.appendChild(stats);
+    grid.appendChild(row);
+  });
+}
+
+// ─── LIVE TRACKER DAY TABS ────────────────────────────────────────────────────
+function buildTrackerTabs(days){
+  const panel=document.getElementById('tracker-csel-panel');
+  if(!panel) return;
+  panel.innerHTML='';
+  days.forEach((day,i)=>{
+    const dateStr=day.date?new Date(day.date).toLocaleDateString('en-CA',{month:'short',day:'numeric'}):`Day ${i+1}`;
+    const label=`Day ${i+1} · ${dateStr}`;
+    const item=document.createElement('div');
+    item.className='csel-item'+(i===selectedTracker?' selected':'');
+    item.textContent=label;
+    item.onclick=()=>{selectedTracker=i;closeCsel('tracker-csel');setCselVal('tracker-csel',label);renderTracker();};
+    panel.appendChild(item);
+  });
+  const firstLabel=panel.querySelector('.csel-item')?.textContent||'Day 1';
+  const curLabel=panel.querySelectorAll('.csel-item')[selectedTracker]?.textContent||firstLabel;
+  setCselVal('tracker-csel',curLabel);
+}
+
+function renderTracker(){
+  const panel=document.getElementById('tracker-csel-panel');
+  if(panel){
+    panel.querySelectorAll('.csel-item').forEach((el,i)=>el.classList.toggle('selected',i===selectedTracker));
+    const lbl=panel.querySelectorAll('.csel-item')[selectedTracker]?.textContent;
+    if(lbl) setCselVal('tracker-csel',lbl);
+  }
+  const day=allDays[selectedTracker];
+  if(!day) return;
+  const dateStr=day.date?new Date(day.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):`Day ${selectedTracker+1}`;
+  document.getElementById('tracker-day-label').textContent=dateStr;
+
+  const currentIdx=findCurrentIdx(legsData,trackerData);
+  const currentDayDate=(legsData[currentIdx]||{})['Date']||''; // date string of the active leg's day
+  const tbody=document.getElementById('tracker-tbl');
+  tbody.innerHTML='';
+  day.legs.forEach(({l,i})=>{
+    const legNum=parseInt(l['Leg']||i+1);
+    const t=trackerData[legNum]||{};
+    const actStart=trackerActStart(t);
+    const actEnd=trackerActEnd(t);
+    const actDur=trackerDur(t);
+    const lag=trackerLag(t);
+    const status=trackerStatus(t)||(actEnd?'Completed':i===currentIdx?'Running':'Upcoming');
+    const isCur=i===currentIdx;
+    const isIncomplete=!actEnd;
+
+    // Only apply lag revision to incomplete legs on the SAME day as the active leg.
+    // Future days reset to zero lag (overnight rest), so show the original planned time.
+    const isSameDay=(l['Date']||'')=== currentDayDate;
+    let expStartCell;
+    if(isIncomplete&&l['Exp. Start']){
+      const expSDate=parseDateTime(l['Date']||'',l['Exp. Start']||'');
+      if(isSameDay&&expSDate&&currentLagTotal!==0){
+        const revS=new Date(expSDate.getTime()+currentLagTotal*60000);
+        const revStr=revS.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+        const lagDir=currentLagTotal>0?'behind':'ahead';
+        expStartCell=`<span class="mono" style="color:var(--txt2)" title="Planned: ${fmt24(l['Exp. Start'],l['Date'])} · shifted ${Math.round(Math.abs(currentLagTotal))} min ${lagDir}">~${revStr}</span>`;
+      } else {
+        expStartCell=`<span class="mono" style="color:var(--txt2)">${fmt24(l['Exp. Start'],l['Date'])}</span>`;
+      }
+    } else {
+      expStartCell=`<span class="mono" style="color:var(--txt3)">${fmt24(l['Exp. Start'],l['Date'])}</span>`;
+    }
+
+    const tr=document.createElement('tr');
+    if(isCur) tr.style.background='var(--abg)';
+    tr.innerHTML=`
+      <td class="mono" style="color:var(--txt2)">${l['Leg']}</td>
+      <td style="font-size:13px;font-weight:${isCur?'600':'400'}">${l['Runner 1 (Pacer)']} <span style="color:var(--txt3)">+</span> ${l['Runner 2']}</td>
+      <td>${expStartCell}</td>
+      <td class="mono" style="${actStart?'color:var(--gtxt)':'color:var(--txt3)'}">${actStart?fmt24(actStart,l['Date']):'—'}</td>
+      <td class="mono" style="${actEnd?'color:var(--gtxt)':'color:var(--txt3)'}">${actEnd?fmt24(actEnd,l['Date']):'—'}</td>
+      <td class="mono">${actDur?parseFloat(actDur).toFixed(1)+' min':'—'}</td>
+      <td>${fmtLag(lag,!!actEnd)}</td>
+      <td>${statusPill(status)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ─── UPCOMING LEGS DAY TABS ──────────────────────────────────────────────────
+function buildDayTabs(days){
+  const panel=document.getElementById('day-csel-panel');
+  if(!panel) return;
+  panel.innerHTML='';
+  days.forEach((day,i)=>{
+    const dateStr=day.date?new Date(day.date).toLocaleDateString('en-CA',{month:'short',day:'numeric'}):`Day ${i+1}`;
+    const label=`Day ${i+1} · ${dateStr}`;
+    const item=document.createElement('div');
+    item.className='csel-item'+(i===selectedDay?' selected':'');
+    item.textContent=label;
+    item.onclick=()=>{selectedDay=i;closeCsel('day-csel');setCselVal('day-csel',label);renderUpcoming();};
+    panel.appendChild(item);
+  });
+  const curLabel=panel.querySelectorAll('.csel-item')[selectedDay]?.textContent||'Day 1';
+  setCselVal('day-csel',curLabel);
+}
+
+function renderUpcoming(){
+  const panel=document.getElementById('day-csel-panel');
+  if(panel){
+    panel.querySelectorAll('.csel-item').forEach((el,i)=>el.classList.toggle('selected',i===selectedDay));
+    const lbl=panel.querySelectorAll('.csel-item')[selectedDay]?.textContent;
+    if(lbl) setCselVal('day-csel',lbl);
+  }
+  const day=allDays[selectedDay];
+  if(!day) return;
+  const dateStr=day.date?new Date(day.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):`Day ${selectedDay+1}`;
+  document.getElementById('upcoming-day-label').textContent=dateStr;
+  const utbody=document.getElementById('upcoming');
+  utbody.innerHTML='';
+  const currentIdx=findCurrentIdx(legsData,trackerData);
+  day.legs.forEach(({l,i})=>{
+    const lkm=parseFloat(l['Distance (km)'])||0;
+    const isCur=i===currentIdx;
+    const carUrl=(l['Car Start (Maps URL)']||'').trim();
+    const routeUrl=(l['Route URL']||l['Route Link']||l['Komoot URL']||'').trim();
+    const carCell=carUrl
+      ?`<a href="${carUrl}" class="lbtn" target="_blank" style="font-size:10px;padding:3px 8px">📍 Map</a>`
+      :'<span style="color:var(--txt3);font-size:11px">—</span>';
+    const routeCell=routeUrl
+      ?`<a href="${routeUrl}" class="lbtn" target="_blank" style="font-size:10px;padding:3px 8px">🗺 Route</a>`
+      :'<span style="color:var(--txt3);font-size:11px">—</span>';
+    const tr=document.createElement('tr');
+    if(isCur) tr.style.background='var(--abg)';
+    tr.innerHTML=`
+      <td class="mono" style="color:var(--txt2);font-weight:${isCur?'700':'400'}">${l['Leg']}</td>
+      <td style="font-size:13px;font-weight:${isCur?'600':'400'}">${l['Runner 1 (Pacer)']} <span style="color:var(--txt3)">+</span> ${l['Runner 2']}</td>
+      <td class="mono">${lkm} km</td>
+      <td>${exposureBadge(l['Route Exposure'])}</td>
+      <td class="mono" style="color:var(--txt2)">${fmt24(l['Exp. Start'],l['Date'])}</td>
+      <td>${routeCell}</td>
+      <td>${carCell}</td>`;
+    utbody.appendChild(tr);
+  });
+}
+
+// (RWGPS proxy removed — coordinates are now loaded from the Coordinates sheet tab)
+
+// ─── OVERHEAD ROUTE PATH (Leaflet / OpenStreetMap) ───────────────────────────
+// Renders the GPS track as an interactive Leaflet map with OSM tiles.
+// Destroys and recreates the map instance each time the leg changes.
+function drawRoutePath(container, trackPoints){
+  // Tear down any existing Leaflet instance before reusing the container
+  if(leafletMap){ leafletMap.remove(); leafletMap=null; }
+
+  // Leaflet requires the container to exist in the DOM with a defined size
+  container.innerHTML='<div id="leg-leaflet-map" style="width:100%;height:100%"></div>';
+
+  const latlngs=trackPoints.map(p=>[p.y, p.x]);
+
+  leafletMap=L.map('leg-leaflet-map',{
+    zoomControl:false,
+    scrollWheelZoom:false,
+    attributionControl:false,
+    zoomSnap:0.25
+  });
+
+  // CartoDB Positron (light) / Dark Matter (dark) — minimal, no API key needed
+  const isDark=(()=>{const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t==null&&window.matchMedia('(prefers-color-scheme: dark)').matches);})();
+  const tileStyle=isDark?'dark_all':'light_all';
+  L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tileStyle}/{z}/{x}/{y}{r}.png`,{
+    maxZoom:19,
+    subdomains:'abcd'
+  }).addTo(leafletMap);
+
+  // Route polyline in dashboard green
+  const poly=L.polyline(latlngs,{
+    color:'#1D9E75', weight:3.5, opacity:0.9
+  }).addTo(leafletMap);
+
+  // Start marker (green circle)
+  L.circleMarker(latlngs[0],{
+    radius:7, fillColor:'#1D9E75', color:'#fff', weight:2, fillOpacity:1
+  }).bindTooltip('START',{permanent:false,direction:'top'}).addTo(leafletMap);
+
+  // Finish marker (amber circle)
+  L.circleMarker(latlngs[latlngs.length-1],{
+    radius:7, fillColor:'#EF9F27', color:'#fff', weight:2, fillOpacity:1
+  }).bindTooltip('FINISH',{permanent:false,direction:'top'}).addTo(leafletMap);
+
+  // Fit map to route bounds with padding
+  leafletMap.fitBounds(poly.getBounds(),{padding:[12,12]});
+}
+
+// ─── FULL ROUTE OVERVIEW MAP (POI tab) ─────────────────────────────────────────
+// Draws the entire 59-leg route, color-coded by day, with a marker at the
+// start of every leg and an overall START/FINISH marker for Tokyo/Osaka.
+function drawFullRouteMap(){
+  const container=document.getElementById('poi-route-map');
+  if(!container||!legsData.length||!Object.keys(coordsData).length) return;
+
+  if(poiMap){ poiMap.remove(); poiMap=null; }
+  container.innerHTML='';
+
+  poiMap=L.map('poi-route-map',{
+    zoomControl:true,
+    scrollWheelZoom:false,
+    attributionControl:false,
+    zoomSnap:0.25
+  });
+
+  const isDark=(()=>{const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t==null&&window.matchMedia('(prefers-color-scheme: dark)').matches);})();
+  const tileStyle=isDark?'dark_all':'light_all';
+  L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tileStyle}/{z}/{x}/{y}{r}.png`,{
+    maxZoom:19,
+    subdomains:'abcd'
+  }).addTo(poiMap);
+
+  // Map each leg index to its relay day number (1-based) via allDays grouping
+  const dayByLegIdx={};
+  (allDays.length?allDays:groupByDay(legsData)).forEach((day,di)=>{
+    day.legs.forEach(({i})=>{ dayByLegIdx[i]=di+1; });
+  });
+
+  const allLatLngs=[];
+  let firstPoint=null, lastPoint=null;
+
+  legsData.forEach((l,i)=>{
+    const legNum=parseInt(l['Leg']||'');
+    const track=coordsData[legNum];
+    if(!track||!track.length) return;
+
+    const latlngs=track.map(p=>[p.y,p.x]);
+    allLatLngs.push(...latlngs);
+    if(!firstPoint) firstPoint=latlngs[0];
+    lastPoint=latlngs[latlngs.length-1];
+
+    const day=dayByLegIdx[i]||1;
+    const color=DAY_COLORS[day]||'#1D9E75';
+
+    L.polyline(latlngs,{color, weight:3, opacity:0.85}).addTo(poiMap);
+
+    L.circleMarker(latlngs[0],{
+      radius:4, fillColor:color, color:'#fff', weight:1.5, fillOpacity:1
+    }).bindTooltip(`Leg ${l['Leg']}`,{permanent:false,direction:'top'}).addTo(poiMap);
+  });
+
+  if(firstPoint){
+    L.circleMarker(firstPoint,{
+      radius:8, fillColor:'#1D9E75', color:'#fff', weight:2, fillOpacity:1
+    }).bindTooltip('START — Tokyo',{permanent:false,direction:'top'}).addTo(poiMap);
+  }
+  if(lastPoint){
+    L.circleMarker(lastPoint,{
+      radius:8, fillColor:'#EF9F27', color:'#fff', weight:2, fillOpacity:1
+    }).bindTooltip('FINISH — Osaka',{permanent:false,direction:'top'}).addTo(poiMap);
+  }
+
+  if(allLatLngs.length){
+    poiMap.fitBounds(L.latLngBounds(allLatLngs),{padding:[12,12]});
+  }
+
+  // Legend — one swatch per relay day
+  const legendEl=document.getElementById('poi-map-legend');
+  if(legendEl){
+    const daysUsed=[...new Set(Object.values(dayByLegIdx))].sort((a,b)=>a-b);
+    legendEl.innerHTML=daysUsed.map(d=>
+      `<div class="li"><div class="sw" style="background:${DAY_COLORS[d]||'#1D9E75'}"></div>Day ${d}</div>`
+    ).join('');
+  }
+
+  poiMapDrawn=true;
+}
+
+// ─── ELEVATION PROFILE — from real track data ─────────────────────────────────
+function drawElevationFromTrack(trackPoints, leg, svgId='elev-svg', statsId='elev-stats'){
+  const svg=document.getElementById(svgId);
+  const statsEl=document.getElementById(statsId);
+  if(!svg) return;
+
+  const valid=trackPoints.filter(p=>p.e!=null&&p.d!=null);
+  if(valid.length<2){ drawElevationFallback(leg,svgId,statsId); return; }
+
+  // SVG canvas — match the element's viewBox (wider for full-card-width display)
+  const W=600,H=130,pad=10,lPad=10; // no y-axis labels, full-width chart
+
+  const maxD=valid[valid.length-1].d||1;
+  const elevs=valid.map(p=>p.e);
+  const minE=Math.min(...elevs), maxE=Math.max(...elevs);
+  const eRange=maxE-minE||1;
+  // Add 10% headroom top and bottom so the line doesn't touch the edges
+  const eMin=minE-eRange*0.1, eTot=eRange*1.2;
+
+  const toX=d=>+(lPad+(d/maxD)*(W-lPad-pad)).toFixed(1);
+  const toY=e=>+(H-pad-((e-eMin)/eTot)*(H-pad*2)).toFixed(1);
+
+  const pts=valid.map(p=>[toX(p.d), toY(p.e)]);
+
+  // Smooth the elevation line the same way as the route path
+  function smoothElev(pts){
+    if(pts.length<2) return '';
+    const d=[`M${pts[0][0]},${pts[0][1]}`];
+    for(let i=0;i<pts.length-1;i++){
+      const p0=pts[Math.max(0,i-1)];
+      const p1=pts[i];
+      const p2=pts[i+1];
+      const p3=pts[Math.min(pts.length-1,i+2)];
+      const cp1x=(p1[0]+(p2[0]-p0[0])/6).toFixed(2);
+      const cp1y=(p1[1]+(p2[1]-p0[1])/6).toFixed(2);
+      const cp2x=(p2[0]-(p3[0]-p1[0])/6).toFixed(2);
+      const cp2y=(p2[1]-(p3[1]-p1[1])/6).toFixed(2);
+      d.push(`C${cp1x},${cp1y} ${cp2x},${cp2y} ${p2[0]},${p2[1]}`);
+    }
+    return d.join(' ');
+  }
+
+  const pathD=smoothElev(pts);
+  const baseY=toY(eMin);
+  const areaD=pathD+` L${toX(maxD)},${baseY} L${toX(0)},${baseY} Z`;
+
+  // Y-axis: 3 labels — min, mid, max elevation
+  const midE=Math.round((minE+maxE)/2);
+  const yLabels=[
+    {e:Math.round(maxE), y:toY(maxE)},
+    {e:midE,             y:toY(midE)},
+    {e:Math.round(minE), y:toY(minE)},
+  ];
+  const yLabelSVG=yLabels.map(l=>
+    `<line x1="${pad}" y1="${l.y}" x2="${W-pad}" y2="${l.y}"
+      stroke="var(--bdr)" stroke-width="0.5" stroke-dasharray="2,3"/>`
+  ).join('');
+
+  // Update the SVG viewBox to match our canvas size
+  const gradId=svgId.replace(/[^a-z0-9]/gi,'-')+'-g';
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML=`
+    <defs>
+      <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--green)" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="var(--green)" stop-opacity="0.02"/>
+      </linearGradient>
+    </defs>
+    ${yLabelSVG}
+    <path d="${areaD}" fill="url(#${gradId})" stroke="none"/>
+    <path d="${pathD}" fill="none" stroke="var(--green)" stroke-width="1.5"
+      stroke-linejoin="round" stroke-linecap="round"/>
+    `;
+
+  // Gain / drop stats — prefer sheet columns N/O, fall back to computing from track
+  const sheetGain=parseFloat(leg['Elevation Gain (m)']||'');
+  const sheetDrop=parseFloat(leg['Elevation Drop (m)']||'');
+  let tGain=0, tDrop=0;
+  for(let i=1;i<valid.length;i++){
+    const diff=valid[i].e-valid[i-1].e;
+    if(diff>0) tGain+=diff; else tDrop+=Math.abs(diff);
+  }
+  const gainM=!isNaN(sheetGain)?Math.round(sheetGain):Math.round(tGain);
+  const dropM=!isNaN(sheetDrop)?Math.round(sheetDrop):Math.round(tDrop);
+  if(statsEl) statsEl.innerHTML=
+    `<span style="color:var(--txt3)">Elevation profile</span>`+
+    `<span style="color:var(--gtxt)">▲ ${gainM} m gain</span>`+
+    `<span style="color:var(--btxt)">▼ ${dropM} m drop</span>`;
+}
+
+// ─── ELEVATION PROFILE — seeded fallback (no GPS data) ────────────────────────
+function drawElevationFallback(leg, svgId='elev-svg', statsId='elev-stats'){
+  const svg=document.getElementById(svgId);
+  const statsEl=document.getElementById(statsId);
+  if(!svg) return;
+
+  const legNum=parseInt(leg['Leg']||'1');
+  const exposure=(leg['Route Exposure']||'').toLowerCase();
+  const W=600,H=130,pad=10;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const seed=legNum*7+13;
+  function rng(n){return Math.abs((Math.sin(n*seed*0.9+1.3)*43758.5453)%1);}
+  const isHilly=exposure.includes('exposed');
+  const simPts=[];
+  for(let i=0;i<=11;i++){
+    const t=i/11;
+    const noise=rng(i)*0.4+rng(i*2)*0.2;
+    const base=isHilly?(0.3+Math.sin(t*Math.PI*2)*0.3+noise*0.3):(0.15+noise*0.2+Math.sin(t*Math.PI)*0.15);
+    simPts.push([pad+t*(W-pad*2), H-pad-(base*(H-pad*2))]);
+  }
+  const pathD='M'+simPts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join('L');
+  const areaD=pathD+` L${W-pad},${H-pad} L${pad},${H-pad} Z`;
+
+  const gradId=svgId.replace(/[^a-z0-9]/gi,'-')+'-g';
+  svg.innerHTML=`
+    <defs>
+      <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--green)" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="var(--green)" stop-opacity="0.02"/>
+      </linearGradient>
+    </defs>
+    <path d="${areaD}" fill="url(#${gradId})" stroke="none"/>
+    <path d="${pathD}" fill="none" stroke="var(--green)" stroke-width="1.5"
+      stroke-linejoin="round" stroke-linecap="round"/>
+    `;
+
+  // Sheet gain/drop values (columns N/O)
+  const sheetGain=parseFloat(leg['Elevation Gain (m)']||'');
+  const sheetDrop=parseFloat(leg['Elevation Drop (m)']||'');
+  if(statsEl){
+    if(!isNaN(sheetGain)&&!isNaN(sheetDrop)){
+      statsEl.innerHTML=
+        `<span style="color:var(--txt3)">Elevation profile</span>`+
+        `<span style="color:var(--gtxt)">▲ ${Math.round(sheetGain)} m gain</span>`+
+        `<span style="color:var(--btxt)">▼ ${Math.round(sheetDrop)} m drop</span>`;
+    } else {
+      statsEl.innerHTML=`<span style="color:var(--txt3)">Elevation profile (estimated)</span>`;
+    }
+  }
+}
+
+// ─── MAP + ELEVATION ORCHESTRATOR ────────────────────────────────────────────
+// Looks up the leg's coordinates in coordsData (loaded from the Coordinates
+// sheet tab) and renders both panels in the dashboard's own style.
+// Falls back to the seeded sketch + sheet gain/drop numbers if no coordinates
+// have been entered for this leg yet.
+function renderMap(leg){
+  const mapDiv=document.getElementById('cur-map');
+  const elevWrap=document.querySelector('.elev-wrap');
+  if(!mapDiv) return;
+  if(elevWrap) elevWrap.style.display='';
+
+  const legNum=parseInt(leg['Leg']||'');
+  const pts=coordsData[legNum]||[];
+
+  if(pts.length>=2){
+    drawRoutePath(mapDiv,pts);
+    drawElevationFromTrack(pts,leg);
+  } else {
+    // No coordinates — clear any existing Leaflet instance, show placeholder
+    if(leafletMap){ leafletMap.remove(); leafletMap=null; }
+    mapDiv.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;
+      justify-content:center;gap:6px;height:180px;background:var(--bg2);border-radius:6px;
+      font-family:'Space Mono',monospace;font-size:10px;color:var(--txt3);text-align:center;
+      padding:12px">
+      <span style="font-size:22px">📍</span>
+      No coordinates loaded for Leg ${legNum}<br>
+      <span style="font-size:9px;margin-top:4px">Add rows to the Coordinates sheet tab</span>
+    </div>`;
+    drawElevationFallback(leg);
+  }
+}
+
+// ─── TEAM PERFORMANCE ────────────────────────────────────────────────────────
+function buildTeamPerf(legs,tracker){
+  const timeVal=document.getElementById('team-time-val');
+  const gapVal=document.getElementById('team-gap-val');
+  if(!timeVal) return;
+
+  const fmtMin=m=>{const h=Math.floor(m/60),min=Math.round(m%60);return h>0?`${h}h ${min}m`:`${min}m`;};
+  const fmtPace=p=>{const m=Math.floor(p),s=Math.round((p-m)*60);return `${m}:${s.toString().padStart(2,'0')}`;};
+
+  let actMin=0,actCount=0,totalDistKm=0,totalPaceWeighted=0,paceCount=0;
+  const completed=[];
+
+  legs.forEach(l=>{
+    const t=tracker[parseInt(l['Leg']||'')]||{};
+    if(!trackerActEnd(t)) return;
+    const act=parseFloat(trackerDur(t));
+    const proj=parseFloat(l['Exp. Duration (min)']||'');
+    const distKm=parseFloat(l['Distance (km)']||'');
+    const sheetPace=parseFloat(trackerPace(t));
+    const sheetLag=parseFloat(trackerLag(t));
+
+    if(!isNaN(act)){actMin+=act;actCount++;}
+
+    const actPace=!isNaN(sheetPace)&&sheetPace>0?sheetPace:(!isNaN(act)&&distKm>0?act/distKm:NaN);
+    const projPace=distKm>0&&!isNaN(proj)?proj/distKm:NaN;
+    const lag=!isNaN(sheetLag)?sheetLag:(!isNaN(act)&&!isNaN(proj)?act-proj:NaN);
+
+    if(!isNaN(actPace)&&distKm>0){
+      totalDistKm+=distKm;
+      totalPaceWeighted+=actPace*distKm;paceCount++;
+    }
+    completed.push({legNum:l['Leg'],distKm,proj,act,lag,actPace,projPace});
+  });
+
+  // ── Running time card ──
+  timeVal.innerHTML=actCount===0?'--':fmtMin(actMin);
+
+  // ── Average pace card ──
+  if(paceCount===0||totalDistKm===0){
+    gapVal.textContent='--';
+  } else {
+    const avgPace=totalPaceWeighted/totalDistKm;
+    gapVal.innerHTML=`${fmtPace(avgPace)} <span style="font-size:13px;font-weight:400;color:var(--txt3)">/km</span>`;
+  }
+
+  _teamCompleted=completed; _teamFmtPace=fmtPace;
+  requestAnimationFrame(()=>{
+    drawTeamDeltaChart(completed,fmtPace);
+    drawTeamPaceChart(completed,fmtPace);
+    document.dispatchEvent(new Event('chartsRedrawn'));
+  });
+}
+let _teamCompleted=null,_teamFmtPace=null;
+window.addEventListener('resize',()=>{
+  if(_teamCompleted&&_teamFmtPace){
+    drawTeamDeltaChart(_teamCompleted,_teamFmtPace);
+    drawTeamPaceChart(_teamCompleted,_teamFmtPace);
+    document.dispatchEvent(new Event('chartsRedrawn'));
+  }
+});
+
+function getChartWidth(svg){
+  // Real browsers: use viewport width minus known padding (wrap: 40px, elev-wrap: 20px)
+  if(window.innerWidth>50){
+    const vw=Math.min(window.innerWidth,860);
+    return Math.max(vw-60,200);
+  }
+  // Fallback for iframe/preview: walk up DOM using scrollWidth
+  let el=svg.parentElement;
+  while(el&&el!==document.body){
+    const sw=el.scrollWidth;
+    if(sw>50){
+      const cs=getComputedStyle(el);
+      const px=parseFloat(cs.paddingLeft||0)+parseFloat(cs.paddingRight||0);
+      return Math.max(sw-px,200);
+    }
+    el=el.parentElement;
+  }
+  return 600;
+}
+function drawTeamDeltaChart(completed,fmtPace){
+  const svg=document.getElementById('team-delta-svg');
+  const statsEl=document.getElementById('team-delta-stats');
+  if(!svg) return;
+  const valid=completed.filter(d=>!isNaN(d.lag));
+  if(valid.length<2){
+    svg.innerHTML=`<text x="300" y="110" text-anchor="middle" font-family="Space Mono,monospace" font-size="16" fill="var(--txt3)">Need 2+ completed legs</text>`;
+    if(statsEl) statsEl.innerHTML='';
+    return;
+  }
+
+  const W=getChartWidth(svg);
+  const H=200,pad=10,lPad=46,bPad=22;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  let cum=0;
+  const pts=valid.map((d,i)=>{cum+=d.lag;return{i,display:-cum,legNum:d.legNum,lag:d.lag};});
+  const vals=pts.map(p=>p.display);
+  const minV=Math.min(0,...vals),maxV=Math.max(0,...vals);
+  const span=Math.max(maxV-minV,5)*1.3;
+  const mid=(minV+maxV)/2;
+  const eMin=mid-span/2,eMax=mid+span/2;
+
+  const n=pts.length;
+  const toX=i=>lPad+(i/(n-1||1))*(W-lPad-pad);
+  const toY=v=>pad+((eMax-v)/(eMax-eMin))*(H-pad-bPad);
+  const zeroY=toY(0);
+
+  const coords=pts.map((p,i)=>[toX(i),toY(p.display)]);
+  const lineD='M'+coords.map(c=>c[0].toFixed(1)+','+c[1].toFixed(1)).join('L');
+  const last=coords[coords.length-1],first=coords[0];
+  const areaD=`${lineD} L${last[0].toFixed(1)},${zeroY.toFixed(1)} L${first[0].toFixed(1)},${zeroY.toFixed(1)} Z`;
+
+  const zY=Math.max(pad,Math.min(H-bPad,zeroY));
+  const aboveH=Math.max(0,zY-pad),belowH=Math.max(0,H-bPad-zY);
+  const id=svg.id;
+
+  // Y-axis gridlines + labels
+  const step=span<20?5:span<50?10:20;
+  const yLines=[];
+  for(let v=Math.ceil(eMin/step)*step;v<=eMax+0.01;v+=step){
+    const y=toY(v);
+    if(y<pad-2||y>H-bPad+2) continue;
+    const isZero=Math.abs(v)<0.1;
+    const label=v>0.5?`+${Math.round(v)}`:v<-0.5?`${Math.round(v)}`:'0';
+    yLines.push(`
+      <line x1="${lPad}" y1="${y.toFixed(1)}" x2="${W-pad}" y2="${y.toFixed(1)}" stroke="${isZero?'var(--txt3)':'var(--bdr)'}" stroke-width="${isZero?'1':'0.5'}" ${isZero?'':'stroke-dasharray="3,4"'}/>
+      <text x="${lPad-5}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">${label}</text>`);
+  }
+
+  // Y-axis unit label (rotated)
+  const midChartY=(pad+(H-pad-bPad)/2).toFixed(1);
+  const yUnit=`<text x="${(lPad-28).toFixed(1)}" y="${midChartY}" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="var(--txt3)" transform="rotate(-90,${(lPad-28).toFixed(1)},${midChartY})">min</text>`;
+
+  // X-axis leg labels
+  const xIdxs=[0,...(n>4?[Math.floor((n-1)/2)]:[]),n-1].filter((v,i,a)=>a.indexOf(v)===i);
+  const xLabels=xIdxs.map(i=>`<text x="${toX(i).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">Leg ${pts[i].legNum}</text>`);
+
+  const showDots=n<=30;
+  const finalDisplay=pts[pts.length-1].display;
+  const lineCol=finalDisplay>0.5?'var(--gtxt)':finalDisplay<-0.5?'var(--rtxt)':'var(--txt2)';
+  svg.innerHTML=`
+    <defs>
+      <clipPath id="${id}-a"><rect x="${lPad}" y="${pad}" width="${W-lPad-pad}" height="${aboveH}"/></clipPath>
+      <clipPath id="${id}-b"><rect x="${lPad}" y="${zY.toFixed(1)}" width="${W-lPad-pad}" height="${belowH}"/></clipPath>
+    </defs>
+    ${yUnit}
+    ${yLines.join('')}
+    ${xLabels.join('')}
+    <path d="${areaD}" fill="var(--gbg)" stroke="none" clip-path="url(#${id}-a)" opacity="0.85"/>
+    <path d="${areaD}" fill="var(--rbg)" stroke="none" clip-path="url(#${id}-b)" opacity="0.85"/>
+    <path d="${lineD}" fill="none" stroke="${lineCol}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${showDots?coords.map((c,i)=>{
+      const p=pts[i];
+      const col=p.display>0?'var(--gtxt)':'var(--rtxt)';
+      const legLag=p.lag;
+      const absLag=Math.abs(Math.round(legLag));
+      const legDir=legLag<-0.5?`${absLag} min under`:legLag>0.5?`${absLag} min over`:'On pace';
+      return `<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="4" fill="${col}" stroke="var(--bg2)" stroke-width="1.5" data-tip="Leg ${p.legNum}: ${legDir}" style="cursor:pointer"/>`;
+    }).join(''):''}`;
+
+  if(statsEl){
+    const absMin=Math.abs(Math.round(finalDisplay));
+    const dir=finalDisplay>0.5?`<span style="color:var(--gtxt)">▲ ${absMin} min ahead</span>`:finalDisplay<-0.5?`<span style="color:var(--rtxt)">▼ ${absMin} min behind</span>`:`<span style="color:var(--txt3)">On schedule</span>`;
+    statsEl.innerHTML=`<span style="color:var(--txt3)">Cumulative vs plan</span>${dir}<span style="color:var(--txt3)">${valid.length} legs</span>`;
+  }
+}
+
+function drawTeamPaceChart(completed,fmtPace){
+  const svg=document.getElementById('team-pace-svg');
+  const statsEl=document.getElementById('team-pace-stats');
+  if(!svg) return;
+  const valid=completed.filter(d=>!isNaN(d.actPace)&&d.actPace>0);
+  if(valid.length<1){
+    svg.innerHTML=`<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="Space Mono,monospace" font-size="11" fill="var(--txt3)">No pace data yet</text>`;
+    if(statsEl) statsEl.innerHTML='';
+    return;
+  }
+
+  const W=getChartWidth(svg);
+  const H=200,pad=10,lPad=52,bPad=22;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+
+  const paces=valid.map(d=>d.actPace);
+  const allVals=[...paces,...valid.filter(d=>!isNaN(d.projPace)).map(d=>d.projPace)];
+  const minP=Math.max(0,Math.min(...allVals)-0.3);
+  const maxP=Math.max(...allVals)+0.3;
+  const range=maxP-minP||1;
+
+  const n=valid.length;
+  const zoneW=(W-lPad-pad)/n;
+  const barW=Math.max(3,zoneW*0.6);
+  const toX=i=>lPad+i*zoneW+zoneW/2;
+  const toY=v=>pad+((maxP-v)/range)*(H-pad-bPad);
+  const baseY=H-bPad;
+
+  // Y-axis gridlines + labels
+  const step=range<1?0.5:range<3?1:2;
+  const yLines=[];
+  for(let v=Math.ceil(minP/step)*step;v<=maxP+0.01;v+=step){
+    const y=toY(v);
+    if(y<pad-2||y>H-bPad+2) continue;
+    yLines.push(`
+      <line x1="${lPad}" y1="${y.toFixed(1)}" x2="${W-pad}" y2="${y.toFixed(1)}" stroke="var(--bdr)" stroke-width="0.5" stroke-dasharray="3,4"/>
+      <text x="${lPad-5}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">${fmtPace(v)}</text>`);
+  }
+
+  // Y-axis unit label (rotated)
+  const midChartY=(pad+(H-pad-bPad)/2).toFixed(1);
+  const yUnit=`<text x="${(lPad-32).toFixed(1)}" y="${midChartY}" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="var(--txt3)" transform="rotate(-90,${(lPad-32).toFixed(1)},${midChartY})">min/km</text>`;
+
+  // X-axis leg labels
+  const xIdxs=[0,...(n>4?[Math.floor((n-1)/2)]:[]),n-1].filter((v,i,a)=>a.indexOf(v)===i);
+  const xLabels=xIdxs.map(i=>`<text x="${toX(i).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">Leg ${valid[i].legNum}</text>`);
+
+  // Bars + per-leg target tick
+  const bars=valid.map((d,i)=>{
+    const x=toX(i);
+    const y=toY(d.actPace);
+    const bH=Math.max(2,baseY-y);
+    const tip=`Leg ${d.legNum}: ${fmtPace(d.actPace)}/km`;
+    const bar=`<rect x="${(x-barW/2).toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${bH.toFixed(1)}" fill="var(--bbg)" stroke="var(--btxt)" stroke-width="0.75" rx="2" data-tip="${tip}" style="cursor:pointer"/>`;
+    const tick=!isNaN(d.projPace)
+      ?`<line x1="${(x-barW/2-2).toFixed(1)}" y1="${toY(d.projPace).toFixed(1)}" x2="${(x+barW/2+2).toFixed(1)}" y2="${toY(d.projPace).toFixed(1)}" stroke="var(--txt2)" stroke-width="2" stroke-linecap="round"/>`
+      :'';
+    return bar+tick;
+  }).join('');
+
+  svg.innerHTML=`
+    ${yUnit}
+    ${yLines.join('')}
+    ${xLabels.join('')}
+    ${bars}`;
+
+  if(statsEl){
+    const avgPace=valid.reduce((s,d)=>s+d.actPace*d.distKm,0)/valid.reduce((s,d)=>s+d.distKm,0);
+    const minPace=Math.min(...paces),maxPace=Math.max(...paces);
+    const hasTarget=valid.some(d=>!isNaN(d.projPace));
+    statsEl.innerHTML=`<span style="color:var(--txt3)">avg ${fmtPace(avgPace)}/km</span><span style="color:var(--txt3)">fastest ${fmtPace(minPace)}/km</span><span style="color:var(--txt3)">slowest ${fmtPace(maxPace)}/km</span>${hasTarget?'<span style="color:var(--txt2)">— target pace per leg</span>':''}`;
+  }
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function render(legs,tracker){
+  const currentIdx=findCurrentIdx(legs,tracker);
+  const cur=legs[currentIdx];
+  const total=legs.length;
+
+  // Stat cards
+  const pct=Math.round((currentIdx/total)*100);
+  // Distance covered = sum of completed legs' distances; total = sum of all legs' distances
+  const totalKm=legs.reduce((s,l)=>s+(parseFloat(l['Distance (km)'])||0),0);
+  const distCovered=legs.reduce((s,l)=>{
+    const t=tracker[parseInt(l['Leg']||'')]||{};
+    return trackerActEnd(t)?s+(parseFloat(l['Distance (km)'])||0):s;
+  },0);
+
+  document.getElementById('pct-val').innerHTML=`${distCovered.toFixed(1)} <span style="font-size:13px;font-weight:400;color:var(--txt3)">/ ${totalKm.toFixed(1)} km &nbsp;·&nbsp; ${pct}%</span>`;
+  document.getElementById('pct-sub').textContent=`${currentIdx} of ${total} legs done`;
+  document.getElementById('leg-label').textContent=`Leg ${currentIdx+1} of ${total}`;
+  document.getElementById('prog-fill').style.width=pct+'%';
+
+  const {total:lagTotal,count:lagCount}=calcTotalLag(legs,tracker);
+  currentLagTotal=lagCount>0?lagTotal:0;   // keep module-level in sync
+  if(lagCount>0){
+    setLagDisplay(lagTotal);
+  } else {
+    const n=document.getElementById('lag-num');const s=document.getElementById('lag-sub');
+    if(n){n.className='lag-num even';n.textContent='--';}
+    if(s) s.textContent='NO DATA YET';
+  }
+
+  // Team performance
+  buildTeamPerf(legs,tracker);
+
+  // Runner leaderboard + new cards
+  buildLeaderboard(legs,tracker);
+  buildNextRunnerCard(legs,currentIdx,tracker);
+  buildRestTracker(legs,currentIdx,tracker);
+
+  // Weather — fetch using first point of current leg
+  const curLegNum=parseInt(cur['Leg']||'');
+  const curTrack=coordsData[curLegNum];
+  if(curTrack&&curTrack.length){
+    fetchWeather(curTrack[0].y,curTrack[0].x,cur['Leg']);
+  }
+
+  // Day grid
+  buildDayGrid(legs,currentIdx);
+
+  // Build allDays and default tracker/upcoming to current day
+  allDays=groupByDay(legs);
+  allDays.forEach((day,di)=>{
+    if(day.legs.some(({i})=>i===currentIdx)){
+      selectedDay=di;
+      selectedTracker=di;
+    }
+  });
+
+  // Live tracker tabs
+  buildTrackerTabs(allDays);
+  renderTracker();
+
+  // Upcoming tabs
+  buildDayTabs(allDays);
+  renderUpcoming();
+
+  // ── Current leg card ──
+  const legNum=parseInt(cur['Leg']||'');
+  const km=parseFloat(cur['Distance (km)'])||0;
+  const dur=parseFloat(cur['Exp. Duration (min)'])||0;
+  const curT=tracker[legNum]||{};
+  const actStart=trackerActStart(curT);
+  const actEnd=trackerActEnd(curT);
+  const isRunning=!!(actStart&&!actEnd);
+  const isCompleted=!!(actEnd);
+
+  document.getElementById('cur-num').textContent=`LEG ${cur['Leg']} OF ${total} · ${cur['Date']||''}`;
+
+  // Revised estimated finish (exp. start + lag + duration) — used in the DAY stat card for upcoming legs
+  const expSDate=parseDateTime(cur['Date']||'',cur['Exp. Start']||'');
+  let revFinStr=null;
+  if(expSDate){
+    const revFin=new Date(expSDate.getTime()+(dur+currentLagTotal)*60000);
+    revFinStr=revFin.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+
+  // Runner cards — card-style, same size as stat cards, placed in the stats grid
+  function runnerCard(name,role){
+    if(!name) return '';
+    if(!runnerColors[name]) runnerColors[name]=AV[Object.keys(runnerColors).length%AV.length];
+    const avClass=runnerColors[name];
+    const initials=name.slice(0,2).toUpperCase();
+    const photoUrl=contactPhotos[name];
+    const avHTML=photoUrl
+      ?`<div class="av" style="background:var(--bg2);width:34px;height:34px;font-size:13px;flex-shrink:0">
+          <img src="${photoUrl}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
+            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:34px;height:34px;font-size:13px;flex-shrink:0'"/>
+        </div>`
+      :`<div class="av ${avClass}" style="width:34px;height:34px;font-size:13px;flex-shrink:0">${initials}</div>`;
+    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">${role.toUpperCase()}</div>
+      <div style="display:flex;align-items:center;gap:8px;overflow:hidden">
+        ${avHTML}<span style="font-size:14px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+      </div>
+    </div>`;
+  }
+
+  const routeUrl=(cur['Route URL']||cur['Route Link']||cur['Komoot URL']||'').trim();
+
+  // Leg stats mini-grid (fills dead space in the left panel)
+  function statMini(label,value,sub){
+    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
+      <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">${value}</div>
+      ${sub?`<div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px">${sub}</div>`:''}
+    </div>`;
+  }
+  // Card that doubles as a clickable link to the route map
+  function statLinkCard(label,url){
+    if(url){
+      return `<a href="${url}" target="_blank" rel="noopener" style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;display:block;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
+        <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--btxt)">🗺 Open route ↗</div>
+      </a>`;
+    }
+    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;opacity:.5">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
+      <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt3)">—</div>
+    </div>`;
+  }
+  const expDurFmt=(()=>{if(!dur)return '—';const m=Math.floor(dur);const s=Math.round((dur-m)*60);return s>0?`${m}m ${s}s`:`${m} min`;})();
+
+  // Revised est. finish for upcoming/running legs, plain date for completed legs
+  const revFinCard=(!isCompleted&&revFinStr)
+    ? statMini('ESTIMATED FINISH',revFinStr,cur['Date']||'')
+    : statMini('DAY',cur['Date']||'—');
+  const routeMapCard=statLinkCard('ROUTE MAP',routeUrl);
+
+  const legStatsEl=document.getElementById('cur-leg-stats');
+  if(legStatsEl) legStatsEl.innerHTML=
+    runnerCard(cur['Runner 1 (Pacer)'],'Pacer')+
+    runnerCard(cur['Runner 2'],'Runner')+
+    statMini('DISTANCE',`${km} km`)+
+    statMini('ESTIMATED DURATION',expDurFmt)+
+    revFinCard+
+    routeMapCard;
+
+  // renderMap handles both the overhead path and elevation profile.
+  // It fetches RWGPS data async and renders in dashboard style; falls back
+  // gracefully if CORS blocks the request.
+  renderMap(cur);
+
+  // Countdown — hidden for upcoming legs (sub line already shows expected start + est. duration)
+  const cdownBlock=document.getElementById('cdown-block');
+  if(isCompleted){
+    cdownBlock.style.display='block';
+    if(cdInterval) clearInterval(cdInterval);
+    document.getElementById('cdown').textContent='Done';
+    document.getElementById('cdown-lbl').textContent='COMPLETED';
+  } else if(isRunning){
+    cdownBlock.style.display='block';
+    const startDate=parseTimeToday(actStart);
+    if(startDate){
+      const remSecs=Math.round((startDate.getTime()+(dur*60000)-Date.now())/1000);
+      document.getElementById('cdown-lbl').textContent='REMAINING';
+      startCountdown(Math.max(0,remSecs));
+    } else {
+      startCountdown(Math.round(dur*60));
+    }
+  } else {
+    // Upcoming — hide the countdown block entirely; all info is in the sub line
+    cdownBlock.style.display='none';
+    if(cdInterval) clearInterval(cdInterval);
+  }
+
+  // Runner leaderboard
+  const stats={},paceSum={},paceCount={},coveredKm={};
+  legs.forEach(l=>{
+    const km=parseFloat(l['Distance (km)'])||0;
+    const lNum=parseInt(l['Leg']||'');
+    const t=tracker[lNum]||{};
+    const done=!!trackerActEnd(t);
+    [l['Runner 1 (Pacer)'],l['Runner 2']].forEach(name=>{
+      if(!name) return;
+      if(!stats[name]) stats[name]={legs:0,km:0};
+      stats[name].legs++; stats[name].km=+(stats[name].km+km).toFixed(1);
+      if(!coveredKm[name]) coveredKm[name]=0;
+      if(done) coveredKm[name]=+(coveredKm[name]+km).toFixed(1);
+    });
+    const ap=parseFloat(trackerPace(t));
+    if(!isNaN(ap)&&ap>0){
+      [l['Runner 1 (Pacer)'],l['Runner 2']].forEach(name=>{
+        if(!name) return;
+        if(!paceSum[name]) paceSum[name]=0;
+        if(!paceCount[name]) paceCount[name]=0;
+        paceSum[name]+=ap; paceCount[name]++;
+      });
+    }
+  });
+  const sorted=Object.entries(stats).sort((a,b)=>a[0].localeCompare(b[0]));
+  const rtbody=document.getElementById('runner-tbl'); rtbody.innerHTML='';
+  sorted.forEach(([name,s],i)=>{
+    const col=AV[i%AV.length]; runnerColors[name]=col;
+    const covered=coveredKm[name]||0;
+    const barPct=s.km>0?Math.round((covered/s.km)*100):0;
+    const avgPaceMin=paceCount[name]?paceSum[name]/paceCount[name]:null;
+    const avgPace=avgPaceMin!=null?(()=>{const m=Math.floor(avgPaceMin);const s=Math.round((avgPaceMin-m)*60);return `${m}:${String(s).padStart(2,'0')} /km`;})():'—';
+    const initials=name.slice(0,2).toUpperCase();
+    const photoUrl=contactPhotos[name];
+    const avatarHTML=photoUrl
+      ?`<div class="av av-md" style="background:var(--bg2)">
+          <img src="${photoUrl}" alt="${initials}" width="36" height="36"
+            style="object-fit:cover;border-radius:50%;display:block"
+            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av av-md ${col}'"/>
+        </div>`
+      :`<div class="av av-md ${col}">${initials}</div>`;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+        ${avatarHTML}
+        <span style="font-size:13px;font-weight:500">${name}</span>
+      </div></td>
+      <td class="mono">${s.legs}</td>
+      <td class="mono">${s.km} km</td>
+      <td class="mono" style="color:var(--txt2)">${avgPace}</td>
+      <td><div class="mbar-wrap">
+        <div class="mbar"><div class="mbar-fill" style="width:${barPct}%"></div></div>
+        <span class="mono" style="color:var(--txt3);font-size:11px;white-space:nowrap">${covered} / ${s.km} km</span>
+      </div></td>`;
+    rtbody.appendChild(tr);
+  });
+
+  document.getElementById('last-refresh').textContent='Last refreshed: '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+}
+
+// ─── LOAD DATA ───────────────────────────────────────────────────────────────
+async function loadData(){
+  setBanner('info','Fetching live data from Google Sheets…');
+  try{
+    const rpRes=await fetch(csvURL(RP_TAB));
+    if(!rpRes.ok) throw new Error(`Route Plan fetch failed (HTTP ${rpRes.status})`);
+    const rpRows=parseCSV(await rpRes.text());
+    let hdrIdx=0;
+    for(let i=0;i<Math.min(rpRows.length,5);i++){
+      if(rpRows[i].map(c=>c.replace(/^"|"$/g,'').trim().toLowerCase()).includes('leg')){hdrIdx=i;break;}
+    }
+    const rpHdr=rpRows[hdrIdx].map(c=>c.replace(/^"|"$/g,'').trim());
+    const legs=rpRows.slice(hdrIdx+1).filter(r=>r.some(c=>c.replace(/^"|"$/g,'').trim())).map(r=>{
+      const o={};rpHdr.forEach((h,i)=>{o[h]=(r[i]||'').replace(/^"|"$/g,'').trim();});return o;
+    }).filter(r=>r['Leg']&&!isNaN(parseInt(r['Leg'])));
+    if(legs.length===0) throw new Error('No leg data found in Route Plan tab.');
+    legsData=legs;
+
+    let tracker={};
+    try{
+      const ltRes=await fetch(csvURL(LT_TAB));
+      if(ltRes.ok){
+        const ltRows=parseCSV(await ltRes.text());
+        let ltHdrIdx=0;
+        for(let i=0;i<Math.min(ltRows.length,5);i++){
+          if(ltRows[i].map(c=>c.replace(/^"|"$/g,'').trim().toLowerCase()).includes('leg')){ltHdrIdx=i;break;}
+        }
+        const ltHdr=ltRows[ltHdrIdx].map(c=>c.replace(/^"|"$/g,'').trim());
+        console.log('Live Tracker headers:',ltHdr);
+        ltRows.slice(ltHdrIdx+1).filter(r=>r.some(c=>c.replace(/^"|"$/g,'').trim())).forEach(r=>{
+          const obj={};ltHdr.forEach((h,i)=>{obj[h]=(r[i]||'').replace(/^"|"$/g,'').trim();});
+          const legNum=parseInt(obj['Leg']||obj['leg']||obj['Leg #']||'');
+          if(!isNaN(legNum)&&legNum>0) tracker[legNum]=obj;
+        });
+        console.log(`Live Tracker: ${Object.keys(tracker).length} legs loaded.`);
+      }
+    } catch(e){console.warn('Live Tracker unavailable',e);}
+    trackerData=tracker;
+
+    // Coordinates tab — Leg | Lat | Lng | Elevation (m)
+    let coords={};
+    try{
+      const cRes=await fetch(csvURL(COORDS_TAB));
+      if(cRes.ok){
+        const cRows=parseCSV(await cRes.text());
+        let cHdrIdx=0;
+        for(let i=0;i<Math.min(cRows.length,5);i++){
+          if(cRows[i].map(c=>c.replace(/^"|"$/g,'').trim().toLowerCase()).includes('leg')){cHdrIdx=i;break;}
+        }
+        const cHdr=cRows[cHdrIdx].map(c=>c.replace(/^"|"$/g,'').trim());
+        cRows.slice(cHdrIdx+1).filter(r=>r.some(c=>c.trim())).forEach(r=>{
+          const o={};cHdr.forEach((h,i)=>{o[h]=(r[i]||'').replace(/^"|"$/g,'').trim();});
+          const legNum=parseInt(o['Leg']||'');
+          if(isNaN(legNum)||legNum<1) return;
+          const lat=parseFloat(o['Lat']||o['Latitude']||'');
+          const lng=parseFloat(o['Lng']||o['Lon']||o['Longitude']||'');
+          const elev=parseFloat(o['Elevation (m)']||o['Elevation']||o['Elev']||'');
+          if(isNaN(lat)||isNaN(lng)) return;
+          if(!coords[legNum]) coords[legNum]=[];
+          coords[legNum].push({lat,lng,elev:isNaN(elev)?null:elev});
+        });
+        // Convert to {x,y,e,d} format with cumulative distance in metres
+        Object.keys(coords).forEach(k=>{
+          const raw=coords[k];
+          let cum=0;
+          coords[k]=raw.map((p,i)=>{
+            if(i>0) cum+=haversine(raw[i-1].lat,raw[i-1].lng,p.lat,p.lng);
+            return {x:p.lng, y:p.lat, e:p.elev, d:cum};
+          });
+        });
+        console.log(`Coordinates: ${Object.keys(coords).length} legs loaded.`);
+      }
+    } catch(e){console.warn('Coordinates tab unavailable',e);}
+    coordsData=coords;
+
+    // Contact Information tab — used to pull runner profile photos for the current-leg chips
+    let photos={};
+    try{
+      const ciRes=await fetch(csvURL(CI_TAB));
+      if(ciRes.ok){
+        const ciRows=parseCSV(await ciRes.text());
+        if(ciRows.length>=2){
+          const ciHdr=ciRows[0].map(c=>c.replace(/^"|"$/g,'').trim());
+          const photoIdx=ciHdr.findIndex(h=>/photo|image|picture/i.test(h));
+          const nameIdx =ciHdr.findIndex(h=>/^name$|^runner$|^contact/i.test(h));
+          if(photoIdx>=0&&nameIdx>=0){
+            ciRows.slice(1).forEach(r=>{
+              const cells=r.map(c=>c.replace(/^"|"$/g,'').trim());
+              const name=cells[nameIdx];
+              const url=cells[photoIdx];
+              if(name&&url) photos[name]=driveThumb(url);
+            });
+          }
+        }
+        console.log(`Contact photos: ${Object.keys(photos).length} loaded.`);
+      }
+    } catch(e){console.warn('Contact Information tab unavailable',e);}
+    contactPhotos=photos;
+
+    render(legs,tracker);
+    const coordLegs=Object.keys(coordsData).length;
+    setBanner('ok',`Loaded — ${legs.length} legs · ${Object.keys(tracker).length} tracked · ${coordLegs} legs with coordinates${coordLegs<legs.length?' ('+( legs.length-coordLegs)+' pending)':''}`);
+  } catch(err){
+    setBanner('err',`Could not load: ${err.message}`);
+    console.error(err);
+  }
+}
+
+
+// ─── COUNTDOWN TIMER ─────────────────────────────────────────────────────────
+const RACE_START = new Date('2026-11-01T06:00:00+09:00');
+const RACE_END   = new Date('2026-11-06T18:00:00+09:00');
+function updateCountdown(){
+  const now=new Date();
+  const label=document.getElementById('countdown-label');
+  const timer=document.getElementById('countdown-timer');
+  if(!timer) return;
+  let diff,labelText;
+  if(now<RACE_START){
+    diff=RACE_START-now; labelText='RACE BEGINS IN';
+  } else if(now<RACE_END){
+    diff=RACE_END-now; labelText='RACE ENDS IN';
+  } else {
+    label.textContent='RACE COMPLETE';
+    timer.innerHTML='🎉 Tokyo → Osaka';
+    return;
+  }
+  label.textContent=labelText;
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  const parts=[];
+  if(d>0) parts.push(`${d}<span class="cd-unit">d</span>`);
+  parts.push(`${String(h).padStart(2,'0')}<span class="cd-unit">h</span>`);
+  parts.push(`${String(m).padStart(2,'0')}<span class="cd-unit">m</span>`);
+  parts.push(`${String(s).padStart(2,'0')}<span class="cd-unit">s</span>`);
+  timer.innerHTML=parts.join(' ');
+}
+function updateDayPill(){
+  const pill=document.getElementById('day-pill');
+  if(!pill) return;
+  const now=new Date();
+  if(now<RACE_START){pill.textContent='STARTS NOV 1';return;}
+  if(now>=RACE_END){pill.textContent='RACE COMPLETE';return;}
+  const dayNum=Math.min(Math.floor((now-RACE_START)/86400000)+1,6);
+  pill.textContent=`DAY ${dayNum} OF 6`;
+}
+updateCountdown();
+updateDayPill();
+setInterval(updateCountdown,1000);
+setInterval(updateDayPill,60000);
+
+// ─── WEATHER STRIP ───────────────────────────────────────────────────────────
+const WMO_EMOJI={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌧️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'❄️',75:'❄️',77:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',85:'🌨️',86:'❄️',95:'⛈️',96:'⛈️',99:'⛈️'};
+const WMO_DESC={0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Fog',48:'Icy fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',80:'Light showers',81:'Showers',82:'Heavy showers',85:'Snow showers',86:'Heavy snow showers',95:'Thunderstorm',96:'Thunderstorm + hail',99:'Thunderstorm + hail'};
+async function fetchWeather(lat,lng,legName){
+  try{
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m&timezone=Asia%2FTokyo&wind_speed_unit=kmh`;
+    const res=await fetch(url);
+    if(!res.ok) return;
+    const d=await res.json();
+    const c=d.current||{};
+    const code=c.weather_code??0;
+    const el=id=>document.getElementById(id);
+    if(el('weather-emoji')) el('weather-emoji').textContent=WMO_EMOJI[code]??'🌡️';
+    if(el('weather-desc'))  el('weather-desc').textContent=WMO_DESC[code]??'';
+    if(el('weather-temp'))  el('weather-temp').textContent=`${Math.round(c.temperature_2m??0)}°C`;
+    if(el('weather-wind'))  el('weather-wind').textContent=`${Math.round(c.wind_speed_10m??0)} km/h`;
+    if(el('weather-humidity')) el('weather-humidity').textContent=`${c.relative_humidity_2m??'—'}%`;
+  } catch(e){ console.warn('Weather fetch failed',e); }
+}
+
+// ─── NEXT RUNNER CARD ────────────────────────────────────────────────────────
+function buildNextRunnerCard(legs,currentIdx,tracker){
+  const card=document.getElementById('next-runner-card');
+  if(!card) return;
+
+  // Find next leg that hasn't finished
+  let nextIdx=-1;
+  for(let i=currentIdx+1;i<legs.length;i++){
+    const t=tracker[parseInt(legs[i]['Leg']||'')]||{};
+    if(!trackerActEnd(t)){nextIdx=i;break;}
+  }
+  if(nextIdx===-1){
+    card.innerHTML=`<div style="color:var(--txt3);font-size:12px;text-align:center;padding:8px">All legs complete 🎉</div>`;
+    return;
+  }
+
+  const next=legs[nextIdx];
+  const legNum=parseInt(next['Leg']||'');
+  const r1=next['Runner 1 (Pacer)']||'';
+  const r2=next['Runner 2']||'';
+  const dist=parseFloat(next['Distance (km)'])||0;
+  const dur=parseFloat(next['Exp. Duration (min)'])||0;
+  const date=next['Date']||'';
+  const t=tracker[legNum]||{};
+  const actStart=trackerActStart(t);
+  const expStart=next['Exp. Start']||'';
+  const startDisplay=actStart||expStart||'—';
+  const startLabel=actStart?'ACT. START':'EXP. START';
+  const routeUrl=(next['Route URL']||next['Route Link']||next['Komoot URL']||'').trim();
+  const carUrl=(next['Car Start (Maps URL)']||'').trim();
+
+  // Runner card — card-style matching stat cards
+  function runnerChip(name, role){
+    if(!name) return '';
+    if(!runnerColors[name]) runnerColors[name]=AV[Object.keys(runnerColors).length%AV.length];
+    const avClass=runnerColors[name];
+    const initials=name.slice(0,2).toUpperCase();
+    const photo=contactPhotos[name];
+    const avHTML=photo
+      ?`<div class="av" style="background:var(--bg2);width:34px;height:34px;font-size:13px;flex-shrink:0">
+          <img src="${photo}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
+            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:34px;height:34px;font-size:13px;flex-shrink:0'"/>
+        </div>`
+      :`<div class="av ${avClass}" style="width:34px;height:34px;font-size:13px;flex-shrink:0">${initials}</div>`;
+    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">${role.toUpperCase()}</div>
+      <div style="display:flex;align-items:center;gap:8px;overflow:hidden">
+        ${avHTML}<span style="font-size:14px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+      </div>
+    </div>`;
+  }
+
+  // Stat mini — same helper as current leg
+  function statMini(label,value,sub){
+    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
+      <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">${value}</div>
+      ${sub?`<div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px">${sub}</div>`:''}
+    </div>`;
+  }
+  function statLinkCard(label,url,linkText='🗺 Open route ↗',color='var(--btxt)'){
+    if(url) return `<a href="${url}" target="_blank" rel="noopener" style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;display:block;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
+      <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:${color}">${linkText}</div>
+    </a>`;
+    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
+      <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--txt3)">—</div>
+    </div>`;
+  }
+
+  const durStr=dur?`${Math.floor(dur)}m ${Math.round((dur%1)*60)}s`:'—';
+
+  card.innerHTML=`
+    <div class="cur-layout">
+      <div class="cur-left">
+        <div class="cur-num">LEG ${next['Leg']} OF ${legs.length} · ${date}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+          ${runnerChip(r1,'Pacer')}
+          ${runnerChip(r2,'Runner')}
+          ${statMini('DISTANCE',`${dist} km`)}
+          ${statMini('ESTIMATED DURATION',durStr)}
+          ${statMini(startLabel,startDisplay)}
+          <div style="background:var(--gbg);border-radius:var(--r);padding:10px 12px;border:0.5px solid rgba(72,146,155,.15)">
+            <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--gtxt);opacity:.75;margin-bottom:6px">WEATHER</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span id="weather-emoji" style="font-size:20px;line-height:1">—</span>
+              <span id="weather-temp" style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--gtxt)">—</span>
+            </div>
+            <span id="weather-desc" style="font-family:'Space Mono',monospace;font-size:9px;color:var(--gtxt);opacity:.7;margin-top:2px;display:block"></span>
+          </div>
+          ${statLinkCard('ROUTE MAP',routeUrl)}
+          ${statLinkCard('CAR START',carUrl,'📍 Open maps ↗','var(--atxt)')}
+        </div>
+      </div>
+      <div class="cur-right">
+        <div class="cur-map-wrap" id="next-cur-map">
+          <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
+        </div>
+      </div>
+    </div>
+    <div class="elev-wrap" style="margin-top:14px">
+      <svg id="next-elev-svg" viewBox="0 0 600 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="300" y="49" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="var(--txt3)">elevation loading…</text>
+      </svg>
+      <div class="elev-stats" id="next-elev-stats"></div>
+    </div>`;
+
+  // Draw next leg map
+  const track=coordsData[legNum];
+  if(track&&track.length){
+    const container=document.getElementById('next-cur-map');
+    if(container){
+      if(nextLegMap){nextLegMap.remove();nextLegMap=null;}
+      container.innerHTML='<div id="next-leg-leaflet-map" style="width:100%;height:100%"></div>';
+      const latlngs=track.map(p=>[p.y,p.x]);
+      const isDark=(()=>{const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t==null&&window.matchMedia('(prefers-color-scheme:dark)').matches);})();
+      nextLegMap=L.map('next-leg-leaflet-map',{zoomControl:false,scrollWheelZoom:false,attributionControl:false,zoomSnap:0.25});
+      L.tileLayer(`https://{s}.basemaps.cartocdn.com/${isDark?'dark_all':'light_all'}/{z}/{x}/{y}{r}.png`,{maxZoom:19,subdomains:'abcd'}).addTo(nextLegMap);
+      nextLegPoly=L.polyline(latlngs,{color:getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#48929B',weight:3.5,opacity:0.9}).addTo(nextLegMap);
+      L.circleMarker(latlngs[0],{radius:6,fillColor:'#48929B',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
+      L.circleMarker(latlngs[latlngs.length-1],{radius:6,fillColor:'#D4900A',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
+      nextLegMap.fitBounds(nextLegPoly.getBounds(),{padding:[10,10]});
+    }
+  }
+  // Draw elevation profile for next leg
+  const nextTrack=coordsData[legNum];
+  if(nextTrack&&nextTrack.length>=2){
+    drawElevationFromTrack(nextTrack,next,'next-elev-svg','next-elev-stats');
+  } else {
+    drawElevationFallback(next,'next-elev-svg','next-elev-stats');
+  }
+}
+
+// ─── RUNNER REST TRACKER ─────────────────────────────────────────────────────
+function buildRestTracker(legs,currentIdx,tracker){
+  const card=document.getElementById('rest-tracker-card');
+  if(!card) return;
+
+  // Collect each runner's legs with their index
+  const runnerLegs={};
+  legs.forEach((l,i)=>{
+    [l['Runner 1 (Pacer)'],l['Runner 2']].forEach(name=>{
+      if(!name) return;
+      if(!runnerLegs[name]) runnerLegs[name]=[];
+      runnerLegs[name].push(i);
+    });
+  });
+
+  function fmtTime(dateStr,timeStr){
+    if(!timeStr) return null;
+    const dt=parseDateTime(dateStr,timeStr);
+    if(!dt) return timeStr;
+    return dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+  }
+  function restDuration(fromDt,toDt){
+    if(!fromDt||!toDt) return null;
+    const ms=toDt-fromDt;
+    if(ms<=0) return null;
+    const h=Math.floor(ms/3600000);
+    const m=Math.floor((ms%3600000)/60000);
+    return h>0?`${h}h ${m}m`:`${m}m`;
+  }
+
+  const rows=Object.entries(runnerLegs).map(([name,idxList])=>{
+    // Last completed leg (has actual end or start time)
+    let lastIdx=-1, lastTime=null;
+    for(let k=idxList.length-1;k>=0;k--){
+      const i=idxList[k];
+      const l=legs[i];
+      const t=tracker[parseInt(l['Leg']||'')]||{};
+      const ae=trackerActEnd(t)||trackerActStart(t);
+      if(ae){ lastIdx=i; lastTime=fmtTime(l['Date'],ae)||ae; break; }
+    }
+    // Next upcoming leg (first without an actual end time)
+    let nextIdx2=-1, nextTime=null;
+    for(let k=0;k<idxList.length;k++){
+      const i=idxList[k];
+      const l=legs[i];
+      const t=tracker[parseInt(l['Leg']||'')]||{};
+      if(trackerActEnd(t)) continue; // skip completed legs
+      nextIdx2=i;
+      const expS=trackerActStart(t)||l['Exp. Start']||'';
+      nextTime=fmtTime(l['Date'],expS)||expS;
+      break;
+    }
+    // Rest duration between last and next
+    let restStr=null;
+    if(lastIdx>=0&&nextIdx2>=0){
+      const ll=legs[lastIdx]; const nl=legs[nextIdx2];
+      const lt=tracker[parseInt(ll['Leg']||'')]||{};
+      const fromDt=parseDateTime(ll['Date'],trackerActEnd(lt)||trackerActStart(lt)||ll['Exp. Start']);
+      const nt=tracker[parseInt(nl['Leg']||'')]||{};
+      const toDt=parseDateTime(nl['Date'],trackerActStart(nt)||nl['Exp. Start']);
+      restStr=restDuration(fromDt,toDt);
+    }
+    return{name,lastIdx,lastTime,nextIdx2,nextTime,restStr};
+  }).sort((a,b)=>a.name.localeCompare(b.name));
+
+  card.innerHTML=`<div class="rest-grid">${rows.map(({name,lastIdx,lastTime,nextIdx2,nextTime,restStr})=>{
+    const initials=name.slice(0,2).toUpperCase();
+    const photo=contactPhotos[name];
+    const colIdx=Object.keys(runnerLegs).indexOf(name);
+    const col=AV[colIdx%AV.length]||'av-teal';
+    const avHTML=photo
+      ?`<div class="av av-sm" style="background:var(--bg2)"><img src="${photo}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%" onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av av-sm ${col}'"/></div>`
+      :`<div class="av av-sm ${col}">${initials}</div>`;
+    const lastChip=lastIdx>=0
+      ?`<span class="rest-chip rest-chip-done">Leg ${legs[lastIdx]['Leg']} · ${lastTime||'?'}</span>`
+      :`<span class="rest-chip rest-chip-done" style="opacity:.4">No runs yet</span>`;
+    const nextChip=nextIdx2>=0
+      ?`<span class="rest-chip rest-chip-next">Leg ${legs[nextIdx2]['Leg']} · ${nextTime||'?'}</span>`
+      :`<span class="rest-chip rest-chip-next" style="opacity:.4">Done</span>`;
+    const restChip=restStr?`<span class="rest-chip rest-chip-rest">⏸ ${restStr}</span>`:'';
+    return `<div class="rest-row">
+      <span style="cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')"> ${avHTML}</span>
+      <span class="rest-name" style="cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')"> ${name}</span>
+      <div class="rest-timeline">
+        ${lastChip}
+        <div class="rest-line"></div>
+        ${restChip?restChip+'<div class="rest-line"></div>':''}
+        ${nextChip}
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// ─── RUNNER LEADERBOARD ──────────────────────────────────────────────────────
+function buildLeaderboard(legs,tracker){
+  const stats={};
+  legs.forEach(l=>{
+    const legNum=parseInt(l['Leg']||'');
+    const km=parseFloat(l['Distance (km)'])||0;
+    const t=tracker[legNum]||{};
+    const done=!!trackerActEnd(t);
+    const actDur=parseFloat(t['Actual Duration (min)']||'')||0;
+    [l['Runner 1 (Pacer)'],l['Runner 2']].forEach(name=>{
+      if(!name) return;
+      if(!stats[name]) stats[name]={legs:0,km:0,totalMin:0,paceLegs:0};
+      stats[name].legs++;
+      stats[name].km+=km;
+      if(done&&actDur>0&&km>0){
+        stats[name].totalMin+=actDur;
+        stats[name].paceLegs++;
+      }
+    });
+  });
+  const rows=Object.entries(stats)
+    .sort((a,b)=>b[1].km-a[1].km)
+    .map(([name,s],i)=>{
+      const pace=s.paceLegs>0?(s.totalMin/s.km).toFixed(1):'—';
+      const photoUrl=contactPhotos[name];
+      if(!runnerColors[name]) runnerColors[name]=AV[Object.keys(runnerColors).length%AV.length];
+      const avClass=runnerColors[name];
+      const initials=name.slice(0,2).toUpperCase();
+      const avatarHTML=photoUrl
+        ?`<div class="av" style="background:var(--bg2);width:26px;height:26px;font-size:10px">
+            <img src="${photoUrl}" alt="${initials}" width="26" height="26"
+              style="object-fit:cover;border-radius:50%;display:block"
+              onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}'"/>
+          </div>`
+        :`<div class="av ${avClass}" style="width:26px;height:26px;font-size:10px">${initials}</div>`;
+      return `<tr>
+        <td class="mono" style="color:var(--txt3);width:30px">${i+1}</td>
+        <td><div style="display:flex;align-items:center;gap:8px">${avatarHTML}<span style="font-size:13px;font-weight:500">${name}</span></div></td>
+        <td class="mono">${s.legs}</td>
+        <td class="mono">${s.km.toFixed(1)} km</td>
+        <td class="mono">${pace}${pace!=='—'?' min/km':''}</td>
+      </tr>`;
+    });
+  const tbody=document.getElementById('lb-tbody');
+  if(tbody) tbody.innerHTML=rows.join('');
+}
+
+// ─── DARK / LIGHT THEME TOGGLE ──────────────────────────────────────────────
+function getPreferredTheme(){
+  const stored=localStorage.getItem('bagelRelayTheme');
+  if(stored==='light'||stored==='dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+}
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  const btn=document.getElementById('theme-toggle');
+  if(btn) btn.textContent=theme==='dark'?'☀️':'🌙';
+}
+function toggleTheme(){
+  const current=document.documentElement.getAttribute('data-theme')||getPreferredTheme();
+  const next=current==='dark'?'light':'dark';
+  localStorage.setItem('bagelRelayTheme',next);
+  applyTheme(next);
+  poiMapDrawn=false;
+}
+applyTheme(getPreferredTheme());
+
+loadData();
+loadPassport(false);
+setInterval(loadData,2*60*1000);
+
+// Position tubelight on load and on resize
+function initAllPills(){
+  positionTubelight(document.querySelector('.tl-btn.active')?.dataset?.tab||'mission');
+  const legRow=document.getElementById('leg-mtab-row');
+  const detailRow=document.getElementById('detail-mtab-row');
+  if(legRow) positionMtabPill(legRow);
+  if(detailRow) positionMtabPill(detailRow);
+}
+window.addEventListener('resize', initAllPills);
+setTimeout(initAllPills, 50);
+
+// ─── CATCH THE BAGELS — side-scrolling Dino-style mini game ─────────────────
+(function(){
+  const BAGELS    = [{e:'🥯',pts:10}];
+  const SNACKS    = [{e:'🍙',pts:5},{e:'🍈',pts:5},{e:'🍞',pts:5}];
+  const OBSTACLES = [{e:'🚧'},{e:'🦝'}]; // hitting any = instant game over
+  const RUNNER_E  = '🏃';
+  const ITEM_SZ   = 32;
+  const RUN_W     = 34, RUN_H = 42;
+  const RUNNER_X  = 110;
+  const GRAVITY   = 0.72;
+  const JUMP_V    = -14.5;
+  const MAX_JUMPS = 2;
+
+  let canvas,ctx,raf=null;
+  let gW=640,gH=400;
+
+  let runnerBot,velY,jumpCount;
+  const gndY=()=>gH-64;
+
+  let items=[],popups=[];
+  let score=0;
+  let scrollSpeed=5;
+  let frame=0,groundOff=0;
+  let spawnTimer=0,nextSpawn=80;
+  let running=false;
+  let bestScore=parseInt(localStorage.getItem('bagelGameBest')||'0')||0;
+
+  window.initGame=function(){
+    canvas=document.getElementById('game-canvas');
+    if(!canvas) return;
+    ctx=canvas.getContext('2d');
+    gW=canvas.width; gH=canvas.height;
+    resetRunner();
+    document.getElementById('game-best').textContent=bestScore;
+    drawFrame();
+    if(!canvas.dataset.wired){ canvas.dataset.wired='1'; wireControls(); }
+  };
+
+  function resetRunner(){ runnerBot=gndY(); velY=0; jumpCount=0; }
+
+  function doJump(){
+    if(!running) return;
+    if(jumpCount<MAX_JUMPS){ velY=JUMP_V; jumpCount++; }
+  }
+
+  function wireControls(){
+    document.addEventListener('keydown',e=>{
+      if(e.key==='ArrowUp'||e.key===' '||e.key.toLowerCase()==='w'){
+        e.preventDefault(); doJump();
+      }
+    });
+    canvas.addEventListener('pointerdown',e=>{ e.preventDefault(); doJump(); });
+  }
+
+  /* ── Background ── */
+  function drawBg(){
+    const dark=window.matchMedia('(prefers-color-scheme: dark)').matches;
+    ctx.fillStyle=dark?'#1e1e1c':'#f0ede8';
+    ctx.fillRect(0,0,gW,gH);
+    ctx.fillStyle=dark?'#2a2a27':'#e0ddd6';
+    ctx.beginPath(); ctx.moveTo(0,gH-110);
+    const mh=[55,95,65,115,75,100,58,88,48,72,105,62];
+    for(let i=0;i<=gW;i+=60) ctx.lineTo(i,gH-110-mh[(i/60)%mh.length]);
+    ctx.lineTo(gW,gH-110); ctx.closePath(); ctx.fill();
+    ctx.fillStyle=dark?'#313130':'#d8d6d0';
+    ctx.fillRect(0,gndY(),gW,gH-gndY());
+    ctx.fillStyle=dark?'#3f3f3c':'#c5c3bc';
+    ctx.fillRect(0,gndY(),gW,3);
+    ctx.save();
+    ctx.strokeStyle=dark?'rgba(255,255,255,.15)':'rgba(0,0,0,.12)';
+    ctx.lineWidth=2.5; ctx.setLineDash([22,18]);
+    ctx.lineDashOffset=-groundOff;
+    ctx.beginPath(); ctx.moveTo(0,gndY()+22); ctx.lineTo(gW,gndY()+22); ctx.stroke();
+    ctx.restore();
+  }
+
+  /* ── Runner — flipped horizontally so it faces right ── */
+  function drawRunner(){
+    ctx.save();
+    ctx.scale(-1,1);
+    ctx.font=`${RUN_H}px serif`;
+    ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillText(RUNNER_E,-RUNNER_X,runnerBot);
+    ctx.restore();
+  }
+
+  function drawItems(){
+    ctx.font=`${ITEM_SZ}px serif`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    items.forEach(it=>ctx.fillText(it.e,it.x,it.y));
+  }
+
+  function drawPopups(){
+    popups.forEach(p=>{
+      ctx.globalAlpha=Math.max(0,p.life/30);
+      ctx.font="bold 14px 'Space Mono',monospace";
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle=p.pos?'#1D9E75':'#A32D2D';
+      ctx.fillText(p.txt,p.x,p.y);
+      ctx.globalAlpha=1;
+    });
+  }
+
+  function drawFrame(){
+    ctx.clearRect(0,0,gW,gH);
+    drawBg(); drawItems(); drawRunner(); drawPopups();
+  }
+
+  /* ── Spawn ── */
+  function spawnItem(){
+    const r=Math.random();
+    let pool,air,isObstacle=false;
+    if(r<0.38){ pool=OBSTACLES; air=false; isObstacle=true; }
+    else if(r<0.66){ pool=BAGELS; air=true; }
+    else { pool=SNACKS; air=Math.random()<0.55; }
+    const def=pool[Math.floor(Math.random()*pool.length)];
+    const jumpPeak=gndY()+JUMP_V*JUMP_V/(2*GRAVITY);
+    const itemY=air
+      ? gndY()-(ITEM_SZ/2)-(35+Math.random()*Math.abs(gndY()-jumpPeak-20))
+      : gndY()-ITEM_SZ/2;
+    items.push({x:gW+ITEM_SZ, y:itemY, e:def.e, pts:def.pts||0, obstacle:isObstacle});
+  }
+
+  /* ── Update ── */
+  function update(){
+    frame++;
+
+    // Speed ramps up indefinitely based on frames survived
+    scrollSpeed=5+(frame/60)*0.18;
+    groundOff=(groundOff+scrollSpeed)%40;
+
+    // Spawn interval tightens over time (floor at 24 frames)
+    spawnTimer++;
+    if(spawnTimer>=nextSpawn){
+      spawnTimer=0;
+      const lo=Math.max(24,80-(frame/60)*1.2), hi=Math.max(lo+12,110-(frame/60));
+      nextSpawn=lo+Math.random()*(hi-lo);
+      spawnItem();
+    }
+
+    velY+=GRAVITY;
+    runnerBot+=velY;
+    if(runnerBot>=gndY()){ runnerBot=gndY(); velY=0; jumpCount=0; }
+
+    const rL=RUNNER_X-RUN_W*0.38, rR=RUNNER_X+RUN_W*0.38;
+    const rT=runnerBot-RUN_H*0.80, rB=runnerBot;
+
+    let hitObstacle=false;
+    items=items.filter(it=>{
+      it.x-=scrollSpeed;
+      const iL=it.x-ITEM_SZ*0.38, iR=it.x+ITEM_SZ*0.38;
+      const iT=it.y-ITEM_SZ*0.38, iB=it.y+ITEM_SZ*0.38;
+      const hit=iL<rR&&iR>rL&&iT<rB&&iB>rT;
+      if(hit){
+        if(it.obstacle){ hitObstacle=true; return false; }
+        score+=it.pts;
+        popups.push({x:it.x,y:it.y-18,txt:'+'+(it.pts),life:30,pos:true});
+        document.getElementById('game-score').textContent=score;
+        return false;
+      }
+      return it.x>-ITEM_SZ;
+    });
+
+    if(hitObstacle){ endGame(); return; }
+    popups=popups.filter(p=>{p.y-=0.8;p.life--;return p.life>0;});
+  }
+
+  function loop(){ if(!running)return; update(); drawFrame(); raf=requestAnimationFrame(loop); }
+
+  window.startGame=function(){
+    if(running) return;
+    running=true;
+    score=0; items=[]; popups=[];
+    spawnTimer=0; nextSpawn=80; frame=0; groundOff=0;
+    scrollSpeed=5;
+    resetRunner();
+    document.getElementById('game-score').textContent='0';
+    const overlay=document.getElementById('game-overlay');
+    if(overlay) overlay.style.display='none';
+    if(raf) cancelAnimationFrame(raf);
+    loop();
+  };
+
+  function endGame(){
+    running=false;
+    if(raf){cancelAnimationFrame(raf);raf=null;}
+    if(score>bestScore){ bestScore=score; localStorage.setItem('bagelGameBest',String(bestScore)); }
+    document.getElementById('game-best').textContent=bestScore;
+    const overlay=document.getElementById('game-overlay');
+    if(overlay){
+      overlay.innerHTML=`
+        <div style="font-size:26px">💥</div>
+        <div style="font-weight:700;font-size:18px">Game Over</div>
+        <div style="font-size:13px;color:#e8e8e6">Score: <b style="color:#fff;font-size:18px">${score}</b> &nbsp;·&nbsp; Best: <b style="color:#fff">${bestScore}</b></div>
+        <button class="refresh-btn" onclick="startGame()">↻ Try Again</button>`;
+      overlay.style.display='flex';
+    }
+    drawFrame();
+  }
+})();
+</script>
+<!-- Chart tooltip -->
+<div id="chart-tip" style="position:fixed;display:none;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;padding:7px 12px;font-family:'Space Mono',monospace;font-size:11px;color:var(--txt);pointer-events:none;z-index:9999;box-shadow:var(--shadow-lg);white-space:nowrap"></div>
+<script>
+(function(){
+  const tip=document.getElementById('chart-tip');
+  if(!tip) return;
+  function showTip(e){
+    const t=e.currentTarget.getAttribute('data-tip');
+    if(!t) return;
+    tip.textContent=t;
+    tip.style.display='block';
+    moveTip(e);
+  }
+  function moveTip(e){
+    const x=e.clientX,y=e.clientY;
+    const tw=tip.offsetWidth,th=tip.offsetHeight;
+    tip.style.left=(x+12+tw>window.innerWidth?x-tw-12:x+12)+'px';
+    tip.style.top=(y-th-8<0?y+8:y-th-8)+'px';
+  }
+  function hideTip(){tip.style.display='none';}
+  function wire(svgId){
+    const svg=document.getElementById(svgId);
+    if(!svg) return;
+    svg.querySelectorAll('[data-tip]').forEach(el=>{
+      el.addEventListener('mouseenter',showTip);
+      el.addEventListener('mousemove',moveTip);
+      el.addEventListener('mouseleave',hideTip);
+    });
+  }
+  // Wire after data loads — poll until elements have data-tip content
+  let tries=0;
+  const poll=setInterval(()=>{
+    const hasTips=document.querySelector('#team-delta-svg [data-tip],#team-pace-svg [data-tip]');
+    if(hasTips||++tries>30){
+      clearInterval(poll);
+      wire('team-delta-svg');
+      wire('team-pace-svg');
+    }
+  },400);
+  // Re-wire whenever charts are redrawn (after refresh)
+  document.addEventListener('chartsRedrawn',()=>{
+    wire('team-delta-svg');wire('team-pace-svg');
+  });
+})();
+</script>
+<!-- Runner profile modal -->
+<div class="runner-modal-overlay" id="runner-modal-overlay" onclick="closeRunnerModal(event)">
+  <div class="runner-modal" id="runner-modal">
+    <div class="runner-modal-av" id="runner-modal-av"></div>
+    <div class="runner-modal-name" id="runner-modal-name"></div>
+    <div class="runner-modal-stats" id="runner-modal-stats"></div>
+    <button class="runner-modal-close" onclick="closeRunnerModal()">Close</button>
+  </div>
+</div>
+
+<script>
+function openRunnerModal(name){
+  const overlay=document.getElementById('runner-modal-overlay');
+  const avEl=document.getElementById('runner-modal-av');
+  const nameEl=document.getElementById('runner-modal-name');
+  const statsEl=document.getElementById('runner-modal-stats');
+  if(!overlay) return;
+
+  // Avatar
+  const initials=name.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+  const photo=contactPhotos[name];
+  const col=runnerColors[name]||'av-t';
+  if(photo){
+    avEl.className='runner-modal-av';
+    avEl.style.background='var(--bg2)';
+    avEl.innerHTML=`<img src="${photo}" alt="${initials}" onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='runner-modal-av ${col}'"/>`;
+  } else {
+    avEl.className=`runner-modal-av ${col}`;
+    avEl.style.background='';
+    avEl.innerHTML=initials;
+  }
+  nameEl.textContent=name;
+
+  // Per-day mileage using allDays + trackerData
+  const legs=legsData;
+  const tracker=trackerData;
+  const days=allDays.length?allDays:groupByDay(legs);
+
+  // Find today's day index
+  const now=new Date();
+  let todayDi=-1;
+  days.forEach((day,di)=>{
+    if(!day.date) return;
+    const d=new Date(day.date);
+    if(d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate()) todayDi=di;
+  });
+  // Fallback: use current-leg day
+  if(todayDi<0){
+    const curIdx=findCurrentIdx(legs,tracker);
+    days.forEach((day,di)=>{ if(day.legs.some(({i})=>i===curIdx)) todayDi=di; });
+  }
+
+  let todayAssigned=0, todayCovered=0, todayLegs=0;
+  if(todayDi>=0){
+    days[todayDi].legs.forEach(({l,i})=>{
+      const runners=[l['Runner 1 (Pacer)'],l['Runner 2']].filter(Boolean);
+      if(!runners.includes(name)) return;
+      const km=parseFloat(l['Distance (km)'])||0;
+      const legNum=parseInt(l['Leg']||'');
+      const t=tracker[legNum]||{};
+      const done=!!trackerActEnd(t);
+      todayAssigned=+(todayAssigned+km).toFixed(2);
+      if(done) todayCovered=+(todayCovered+km).toFixed(2);
+      todayLegs++;
+    });
+  }
+
+  // Total assigned across all days
+  let totalAssigned=0, totalCovered=0, totalLegCount=0;
+  legs.forEach(l=>{
+    const runners=[l['Runner 1 (Pacer)'],l['Runner 2']].filter(Boolean);
+    if(!runners.includes(name)) return;
+    const km=parseFloat(l['Distance (km)'])||0;
+    const legNum=parseInt(l['Leg']||'');
+    const t=tracker[legNum]||{};
+    const done=!!trackerActEnd(t);
+    totalAssigned=+(totalAssigned+km).toFixed(2);
+    if(done) totalCovered=+(totalCovered+km).toFixed(2);
+    totalLegCount++;
+  });
+
+  const dayLabel=todayDi>=0&&days[todayDi]?.date
+    ? new Date(days[todayDi].date).toLocaleDateString('en-US',{month:'short',day:'numeric'})
+    : 'Today';
+
+  statsEl.innerHTML=`
+    <div class="runner-modal-stat">
+      <span class="runner-modal-stat-label">${dayLabel} — KM COVERED</span>
+      <span class="runner-modal-stat-val">${todayCovered} / ${todayAssigned} km</span>
+    </div>
+    <div class="runner-modal-stat">
+      <span class="runner-modal-stat-label">TOTAL KM (RACE)</span>
+      <span class="runner-modal-stat-val">${totalCovered} / ${totalAssigned} km</span>
+    </div>
+    <div class="runner-modal-stat">
+      <span class="runner-modal-stat-label">TOTAL LEGS</span>
+      <span class="runner-modal-stat-val">${totalLegCount}</span>
+    </div>`;
+
+  overlay.classList.add('open');
+}
+
+function closeRunnerModal(e){
+  if(e&&e.target!==document.getElementById('runner-modal-overlay')) return;
+  document.getElementById('runner-modal-overlay')?.classList.remove('open');
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElementById('runner-modal-overlay')?.classList.remove('open'); });
+</script>
+</body>
+</html>
