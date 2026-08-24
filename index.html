@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -11,56 +11,22 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#EBF6F7;--bg2:#DFF0F2;--bg3:#CDE6E9;
-  --txt:#1C2A2C;--txt2:#3E6068;--txt3:#6A909A;
-  --bdr:rgba(48,120,130,.12);--bdr2:rgba(48,120,130,.20);
+  --bg:#F5F1E8;--bg2:#EDE8DB;--bg3:#E2DBCC;
+  --txt:#1F3A5F;--txt2:#3D5A7A;--txt3:#6080A0;
+  --bdr:rgba(31,58,95,.12);--bdr2:rgba(31,58,95,.22);
   --r:10px;--rl:16px;
-  --shadow:0 1px 3px rgba(26,70,76,.07),0 1px 2px rgba(26,70,76,.05);
-  --shadow-lg:0 4px 12px rgba(26,70,76,.10),0 1px 3px rgba(26,70,76,.07);
-  --bg-glass:rgba(235,246,247,0.92);
-  --green:#48929B;--gbg:#D4EDF0;--gtxt:#006C7F;
-  --amber:#D4900A;--abg:#FFF3D0;--atxt:#7A5000;
-  --bbg:#D8E8F8;--btxt:#1F4788;
-  --rbg:#FDEAEC;--rtxt:#C03048;
+  --shadow:0 1px 3px rgba(31,58,95,.08),0 1px 2px rgba(31,58,95,.05);
+  --shadow-lg:0 4px 12px rgba(31,58,95,.12),0 1px 3px rgba(31,58,95,.08);
+  --bg-glass:rgba(245,241,232,0.94);
+  --green:#718355;--gbg:#E4E9D4;--gtxt:#4A5830;
+  --amber:#D9A441;--abg:#F8EDCC;--atxt:#7A5A10;
+  --bbg:#DDE8F0;--btxt:#1F3A5F;
+  --rbg:#FAEAEC;--rtxt:#D94F3D;
+  --card-person:#F5E0E8;--card-stat:#DDE8F0;--card-link:#D8DFF0;
 }
-/* ── Ai-iro Dark (藍色) — Deep indigo textile ── */
-@media(prefers-color-scheme:dark){:root{
-  --bg:#111C20;--bg2:#182630;--bg3:#132028;
-  --txt:#E4F2F4;--txt2:#7AAAB8;--txt3:#486878;
-  --bdr:rgba(72,146,155,.09);--bdr2:rgba(72,146,155,.16);
-  --shadow:0 1px 3px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.28);
-  --shadow-lg:0 4px 12px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.35);
-  --bg-glass:rgba(17,28,32,0.92);
-  --green:#5AADB8;--gbg:#082830;--gtxt:#7ECAD6;
-  --amber:#F0B030;--abg:#221800;--atxt:#F5D060;
-  --bbg:#0A1C38;--btxt:#6A90C8;
-  --rbg:#2A1020;--rtxt:#E87080;
-}}
-[data-theme="dark"]{
-  --bg:#111C20;--bg2:#182630;--bg3:#132028;
-  --txt:#E4F2F4;--txt2:#7AAAB8;--txt3:#486878;
-  --bdr:rgba(72,146,155,.09);--bdr2:rgba(72,146,155,.16);
-  --shadow:0 1px 3px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.28);
-  --shadow-lg:0 4px 12px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.35);
-  --bg-glass:rgba(17,28,32,0.92);
-  --green:#5AADB8;--gbg:#082830;--gtxt:#7ECAD6;
-  --amber:#F0B030;--abg:#221800;--atxt:#F5D060;
-  --bbg:#0A1C38;--btxt:#6A90C8;
-  --rbg:#2A1020;--rtxt:#E87080;
-}
-/* ── Aijiro Light (藍白) — Palest indigo wash ── */
-[data-theme="light"]{
-  --bg:#EBF6F7;--bg2:#DFF0F2;--bg3:#CDE6E9;
-  --txt:#1C2A2C;--txt2:#3E6068;--txt3:#6A909A;
-  --bdr:rgba(48,120,130,.12);--bdr2:rgba(48,120,130,.20);
-  --shadow:0 1px 3px rgba(26,70,76,.07),0 1px 2px rgba(26,70,76,.05);
-  --shadow-lg:0 4px 12px rgba(26,70,76,.10),0 1px 3px rgba(26,70,76,.07);
-  --bg-glass:rgba(235,246,247,0.92);
-  --green:#48929B;--gbg:#D4EDF0;--gtxt:#006C7F;
-  --amber:#D4900A;--abg:#FFF3D0;--atxt:#7A5000;
-  --bbg:#D8E8F8;--btxt:#1F4788;
-  --rbg:#FDEAEC;--rtxt:#C03048;
-}
+
+
+
 body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-height:100vh;padding:0;-webkit-font-smoothing:antialiased}
 .wrap{max-width:960px;margin:0 auto;padding:1.5rem 1.25rem}
 @media(min-width:768px){.wrap{padding-top:84px}}
@@ -70,17 +36,17 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .tubelight-nav{position:fixed;top:1.25rem;left:50%;transform:translateX(-50%);z-index:500}
 @media(max-width:767px){.tubelight-nav{top:auto;bottom:1.25rem;width:calc(100% - 2rem);max-width:440px}}
 .tl-track{display:flex;align-items:center;gap:0;background:var(--bg-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:0.5px solid var(--bdr);border-radius:100px;padding:5px;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.12),0 1px 4px rgba(0,0,0,.08)}
-.tl-pill{position:absolute;top:5px;height:calc(100% - 10px);background:var(--bg2);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none}
+.tl-pill{position:absolute;top:5px;height:calc(100% - 10px);background:var(--txt);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none}
 .tl-lamp{position:absolute;top:5px;height:calc(100% - 10px);border-radius:100px;pointer-events:none;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:1;overflow:visible}
-.tl-lamp::before{content:'';position:absolute;top:-3px;left:20%;right:20%;height:5px;background:var(--green);border-radius:50%;filter:blur(2.5px);opacity:.9}
-.tl-lamp::after{content:'';position:absolute;top:-3px;left:5%;right:5%;height:24px;background:var(--green);opacity:.16;filter:blur(12px);border-radius:50%}
+.tl-lamp::before{content:'';position:absolute;top:-3px;left:20%;right:20%;height:5px;background:var(--rtxt);border-radius:50%;filter:blur(2.5px);opacity:.9}
+.tl-lamp::after{content:'';position:absolute;top:-3px;left:5%;right:5%;height:24px;background:var(--rtxt);opacity:.20;filter:blur(12px);border-radius:50%}
 @media(max-width:767px){
   .tl-lamp::before{top:auto;bottom:-3px}
   .tl-lamp::after{top:auto;bottom:-3px}
 }
 .tl-btn{position:relative;z-index:2;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;padding:9px 18px;border-radius:100px;border:none;cursor:pointer;background:transparent;color:var(--txt3);white-space:nowrap;transition:color .2s ease;display:flex;align-items:center;gap:6px}
 .tl-btn:hover{color:var(--txt2)}
-.tl-btn.active{color:var(--txt)}
+.tl-btn.active{color:#F5F1E8}
 .tl-btn:active{transform:scale(0.96)}
 .tl-icon{display:none;flex-shrink:0}
 .tl-label{}
@@ -96,13 +62,13 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 @media(max-width:600px){.countdown-timer{font-size:20px}}
 /* ── Mission sub-tabs ── */
 .mtab-row{display:flex;position:relative;gap:0;padding:4px;background:var(--bg-glass);backdrop-filter:blur(12px);border-radius:100px;margin-bottom:0;border:0.5px solid var(--bdr);box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.mtab-pill{position:absolute;top:4px;height:calc(100% - 8px);background:var(--bg2);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none;box-shadow:var(--shadow)}
+.mtab-pill{position:absolute;top:4px;height:calc(100% - 8px);background:var(--txt);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none;box-shadow:var(--shadow)}
 .mtab-lamp{position:absolute;top:4px;height:calc(100% - 8px);border-radius:100px;pointer-events:none;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:1;overflow:visible}
-.mtab-lamp::before{content:'';position:absolute;top:-3px;left:20%;right:20%;height:4px;background:var(--green);border-radius:50%;filter:blur(2px);opacity:.8}
-.mtab-lamp::after{content:'';position:absolute;top:-3px;left:5%;right:5%;height:20px;background:var(--green);opacity:.14;filter:blur(10px);border-radius:50%}
-.mtab-btn{flex:1;position:relative;z-index:2;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:8px 10px;border-radius:100px;border:none;cursor:pointer;background:transparent;color:var(--txt3);transition:color .18s ease;white-space:nowrap;text-align:center}
+.mtab-lamp::before{content:'';position:absolute;top:-3px;left:20%;right:20%;height:4px;background:var(--rtxt);border-radius:50%;filter:blur(2px);opacity:.8}
+.mtab-lamp::after{content:'';position:absolute;top:-3px;left:5%;right:5%;height:20px;background:var(--rtxt);opacity:.18;filter:blur(10px);border-radius:50%}
+.mtab-btn{flex:1;position:relative;z-index:2;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:8px 10px;border-radius:100px;border:none;cursor:pointer;background:transparent;color:var(--txt3);transition:color .18s ease;white-space:nowrap;text-align:center;display:flex;align-items:center;justify-content:center}
 .mtab-btn:hover{color:var(--txt2)}
-.mtab-btn.active{color:var(--txt);background:transparent;box-shadow:none}
+.mtab-btn.active{color:#F5F1E8;background:transparent;box-shadow:none}
 .mtab-btn:active{transform:scale(0.97)}
 .mtab-panel{display:none}
 .mtab-panel.active{display:block}
@@ -122,10 +88,11 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .next-meta-sub{font-size:11px;color:var(--txt2)}
 /* ── Rest tracker ── */
 .rest-grid{display:flex;flex-direction:column;gap:0}
-.rest-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:0.5px solid var(--bdr)}
+.rest-row{display:flex;flex-direction:column;gap:6px;padding:11px 0;border-bottom:0.5px solid var(--bdr)}
 .rest-row:last-child{border-bottom:none}
-.rest-name{font-size:13px;font-weight:500;color:var(--txt);width:80px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rest-timeline{flex:1;display:flex;align-items:center;gap:6px;min-width:0}
+.rest-header{display:flex;align-items:center;gap:10px}
+.rest-name{font-size:13px;font-weight:500;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rest-timeline{display:flex;align-items:center;gap:6px;width:100%}
 .rest-chip{font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border-radius:100px;white-space:nowrap;flex-shrink:0}
 .rest-chip-done{background:var(--gbg);color:var(--gtxt)}
 .rest-chip-next{background:var(--bbg);color:var(--btxt)}
@@ -190,7 +157,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .prog-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .prog-hdr span{font-size:13px;font-weight:500;color:var(--txt2)}
 .track{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;border:0.5px solid var(--bdr);margin-bottom:6px}
-.fill{height:100%;background:linear-gradient(90deg,var(--green),#2abe8c);border-radius:4px;transition:width .6s ease}
+.fill{height:100%;background:linear-gradient(90deg,var(--green),#8FA46A);border-radius:4px;transition:width .6s ease}
 .axis{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:10px;color:var(--txt3);margin-bottom:12px}
 
 /* ── Day rows — grid so stats are always pinned to the right ── */
@@ -253,11 +220,11 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .av-md img{width:36px;height:36px}
 .av-sm{width:28px;height:28px;font-size:10px}
 .av-sm img{width:28px;height:28px}
-.av-t{background:#E1F5EE;color:#0F6E56}
-.av-b{background:#E6F1FB;color:#185FA5}
-.av-a{background:#FAEEDA;color:#854F0B}
-.av-p{background:#EEEDFE;color:#3C3489}
-.av-c{background:#FAECE7;color:#712B13}
+.av-t{background:#E4E9D4;color:#4A5830}
+.av-b{background:#DDE8F0;color:#1F3A5F}
+.av-a{background:#F8EDCC;color:#7A5A10}
+.av-p{background:#F5E0E8;color:#8A2040}
+.av-c{background:#FAEAEC;color:#A83020}
 .rname{font-size:15px;font-weight:600}
 .rrole{font-size:11px;color:var(--txt3)}
 .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
@@ -387,15 +354,11 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
   .scard{padding:12px 14px}
   .sec{font-size:13px;margin-top:1.25rem}
   #nr-weather{flex-direction:row;width:100%;justify-content:space-around;padding:10px 12px;min-width:unset;gap:10px}
-  .rest-row{flex-wrap:wrap;gap:6px;padding:10px 0}
-  .rest-name{width:100%;font-size:12px;margin-bottom:0}
-  .rest-timeline{width:100%;gap:4px;flex-wrap:wrap}
-  .rest-chip{font-size:9px;padding:3px 7px}
-  .rest-line{display:none}
-  .mtab-row{overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0;padding:3px;scrollbar-width:none}
-  .mtab-row::-webkit-scrollbar{display:none}
-  .mtab-btn{padding:7px 8px;font-size:9px;flex-shrink:0;flex:0 0 auto}
-  #leg-mtab-row .mtab-btn{flex:1;flex-shrink:1;padding:8px 6px}
+  .rest-row{padding:8px 0;gap:5px}
+  .rest-name{font-size:11px}
+  .rest-chip{font-size:8px;padding:2px 6px}
+  .mtab-row{gap:0;padding:3px}
+  .mtab-btn{padding:7px 6px;font-size:9px;flex:1;flex-shrink:1}
   .tbl th,.tbl td{font-size:11px;padding:9px 8px}
   .elev-wrap svg{height:150px}
   #team-delta-svg,#team-pace-svg{height:auto}
@@ -415,6 +378,23 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .runner-modal-stat-val{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
 .runner-modal-close{margin-top:1.25rem;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:7px 18px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg2);color:var(--txt);cursor:pointer;transition:background .15s}
 .runner-modal-close:hover{background:var(--bg3)}
+/* ── Toast notifications ── */
+#toast-container{position:fixed;bottom:80px;right:16px;z-index:2000;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);box-shadow:0 8px 32px rgba(0,0,0,.18);padding:14px 18px;min-width:240px;max-width:320px;display:flex;align-items:flex-start;gap:12px;pointer-events:all;animation:toastIn .35s cubic-bezier(0.34,1.56,0.64,1) both}
+.toast.out{animation:toastOut .25s ease forwards}
+.toast-icon{font-size:24px;line-height:1;flex-shrink:0}
+.toast-body{flex:1;min-width:0}
+.toast-title{font-weight:700;font-size:13px;color:var(--txt);margin-bottom:2px}
+.toast-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--txt3)}
+@keyframes toastIn{from{opacity:0;transform:translateX(60px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateX(60px) scale(.9)}}
+/* ── Overview map pulse ── */
+@keyframes pulse-ring{0%{transform:scale(1);opacity:.9}70%{transform:scale(2.4);opacity:0}100%{transform:scale(2.4);opacity:0}}
+/* ── Photo gallery ── */
+#gallery-grid{column-gap:12px}
+#gallery-grid img{transition:opacity .2s}
+#gallery-grid img:hover{opacity:.88}
+@media(max-width:600px){#gallery-grid{columns:2 140px}}
 </style>
 </head>
 <body>
@@ -446,8 +426,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
         <span class="tl-label">CONTACT INFO</span>
       </button>
       <button class="tl-btn" data-tab="game" onclick="switchTab('game')" role="tab">
-        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg></span>
-        <span class="tl-label">🥯 CATCH THE BAGELS</span>
+        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+        <span class="tl-label">📸 PHOTO GALLERY</span>
       </button>
     </div>
   </nav>
@@ -468,7 +448,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
           <div class="countdown-timer" id="countdown-timer">--</div>
         </div>
         <div class="hdr-controls">
-          <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">☀️</button>
+
           <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
           <div class="live"><div class="dot"></div>LIVE</div>
         </div>
@@ -514,6 +494,11 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
       </div>
     </div>
 
+    <!-- Route overview map -->
+    <div class="card" style="padding:0;overflow:hidden">
+      <div id="overview-map" style="height:220px;width:100%;background:var(--bg2)"></div>
+    </div>
+
     <!-- Current Leg / Next Leg tabbed card -->
     <div class="sec">LEG INFORMATION</div>
     <div style="background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);overflow:hidden;box-shadow:var(--shadow)">
@@ -539,10 +524,6 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
             <div class="cur-right">
               <div class="cur-map-wrap" id="cur-map">
                 <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
-              </div>
-              <div class="cdown-block" id="cdown-block">
-                <div class="cdown" id="cdown">--:--</div>
-                <div class="cdown-lbl" id="cdown-lbl">REMAINING</div>
               </div>
             </div>
           </div>
@@ -613,7 +594,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
           <table class="tbl">
             <thead><tr>
               <th>LEG</th><th>RUNNERS</th>
-              <th>REV. START</th><th>ACT. START</th><th>ACT. FINISH</th>
+              <th>EST. START</th><th>ACT. START</th><th>ACT. FINISH</th>
               <th>ACT. DUR</th><th>LEAD/LAG</th><th>STATUS</th>
             </tr></thead>
             <tbody id="tracker-tbl"></tbody>
@@ -653,20 +634,26 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
       </div>
     </div>
 
-    <!-- Team charts -->
-    <div class="elev-wrap" style="margin-top:12px">
-      <div class="slabel" style="margin-bottom:8px">CUMULATIVE TIME VS PLAN</div>
-      <svg id="team-delta-svg" viewBox="0 0 600 200" preserveAspectRatio="none" style="width:100%;height:200px;display:block">
-        <text x="300" y="110" text-anchor="middle" font-family="Space Mono,monospace" font-size="16" fill="var(--txt3)">No data yet</text>
-      </svg>
-      <div class="elev-stats" id="team-delta-stats"></div>
-    </div>
-    <div class="elev-wrap" style="margin-top:12px">
-      <div class="slabel" style="margin-bottom:8px">AVERAGE PACE PER LEG</div>
-      <svg id="team-pace-svg" viewBox="0 0 600 200" preserveAspectRatio="none" style="width:100%;height:200px;display:block">
-        <text x="300" y="110" text-anchor="middle" font-family="Space Mono,monospace" font-size="16" fill="var(--txt3)">No data yet</text>
-      </svg>
-      <div class="elev-stats" id="team-pace-stats"></div>
+    <!-- Team charts (tabbed) -->
+    <div class="elev-wrap" style="margin-top:12px;padding-top:10px">
+      <div class="mtab-row" id="team-chart-tab-row" style="margin-bottom:12px">
+        <div class="mtab-pill" id="team-chart-tab-pill"></div>
+        <div class="mtab-lamp"></div>
+        <button class="mtab-btn active" data-mtab="tperf-delta" onclick="switchTeamChartTab('tperf-delta')">TIME VS PLAN</button>
+        <button class="mtab-btn" data-mtab="tperf-pace" onclick="switchTeamChartTab('tperf-pace')">PACE PER LEG</button>
+      </div>
+      <div class="mtab-panel active" id="tperf-delta">
+        <svg id="team-delta-svg" viewBox="0 0 600 200" preserveAspectRatio="none" style="width:100%;height:200px;display:block">
+          <text x="300" y="110" text-anchor="middle" font-family="Space Mono,monospace" font-size="16" fill="var(--txt3)">No data yet</text>
+        </svg>
+        <div class="elev-stats" id="team-delta-stats"></div>
+      </div>
+      <div class="mtab-panel" id="tperf-pace">
+        <svg id="team-pace-svg" viewBox="0 0 600 200" preserveAspectRatio="none" style="width:100%;height:200px;display:block">
+          <text x="300" y="110" text-anchor="middle" font-family="Space Mono,monospace" font-size="16" fill="var(--txt3)">No data yet</text>
+        </svg>
+        <div class="elev-stats" id="team-pace-stats"></div>
+      </div>
     </div>
 
     <div class="footer">
@@ -766,36 +753,17 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
     </div>
   </div>
 
-  <!-- ═══════════════ CATCH THE BAGELS GAME TAB ═══════════════ -->
+  <!-- ═══════════════ PHOTO GALLERY TAB ═══════════════ -->
   <div id="tab-game" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
       <div>
-        <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; MINI GAME</div>
-        <div class="pg-title">Catch the Bagels &nbsp;<span>Run the Tōkaidō, grab the goods</span></div>
+        <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; PHOTO GALLERY</div>
+        <div class="pg-title">Race Photos &nbsp;<span>Nov 1–6 · Tokyo → Osaka</span></div>
       </div>
     </div>
-    <div style="background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px">
-      <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;width:100%;max-width:640px">
-        <div class="mono" style="font-size:13px"><span style="color:var(--txt3)">SCORE</span> <span id="game-score" style="font-weight:700;font-size:16px">0</span></div>
-        <div class="mono" style="font-size:13px"><span style="color:var(--txt3)">BEST</span> <span id="game-best" style="font-weight:700;font-size:16px">0</span></div>
-      </div>
-      <div style="position:relative;width:100%;max-width:640px">
-        <canvas id="game-canvas" width="640" height="400" style="display:block;width:100%;height:auto;min-height:200px;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;touch-action:none;cursor:pointer"></canvas>
-        <div id="game-overlay" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(0,0,0,.45);border-radius:8px;color:#fff;text-align:center;padding:16px">
-          <div style="font-size:22px">🥯</div>
-          <div style="font-weight:700;font-size:16px">Catch the Bagels</div>
-          <div style="font-size:12px;max-width:380px;color:#e8e8e6">
-            Press <b>↑ Space W</b> to jump — double-jump to reach high items.<br>
-            Tap the canvas on mobile. Obstacles are on the ground — jump over them!<br>
-            🥯 Bagels = +10 &nbsp;·&nbsp; 🍙🍈🍞 Snacks = +5 &nbsp;·&nbsp; 🚧🦝 Hit an obstacle = Game Over<br>
-            Speed increases the longer you survive. One life — don't trip!
-          </div>
-          <button class="refresh-btn" id="game-start-btn" onclick="startGame()">▶ Start Game</button>
-        </div>
-      </div>
-      <div class="mono" style="font-size:10px;color:var(--txt3);text-align:center">
-        ↑ / Space / W to jump &nbsp;·&nbsp; double-jump available &nbsp;·&nbsp; tap canvas on mobile
-      </div>
+    <div id="gallery-day-filter" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem"></div>
+    <div id="gallery-grid" style="columns:3 220px;column-gap:12px;row-gap:0">
+      <div style="color:var(--txt3);font-size:12px;font-family:'Space Mono',monospace;padding:2rem 0">Loading photos…</div>
     </div>
   </div>
 
@@ -822,6 +790,8 @@ let allDays         = [];   // [{date, legs:[{l,i}]}]
 let selectedDay     = 0;    // index for upcoming tabs
 let selectedTracker = 0;    // index for live tracker tabs
 let currentLagTotal = 0;   // overall lag in minutes (positive = behind); used for revised time estimates
+let overviewMap     = null; // Leaflet map for Mission Control route overview
+let overviewDrawn   = false;
 let leafletMap      = null; // Leaflet map instance for current leg
 let contactPhotos   = {};   // {runnerName: photoThumbUrl} loaded from Contact Information tab
 let poiMap          = null; // Leaflet map instance for the full-route overview
@@ -830,7 +800,7 @@ let nextLegPoly     = null; // stored poly for re-fitting after tab reveal
 let poiMapDrawn     = false;
 
 const DAY_COLORS = {
-  1:'#1D9E75', 2:'#185FA5', 3:'#EF9F27', 4:'#A32D2D', 5:'#7B5EC4', 6:'#C2548C'
+  1:'#718355', 2:'#1F3A5F', 3:'#D9A441', 4:'#D94F3D', 5:'#AFC7D6', 6:'#E8A9B8'
 };
 
 const AV = ['av-t','av-b','av-a','av-p','av-c','av-t','av-b','av-a','av-p'];
@@ -909,6 +879,17 @@ function switchLegTab(id){
   },80);
 }
 
+function switchTeamChartTab(id){
+  const row=document.getElementById('team-chart-tab-row');
+  if(row){
+    row.querySelectorAll('.mtab-btn').forEach(b=>b.classList.remove('active'));
+    row.querySelector(`.mtab-btn[data-mtab="${id}"]`)?.classList.add('active');
+    positionMtabPill(row);
+  }
+  document.getElementById('tperf-delta')?.classList.remove('active');
+  document.getElementById('tperf-pace')?.classList.remove('active');
+  document.getElementById(id)?.classList.add('active');
+}
 function switchTab(id){
   document.querySelectorAll('.tl-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -922,7 +903,7 @@ function switchTab(id){
     if(!poiMapDrawn) drawFullRouteMap();
     else if(poiMap) setTimeout(()=>poiMap.invalidateSize(),0);
   }
-  if(id==='game') initGame();
+  if(id==='game') buildPhotoGallery();
 }
 
 // Split a multi-choice form-cell value into individual names.
@@ -1393,14 +1374,14 @@ function setLagDisplay(lag){
     if(card){card.classList.remove('lag-ahead','lag-behind');card.classList.add('lag-even');}
   }
 }
-function startCountdown(secs){
+function startCountdown(secs,countUp){
   if(cdInterval) clearInterval(cdInterval);
-  let s=Math.max(0,secs);
+  let s=Math.max(0,Math.round(secs));
+  function fmt(v){const h=Math.floor(v/3600),m=Math.floor((v%3600)/60),sc=v%60;return h>0?`${h}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`:String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');}
   function tick(){
-    const m=Math.floor(s/60),sc=s%60;
-    document.getElementById('cdown').textContent=String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');
-    if(s<=0) return;
-    s--;
+    document.getElementById('cdown').textContent=fmt(s);
+    if(countUp) s++;
+    else if(s>0) s--;
   }
   tick();
   cdInterval=setInterval(tick,1000);
@@ -1453,6 +1434,8 @@ function trackerDur(t)     { return tGet(t,'Total Elapsed Time (Moving + Stoppin
 function trackerLag(t)     { return tGet(t,'Leg Lead/Lag (min)','Lead/Lag','Lead / Lag (min)','lag'); }
 function trackerPace(t)    { return tGet(t,'Actual Pace (min/km)','Act. Pace (min/km)','Act. Pace','actual_pace'); }
 function trackerStatus(t)  { return tGet(t,'Status','status'); }
+function trackerActDist(t) { return tGet(t,'Actual Distance (km)','Actual Pace (km)','Actual Distance','Act. Distance (km)','Act. Distance','actual_distance'); }
+function trackerPhoto(t)   { return tGet(t,'Photos','Photo','Photo URL','Image','Photo Link','photo','image'); }
 
 // ─── LEAD/LAG: actual_end of last completed leg vs expected_end of that leg ──
 function calcTotalLag(legs,tracker){
@@ -1730,8 +1713,7 @@ function drawRoutePath(container, trackPoints){
   });
 
   // CartoDB Positron (light) / Dark Matter (dark) — minimal, no API key needed
-  const isDark=(()=>{const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t==null&&window.matchMedia('(prefers-color-scheme: dark)').matches);})();
-  const tileStyle=isDark?'dark_all':'light_all';
+  const tileStyle='light_all';
   L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tileStyle}/{z}/{x}/{y}{r}.png`,{
     maxZoom:19,
     subdomains:'abcd'
@@ -1739,17 +1721,17 @@ function drawRoutePath(container, trackPoints){
 
   // Route polyline in dashboard green
   const poly=L.polyline(latlngs,{
-    color:'#1D9E75', weight:3.5, opacity:0.9
+    color:'#718355', weight:3.5, opacity:0.9
   }).addTo(leafletMap);
 
   // Start marker (green circle)
   L.circleMarker(latlngs[0],{
-    radius:7, fillColor:'#1D9E75', color:'#fff', weight:2, fillOpacity:1
+    radius:7, fillColor:'#718355', color:'#fff', weight:2, fillOpacity:1
   }).bindTooltip('START',{permanent:false,direction:'top'}).addTo(leafletMap);
 
   // Finish marker (amber circle)
   L.circleMarker(latlngs[latlngs.length-1],{
-    radius:7, fillColor:'#EF9F27', color:'#fff', weight:2, fillOpacity:1
+    radius:7, fillColor:'#D94F3D', color:'#fff', weight:2, fillOpacity:1
   }).bindTooltip('FINISH',{permanent:false,direction:'top'}).addTo(leafletMap);
 
   // Fit map to route bounds with padding
@@ -1773,8 +1755,7 @@ function drawFullRouteMap(){
     zoomSnap:0.25
   });
 
-  const isDark=(()=>{const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t==null&&window.matchMedia('(prefers-color-scheme: dark)').matches);})();
-  const tileStyle=isDark?'dark_all':'light_all';
+  const tileStyle='light_all';
   L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tileStyle}/{z}/{x}/{y}{r}.png`,{
     maxZoom:19,
     subdomains:'abcd'
@@ -1800,7 +1781,7 @@ function drawFullRouteMap(){
     lastPoint=latlngs[latlngs.length-1];
 
     const day=dayByLegIdx[i]||1;
-    const color=DAY_COLORS[day]||'#1D9E75';
+    const color=DAY_COLORS[day]||'#718355';
 
     L.polyline(latlngs,{color, weight:3, opacity:0.85}).addTo(poiMap);
 
@@ -1811,12 +1792,12 @@ function drawFullRouteMap(){
 
   if(firstPoint){
     L.circleMarker(firstPoint,{
-      radius:8, fillColor:'#1D9E75', color:'#fff', weight:2, fillOpacity:1
+      radius:8, fillColor:'#718355', color:'#fff', weight:2, fillOpacity:1
     }).bindTooltip('START — Tokyo',{permanent:false,direction:'top'}).addTo(poiMap);
   }
   if(lastPoint){
     L.circleMarker(lastPoint,{
-      radius:8, fillColor:'#EF9F27', color:'#fff', weight:2, fillOpacity:1
+      radius:8, fillColor:'#D94F3D', color:'#fff', weight:2, fillOpacity:1
     }).bindTooltip('FINISH — Osaka',{permanent:false,direction:'top'}).addTo(poiMap);
   }
 
@@ -1829,7 +1810,7 @@ function drawFullRouteMap(){
   if(legendEl){
     const daysUsed=[...new Set(Object.values(dayByLegIdx))].sort((a,b)=>a-b);
     legendEl.innerHTML=daysUsed.map(d=>
-      `<div class="li"><div class="sw" style="background:${DAY_COLORS[d]||'#1D9E75'}"></div>Day ${d}</div>`
+      `<div class="li"><div class="sw" style="background:${DAY_COLORS[d]||'#718355'}"></div>Day ${d}</div>`
     ).join('');
   }
 
@@ -2026,14 +2007,16 @@ function buildTeamPerf(legs,tracker){
     if(!trackerActEnd(t)) return;
     const act=parseFloat(trackerDur(t));
     const proj=parseFloat(l['Exp. Duration (min)']||'');
-    const distKm=parseFloat(l['Distance (km)']||'');
+    const plannedKm=parseFloat(l['Distance (km)']||'');
+    const actDistVal=parseFloat(trackerActDist(t));
+    const distKm=!isNaN(actDistVal)&&actDistVal>0?actDistVal:plannedKm;
     const sheetPace=parseFloat(trackerPace(t));
     const sheetLag=parseFloat(trackerLag(t));
 
     if(!isNaN(act)){actMin+=act;actCount++;}
 
     const actPace=!isNaN(sheetPace)&&sheetPace>0?sheetPace:(!isNaN(act)&&distKm>0?act/distKm:NaN);
-    const projPace=distKm>0&&!isNaN(proj)?proj/distKm:NaN;
+    const projPace=plannedKm>0&&!isNaN(proj)?proj/plannedKm:NaN;
     const lag=!isNaN(sheetLag)?sheetLag:(!isNaN(act)&&!isNaN(proj)?act-proj:NaN);
 
     if(!isNaN(actPace)&&distKm>0){
@@ -2258,11 +2241,14 @@ function render(legs,tracker){
 
   // Stat cards
   const pct=Math.round((currentIdx/total)*100);
-  // Distance covered = sum of completed legs' distances; total = sum of all legs' distances
+  // Distance covered = sum of completed legs' actual distances (falling back to planned)
   const totalKm=legs.reduce((s,l)=>s+(parseFloat(l['Distance (km)'])||0),0);
   const distCovered=legs.reduce((s,l)=>{
     const t=tracker[parseInt(l['Leg']||'')]||{};
-    return trackerActEnd(t)?s+(parseFloat(l['Distance (km)'])||0):s;
+    if(!trackerActEnd(t)) return s;
+    const actDist=parseFloat(trackerActDist(t));
+    const km=!isNaN(actDist)&&actDist>0?actDist:(parseFloat(l['Distance (km)'])||0);
+    return s+km;
   },0);
 
   document.getElementById('pct-val').innerHTML=`${distCovered.toFixed(1)} <span style="font-size:13px;font-weight:400;color:var(--txt3)">/ ${totalKm.toFixed(1)} km &nbsp;·&nbsp; ${pct}%</span>`;
@@ -2287,6 +2273,9 @@ function render(legs,tracker){
   buildLeaderboard(legs,tracker);
   buildNextRunnerCard(legs,currentIdx,tracker);
   buildRestTracker(legs,currentIdx,tracker);
+  buildPhotoGallery(legs,tracker);
+  buildOverviewMap(legs,tracker,currentIdx);
+  checkMilestones(legs,tracker,distCovered,currentIdx);
 
   // Weather — fetch using first point of current leg
   const curLegNum=parseInt(cur['Leg']||'');
@@ -2348,7 +2337,7 @@ function render(legs,tracker){
             onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:34px;height:34px;font-size:13px;flex-shrink:0'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:34px;height:34px;font-size:13px;flex-shrink:0">${initials}</div>`;
-    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div style="background:var(--card-person);border-radius:var(--r);padding:10px 12px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">${role.toUpperCase()}</div>
       <div style="display:flex;align-items:center;gap:8px;overflow:hidden">
         ${avHTML}<span style="font-size:14px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
@@ -2360,7 +2349,7 @@ function render(legs,tracker){
 
   // Leg stats mini-grid (fills dead space in the left panel)
   function statMini(label,value,sub){
-    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px">
+    return `<div style="background:var(--card-stat);border-radius:var(--r);padding:10px 12px">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
       <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">${value}</div>
       ${sub?`<div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px">${sub}</div>`:''}
@@ -2369,12 +2358,12 @@ function render(legs,tracker){
   // Card that doubles as a clickable link to the route map
   function statLinkCard(label,url){
     if(url){
-      return `<a href="${url}" target="_blank" rel="noopener" style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;display:block;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
+      return `<a href="${url}" target="_blank" rel="noopener" style="background:var(--card-link);border-radius:var(--r);padding:10px 12px;display:block;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--btxt);margin-bottom:4px">${label}</div>
         <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--btxt)">🗺 Open route ↗</div>
       </a>`;
     }
-    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;opacity:.5">
+    return `<div style="background:var(--card-link);border-radius:var(--r);padding:10px 12px;opacity:.5">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
       <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt3)">—</div>
     </div>`;
@@ -2401,42 +2390,23 @@ function render(legs,tracker){
   // gracefully if CORS blocks the request.
   renderMap(cur);
 
-  // Countdown — hidden for upcoming legs (sub line already shows expected start + est. duration)
-  const cdownBlock=document.getElementById('cdown-block');
-  if(isCompleted){
-    cdownBlock.style.display='block';
-    if(cdInterval) clearInterval(cdInterval);
-    document.getElementById('cdown').textContent='Done';
-    document.getElementById('cdown-lbl').textContent='COMPLETED';
-  } else if(isRunning){
-    cdownBlock.style.display='block';
-    const startDate=parseTimeToday(actStart);
-    if(startDate){
-      const remSecs=Math.round((startDate.getTime()+(dur*60000)-Date.now())/1000);
-      document.getElementById('cdown-lbl').textContent='REMAINING';
-      startCountdown(Math.max(0,remSecs));
-    } else {
-      startCountdown(Math.round(dur*60));
-    }
-  } else {
-    // Upcoming — hide the countdown block entirely; all info is in the sub line
-    cdownBlock.style.display='none';
-    if(cdInterval) clearInterval(cdInterval);
-  }
+  if(cdInterval){ clearInterval(cdInterval); cdInterval=null; }
 
   // Runner leaderboard
   const stats={},paceSum={},paceCount={},coveredKm={};
   legs.forEach(l=>{
-    const km=parseFloat(l['Distance (km)'])||0;
+    const plannedKm=parseFloat(l['Distance (km)'])||0;
     const lNum=parseInt(l['Leg']||'');
     const t=tracker[lNum]||{};
     const done=!!trackerActEnd(t);
+    const actDistVal=parseFloat(trackerActDist(t));
+    const covKm=done&&!isNaN(actDistVal)&&actDistVal>0?actDistVal:plannedKm;
     [l['Runner 1 (Pacer)'],l['Runner 2']].forEach(name=>{
       if(!name) return;
       if(!stats[name]) stats[name]={legs:0,km:0};
-      stats[name].legs++; stats[name].km=+(stats[name].km+km).toFixed(1);
+      stats[name].legs++; stats[name].km=+(stats[name].km+plannedKm).toFixed(1);
       if(!coveredKm[name]) coveredKm[name]=0;
-      if(done) coveredKm[name]=+(coveredKm[name]+km).toFixed(1);
+      if(done) coveredKm[name]=+(coveredKm[name]+covKm).toFixed(1);
     });
     const ap=parseFloat(trackerPace(t));
     if(!isNaN(ap)&&ap>0){
@@ -2684,7 +2654,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
   const actStart=trackerActStart(t);
   const expStart=next['Exp. Start']||'';
   const startDisplay=actStart||expStart||'—';
-  const startLabel=actStart?'ACT. START':'EXP. START';
+  const startLabel=actStart?'ACT. START':'EST. START';
   const routeUrl=(next['Route URL']||next['Route Link']||next['Komoot URL']||'').trim();
   const carUrl=(next['Car Start (Maps URL)']||'').trim();
 
@@ -2701,7 +2671,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
             onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:34px;height:34px;font-size:13px;flex-shrink:0'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:34px;height:34px;font-size:13px;flex-shrink:0">${initials}</div>`;
-    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div style="background:var(--card-person);border-radius:var(--r);padding:10px 12px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">${role.toUpperCase()}</div>
       <div style="display:flex;align-items:center;gap:8px;overflow:hidden">
         ${avHTML}<span style="font-size:14px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
@@ -2711,18 +2681,18 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
 
   // Stat mini — same helper as current leg
   function statMini(label,value,sub){
-    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px">
+    return `<div style="background:var(--card-stat);border-radius:var(--r);padding:10px 12px">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
       <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">${value}</div>
       ${sub?`<div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px">${sub}</div>`:''}
     </div>`;
   }
   function statLinkCard(label,url,linkText='🗺 Open route ↗',color='var(--btxt)'){
-    if(url) return `<a href="${url}" target="_blank" rel="noopener" style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;display:block;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+    if(url) return `<a href="${url}" target="_blank" rel="noopener" style="background:var(--card-link);border-radius:var(--r);padding:10px 12px;display:block;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
       <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:${color}">${linkText}</div>
     </a>`;
-    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px">
+    return `<div style="background:var(--card-link);border-radius:var(--r);padding:10px 12px;opacity:.5">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
       <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--txt3)">—</div>
     </div>`;
@@ -2740,13 +2710,13 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
           ${statMini('DISTANCE',`${dist} km`)}
           ${statMini('ESTIMATED DURATION',durStr)}
           ${statMini(startLabel,startDisplay)}
-          <div style="background:var(--gbg);border-radius:var(--r);padding:10px 12px;border:0.5px solid rgba(72,146,155,.15)">
-            <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--gtxt);opacity:.75;margin-bottom:6px">WEATHER</div>
+          <div style="background:var(--card-stat);border-radius:var(--r);padding:10px 12px">
+            <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">WEATHER</div>
             <div style="display:flex;align-items:center;gap:6px">
               <span id="weather-emoji" style="font-size:20px;line-height:1">—</span>
-              <span id="weather-temp" style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--gtxt)">—</span>
+              <span id="weather-temp" style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">—</span>
             </div>
-            <span id="weather-desc" style="font-family:'Space Mono',monospace;font-size:9px;color:var(--gtxt);opacity:.7;margin-top:2px;display:block"></span>
+            <span id="weather-desc" style="font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px;display:block"></span>
           </div>
           ${statLinkCard('ROUTE MAP',routeUrl)}
           ${statLinkCard('CAR START',carUrl,'📍 Open maps ↗','var(--atxt)')}
@@ -2773,12 +2743,11 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
       if(nextLegMap){nextLegMap.remove();nextLegMap=null;}
       container.innerHTML='<div id="next-leg-leaflet-map" style="width:100%;height:100%"></div>';
       const latlngs=track.map(p=>[p.y,p.x]);
-      const isDark=(()=>{const t=document.documentElement.getAttribute('data-theme');return t==='dark'||(t==null&&window.matchMedia('(prefers-color-scheme:dark)').matches);})();
       nextLegMap=L.map('next-leg-leaflet-map',{zoomControl:false,scrollWheelZoom:false,attributionControl:false,zoomSnap:0.25});
-      L.tileLayer(`https://{s}.basemaps.cartocdn.com/${isDark?'dark_all':'light_all'}/{z}/{x}/{y}{r}.png`,{maxZoom:19,subdomains:'abcd'}).addTo(nextLegMap);
-      nextLegPoly=L.polyline(latlngs,{color:getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#48929B',weight:3.5,opacity:0.9}).addTo(nextLegMap);
-      L.circleMarker(latlngs[0],{radius:6,fillColor:'#48929B',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
-      L.circleMarker(latlngs[latlngs.length-1],{radius:6,fillColor:'#D4900A',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
+      L.tileLayer(`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png`,{maxZoom:19,subdomains:'abcd'}).addTo(nextLegMap);
+      nextLegPoly=L.polyline(latlngs,{color:getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#718355',weight:3.5,opacity:0.9}).addTo(nextLegMap);
+      L.circleMarker(latlngs[0],{radius:6,fillColor:'#718355',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
+      L.circleMarker(latlngs[latlngs.length-1],{radius:6,fillColor:'#D94F3D',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
       nextLegMap.fitBounds(nextLegPoly.getBounds(),{padding:[10,10]});
     }
   }
@@ -2872,8 +2841,9 @@ function buildRestTracker(legs,currentIdx,tracker){
       :`<span class="rest-chip rest-chip-next" style="opacity:.4">Done</span>`;
     const restChip=restStr?`<span class="rest-chip rest-chip-rest">⏸ ${restStr}</span>`:'';
     return `<div class="rest-row">
-      <span style="cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')"> ${avHTML}</span>
-      <span class="rest-name" style="cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')"> ${name}</span>
+      <div class="rest-header" style="cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+        ${avHTML}<span class="rest-name">${name}</span>
+      </div>
       <div class="rest-timeline">
         ${lastChip}
         <div class="rest-line"></div>
@@ -2931,25 +2901,6 @@ function buildLeaderboard(legs,tracker){
   if(tbody) tbody.innerHTML=rows.join('');
 }
 
-// ─── DARK / LIGHT THEME TOGGLE ──────────────────────────────────────────────
-function getPreferredTheme(){
-  const stored=localStorage.getItem('bagelRelayTheme');
-  if(stored==='light'||stored==='dark') return stored;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
-}
-function applyTheme(theme){
-  document.documentElement.setAttribute('data-theme',theme);
-  const btn=document.getElementById('theme-toggle');
-  if(btn) btn.textContent=theme==='dark'?'☀️':'🌙';
-}
-function toggleTheme(){
-  const current=document.documentElement.getAttribute('data-theme')||getPreferredTheme();
-  const next=current==='dark'?'light':'dark';
-  localStorage.setItem('bagelRelayTheme',next);
-  applyTheme(next);
-  poiMapDrawn=false;
-}
-applyTheme(getPreferredTheme());
 
 loadData();
 loadPassport(false);
@@ -2962,210 +2913,218 @@ function initAllPills(){
   const detailRow=document.getElementById('detail-mtab-row');
   if(legRow) positionMtabPill(legRow);
   if(detailRow) positionMtabPill(detailRow);
+  const teamChartRow=document.getElementById('team-chart-tab-row');
+  if(teamChartRow) positionMtabPill(teamChartRow);
 }
 window.addEventListener('resize', initAllPills);
 setTimeout(initAllPills, 50);
 
-// ─── CATCH THE BAGELS — side-scrolling Dino-style mini game ─────────────────
-(function(){
-  const BAGELS    = [{e:'🥯',pts:10}];
-  const SNACKS    = [{e:'🍙',pts:5},{e:'🍈',pts:5},{e:'🍞',pts:5}];
-  const OBSTACLES = [{e:'🚧'},{e:'🦝'}]; // hitting any = instant game over
-  const RUNNER_E  = '🏃';
-  const ITEM_SZ   = 32;
-  const RUN_W     = 34, RUN_H = 42;
-  const RUNNER_X  = 110;
-  const GRAVITY   = 0.72;
-  const JUMP_V    = -14.5;
-  const MAX_JUMPS = 2;
+// ─── OVERVIEW MAP (Mission Control) ──────────────────────────────────────────
+function buildOverviewMap(legs, tracker, currentIdx){
+  const container=document.getElementById('overview-map');
+  if(!container||!legs.length||!Object.keys(coordsData).length) return;
 
-  let canvas,ctx,raf=null;
-  let gW=640,gH=400;
-
-  let runnerBot,velY,jumpCount;
-  const gndY=()=>gH-64;
-
-  let items=[],popups=[];
-  let score=0;
-  let scrollSpeed=5;
-  let frame=0,groundOff=0;
-  let spawnTimer=0,nextSpawn=80;
-  let running=false;
-  let bestScore=parseInt(localStorage.getItem('bagelGameBest')||'0')||0;
-
-  window.initGame=function(){
-    canvas=document.getElementById('game-canvas');
-    if(!canvas) return;
-    ctx=canvas.getContext('2d');
-    gW=canvas.width; gH=canvas.height;
-    resetRunner();
-    document.getElementById('game-best').textContent=bestScore;
-    drawFrame();
-    if(!canvas.dataset.wired){ canvas.dataset.wired='1'; wireControls(); }
-  };
-
-  function resetRunner(){ runnerBot=gndY(); velY=0; jumpCount=0; }
-
-  function doJump(){
-    if(!running) return;
-    if(jumpCount<MAX_JUMPS){ velY=JUMP_V; jumpCount++; }
-  }
-
-  function wireControls(){
-    document.addEventListener('keydown',e=>{
-      if(e.key==='ArrowUp'||e.key===' '||e.key.toLowerCase()==='w'){
-        e.preventDefault(); doJump();
-      }
+  if(!overviewMap){
+    overviewMap=L.map('overview-map',{
+      zoomControl:false,scrollWheelZoom:false,attributionControl:false,
+      dragging:false,touchZoom:false,doubleClickZoom:false,keyboard:false
     });
-    canvas.addEventListener('pointerdown',e=>{ e.preventDefault(); doJump(); });
+    L.tileLayer(`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png`,{maxZoom:19,subdomains:'abcd'}).addTo(overviewMap);
   }
 
-  /* ── Background ── */
-  function drawBg(){
-    const dark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-    ctx.fillStyle=dark?'#1e1e1c':'#f0ede8';
-    ctx.fillRect(0,0,gW,gH);
-    ctx.fillStyle=dark?'#2a2a27':'#e0ddd6';
-    ctx.beginPath(); ctx.moveTo(0,gH-110);
-    const mh=[55,95,65,115,75,100,58,88,48,72,105,62];
-    for(let i=0;i<=gW;i+=60) ctx.lineTo(i,gH-110-mh[(i/60)%mh.length]);
-    ctx.lineTo(gW,gH-110); ctx.closePath(); ctx.fill();
-    ctx.fillStyle=dark?'#313130':'#d8d6d0';
-    ctx.fillRect(0,gndY(),gW,gH-gndY());
-    ctx.fillStyle=dark?'#3f3f3c':'#c5c3bc';
-    ctx.fillRect(0,gndY(),gW,3);
-    ctx.save();
-    ctx.strokeStyle=dark?'rgba(255,255,255,.15)':'rgba(0,0,0,.12)';
-    ctx.lineWidth=2.5; ctx.setLineDash([22,18]);
-    ctx.lineDashOffset=-groundOff;
-    ctx.beginPath(); ctx.moveTo(0,gndY()+22); ctx.lineTo(gW,gndY()+22); ctx.stroke();
-    ctx.restore();
-  }
+  // Clear old layers (keep tile layer)
+  overviewMap.eachLayer(l=>{ if(!(l instanceof L.TileLayer)) overviewMap.removeLayer(l); });
 
-  /* ── Runner — flipped horizontally so it faces right ── */
-  function drawRunner(){
-    ctx.save();
-    ctx.scale(-1,1);
-    ctx.font=`${RUN_H}px serif`;
-    ctx.textAlign='center'; ctx.textBaseline='bottom';
-    ctx.fillText(RUNNER_E,-RUNNER_X,runnerBot);
-    ctx.restore();
-  }
+  const allLL=[];
+  legs.forEach((l,i)=>{
+    const legNum=parseInt(l['Leg']||'');
+    const track=coordsData[legNum];
+    if(!track||!track.length) return;
+    const latlngs=track.map(p=>[p.y,p.x]);
+    allLL.push(...latlngs);
+    const t=tracker[legNum]||{};
+    const done=!!trackerActEnd(t);
+    const active=i===currentIdx&&!done;
+    const color=done?'#718355':active?'#D94F3D':'#888';
+    const weight=done?3.5:active?4:1.5;
+    const opacity=done?0.9:active?1:0.35;
+    L.polyline(latlngs,{color,weight,opacity}).addTo(overviewMap);
 
-  function drawItems(){
-    ctx.font=`${ITEM_SZ}px serif`;
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    items.forEach(it=>ctx.fillText(it.e,it.x,it.y));
-  }
-
-  function drawPopups(){
-    popups.forEach(p=>{
-      ctx.globalAlpha=Math.max(0,p.life/30);
-      ctx.font="bold 14px 'Space Mono',monospace";
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillStyle=p.pos?'#1D9E75':'#A32D2D';
-      ctx.fillText(p.txt,p.x,p.y);
-      ctx.globalAlpha=1;
-    });
-  }
-
-  function drawFrame(){
-    ctx.clearRect(0,0,gW,gH);
-    drawBg(); drawItems(); drawRunner(); drawPopups();
-  }
-
-  /* ── Spawn ── */
-  function spawnItem(){
-    const r=Math.random();
-    let pool,air,isObstacle=false;
-    if(r<0.38){ pool=OBSTACLES; air=false; isObstacle=true; }
-    else if(r<0.66){ pool=BAGELS; air=true; }
-    else { pool=SNACKS; air=Math.random()<0.55; }
-    const def=pool[Math.floor(Math.random()*pool.length)];
-    const jumpPeak=gndY()+JUMP_V*JUMP_V/(2*GRAVITY);
-    const itemY=air
-      ? gndY()-(ITEM_SZ/2)-(35+Math.random()*Math.abs(gndY()-jumpPeak-20))
-      : gndY()-ITEM_SZ/2;
-    items.push({x:gW+ITEM_SZ, y:itemY, e:def.e, pts:def.pts||0, obstacle:isObstacle});
-  }
-
-  /* ── Update ── */
-  function update(){
-    frame++;
-
-    // Speed ramps up indefinitely based on frames survived
-    scrollSpeed=5+(frame/60)*0.18;
-    groundOff=(groundOff+scrollSpeed)%40;
-
-    // Spawn interval tightens over time (floor at 24 frames)
-    spawnTimer++;
-    if(spawnTimer>=nextSpawn){
-      spawnTimer=0;
-      const lo=Math.max(24,80-(frame/60)*1.2), hi=Math.max(lo+12,110-(frame/60));
-      nextSpawn=lo+Math.random()*(hi-lo);
-      spawnItem();
+    // Pulsing circle for active leg start
+    if(active){
+      const pt=latlngs[0];
+      const icon=L.divIcon({className:'',html:`
+        <div style="position:relative;width:16px;height:16px">
+          <div style="position:absolute;inset:0;border-radius:50%;background:#D94F3D;animation:pulse-ring 1.5s ease-out infinite"></div>
+          <div style="position:absolute;inset:3px;border-radius:50%;background:#D94F3D;border:1.5px solid #fff"></div>
+        </div>`,iconSize:[16,16],iconAnchor:[8,8]});
+      L.marker(pt,{icon}).addTo(overviewMap);
     }
+  });
 
-    velY+=GRAVITY;
-    runnerBot+=velY;
-    if(runnerBot>=gndY()){ runnerBot=gndY(); velY=0; jumpCount=0; }
+  if(allLL.length) overviewMap.fitBounds(L.latLngBounds(allLL),{padding:[8,8]});
+}
 
-    const rL=RUNNER_X-RUN_W*0.38, rR=RUNNER_X+RUN_W*0.38;
-    const rT=runnerBot-RUN_H*0.80, rB=runnerBot;
+// ─── TOAST NOTIFICATIONS ──────────────────────────────────────────────────────
+const _shownMilestones=new Set(JSON.parse(localStorage.getItem('shownMilestones')||'[]'));
 
-    let hitObstacle=false;
-    items=items.filter(it=>{
-      it.x-=scrollSpeed;
-      const iL=it.x-ITEM_SZ*0.38, iR=it.x+ITEM_SZ*0.38;
-      const iT=it.y-ITEM_SZ*0.38, iB=it.y+ITEM_SZ*0.38;
-      const hit=iL<rR&&iR>rL&&iT<rB&&iB>rT;
-      if(hit){
-        if(it.obstacle){ hitObstacle=true; return false; }
-        score+=it.pts;
-        popups.push({x:it.x,y:it.y-18,txt:'+'+(it.pts),life:30,pos:true});
-        document.getElementById('game-score').textContent=score;
-        return false;
-      }
-      return it.x>-ITEM_SZ;
-    });
+function showToast(icon,title,sub,durationMs=5000){
+  const c=document.getElementById('toast-container');
+  if(!c) return;
+  const el=document.createElement('div');
+  el.className='toast';
+  el.innerHTML=`<div class="toast-icon">${icon}</div><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-sub">${sub}</div></div>`;
+  el.onclick=()=>dismissToast(el);
+  c.appendChild(el);
+  setTimeout(()=>dismissToast(el),durationMs);
+}
+function dismissToast(el){
+  el.classList.add('out');
+  setTimeout(()=>el.remove(),300);
+}
 
-    if(hitObstacle){ endGame(); return; }
-    popups=popups.filter(p=>{p.y-=0.8;p.life--;return p.life>0;});
-  }
+function checkMilestones(legs,tracker,distCovered,currentIdx){
+  const totalKm=legs.reduce((s,l)=>s+(parseFloat(l['Distance (km)'])||0),0);
+  if(!totalKm) return;
+  const pct=distCovered/totalKm;
 
-  function loop(){ if(!running)return; update(); drawFrame(); raf=requestAnimationFrame(loop); }
-
-  window.startGame=function(){
-    if(running) return;
-    running=true;
-    score=0; items=[]; popups=[];
-    spawnTimer=0; nextSpawn=80; frame=0; groundOff=0;
-    scrollSpeed=5;
-    resetRunner();
-    document.getElementById('game-score').textContent='0';
-    const overlay=document.getElementById('game-overlay');
-    if(overlay) overlay.style.display='none';
-    if(raf) cancelAnimationFrame(raf);
-    loop();
-  };
-
-  function endGame(){
-    running=false;
-    if(raf){cancelAnimationFrame(raf);raf=null;}
-    if(score>bestScore){ bestScore=score; localStorage.setItem('bagelGameBest',String(bestScore)); }
-    document.getElementById('game-best').textContent=bestScore;
-    const overlay=document.getElementById('game-overlay');
-    if(overlay){
-      overlay.innerHTML=`
-        <div style="font-size:26px">💥</div>
-        <div style="font-weight:700;font-size:18px">Game Over</div>
-        <div style="font-size:13px;color:#e8e8e6">Score: <b style="color:#fff;font-size:18px">${score}</b> &nbsp;·&nbsp; Best: <b style="color:#fff">${bestScore}</b></div>
-        <button class="refresh-btn" onclick="startGame()">↻ Try Again</button>`;
-      overlay.style.display='flex';
+  const pctMilestones=[
+    {key:'pct25',thresh:0.25,icon:'🏅',title:'25% Complete!',sub:`${distCovered.toFixed(1)} km down · ${(totalKm-distCovered).toFixed(1)} km to go`},
+    {key:'pct50',thresh:0.50,icon:'🎉',title:'Halfway there!',sub:`${distCovered.toFixed(1)} km of ${totalKm.toFixed(1)} km done`},
+    {key:'pct75',thresh:0.75,icon:'🔥',title:'75% Complete!',sub:`Only ${(totalKm-distCovered).toFixed(1)} km left — keep pushing!`},
+  ];
+  pctMilestones.forEach(({key,thresh,icon,title,sub})=>{
+    if(pct>=thresh&&!_shownMilestones.has(key)){
+      _shownMilestones.add(key);
+      localStorage.setItem('shownMilestones',JSON.stringify([..._shownMilestones]));
+      showToast(icon,title,sub,7000);
     }
-    drawFrame();
+  });
+
+  // Day completion milestones
+  const days=allDays.length?allDays:groupByDay(legs);
+  days.forEach((day,di)=>{
+    const key=`day${di+1}done`;
+    if(_shownMilestones.has(key)) return;
+    const allDone=day.legs.every(({i})=>i<currentIdx||(i===currentIdx&&!!trackerActEnd(tracker[parseInt(legs[i]['Leg']||'')]||{})));
+    if(allDone&&day.legs.length>0){
+      _shownMilestones.add(key);
+      localStorage.setItem('shownMilestones',JSON.stringify([..._shownMilestones]));
+      const dayLabel=day.date?new Date(day.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):`Day ${di+1}`;
+      const dayKm=day.legs.reduce((s,{l})=>s+(parseFloat(l['Distance (km)'])||0),0);
+      showToast('🌟',`Day ${di+1} Complete!`,`${dayLabel} · ${dayKm.toFixed(1)} km done`,7000);
+    }
+  });
+}
+
+// ─── PHOTO GALLERY ──────────────────────────────────────────────────────────
+let _galleryPhotos = []; // [{url, legNum, date, dayLabel, runners}]
+let _galleryFilter = 'all';
+
+function drivePhotoUrl(raw) {
+  if (!raw) return '';
+  // Handle Google Drive sharing links → thumbnail URL
+  const m = raw.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w800`;
+  // Handle open?id= format
+  const m2 = raw.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (m2) return `https://drive.google.com/thumbnail?id=${m2[1]}&sz=w800`;
+  return raw;
+}
+
+function buildPhotoGallery(legs, tracker) {
+  // May be called with no args (tab switch) — use cached data
+  if (legs && tracker) {
+    const days = groupByDay(legs);
+    const photos = [];
+    days.forEach((day, di) => {
+      const dayLabel = day.date
+        ? new Date(day.date).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'})
+        : `Day ${di+1}`;
+      day.legs.forEach(({l}) => {
+        const lNum = parseInt(l['Leg']||'');
+        const t = tracker[lNum]||{};
+        const raw = trackerPhoto(t);
+        if (!raw) return;
+        // May be comma-separated if multiple photos
+        raw.split(',').forEach(r => {
+          const url = drivePhotoUrl(r.trim());
+          if (url) photos.push({url, legNum: l['Leg'], date: day.date, dayLabel, dayIdx: di,
+            runners: [l['Runner 1 (Pacer)'], l['Runner 2']].filter(Boolean).join(' & ')});
+        });
+      });
+    });
+    _galleryPhotos = photos;
   }
-})();
+  renderGallery();
+}
+
+function renderGallery() {
+  const grid = document.getElementById('gallery-grid');
+  const filterBar = document.getElementById('gallery-day-filter');
+  if (!grid) return;
+
+  const photos = _galleryPhotos;
+
+  if (!photos.length) {
+    grid.innerHTML = '<div style="color:var(--txt3);font-size:12px;font-family:\'Space Mono\',monospace;padding:2rem 0">No photos logged yet — photos will appear here as legs are completed.</div>';
+    filterBar.innerHTML = '';
+    return;
+  }
+
+  // Build day filter buttons
+  const days = [...new Set(photos.map(p => p.dayLabel))];
+  filterBar.innerHTML = ['All', ...days].map(d => {
+    const val = d === 'All' ? 'all' : d;
+    const active = _galleryFilter === val;
+    return `<button onclick="setGalleryFilter('${val}')" style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:5px 12px;border-radius:20px;border:0.5px solid ${active?'var(--green)':'var(--bdr2)'};background:${active?'var(--gbg)':'var(--bg2)'};color:${active?'var(--green)':'var(--txt2)'};cursor:pointer;transition:all .15s">${d.toUpperCase()}</button>`;
+  }).join('');
+
+  const filtered = _galleryFilter === 'all' ? photos : photos.filter(p => p.dayLabel === _galleryFilter);
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div style="color:var(--txt3);font-size:12px;font-family:\'Space Mono\',monospace;padding:2rem 0">No photos for this day yet.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(p => `
+    <div style="break-inside:avoid;margin-bottom:12px;border-radius:var(--r);overflow:hidden;border:0.5px solid var(--bdr);background:var(--bg2)">
+      <img src="${p.url}" alt="Leg ${p.legNum}" loading="lazy"
+        style="width:100%;display:block;object-fit:cover;cursor:pointer"
+        onclick="openPhotoLightbox('${p.url}','${p.dayLabel}','${p.runners}','${p.legNum}')"
+        onerror="this.parentElement.style.display='none'"/>
+      <div style="padding:7px 10px">
+        <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--txt3)">${p.dayLabel.toUpperCase()} · LEG ${p.legNum}</div>
+        ${p.runners?`<div style="font-size:11px;color:var(--txt2);margin-top:2px">${p.runners}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function setGalleryFilter(val) {
+  _galleryFilter = val;
+  renderGallery();
+}
+
+// Lightbox
+function openPhotoLightbox(url, day, runners, leg) {
+  let lb = document.getElementById('photo-lightbox');
+  if (!lb) {
+    lb = document.createElement('div');
+    lb.id = 'photo-lightbox';
+    lb.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:1100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;cursor:pointer';
+    lb.onclick = () => lb.style.display = 'none';
+    document.body.appendChild(lb);
+    document.addEventListener('keydown', e => { if(e.key==='Escape') lb.style.display='none'; });
+  }
+  lb.innerHTML = `
+    <img src="${url}" style="max-width:min(900px,94vw);max-height:80vh;object-fit:contain;border-radius:8px;display:block"/>
+    <div style="text-align:center">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;color:#aaa">${day.toUpperCase()} · LEG ${leg}</div>
+      ${runners?`<div style="font-size:13px;color:#fff;margin-top:4px">${runners}</div>`:''}
+      <div style="font-size:11px;color:#888;margin-top:6px">Click anywhere to close</div>
+    </div>`;
+  lb.style.display = 'flex';
+}
 </script>
 <!-- Chart tooltip -->
 <div id="chart-tip" style="position:fixed;display:none;background:var(--bg2);border:0.5px solid var(--bdr);border-radius:8px;padding:7px 12px;font-family:'Space Mono',monospace;font-size:11px;color:var(--txt);pointer-events:none;z-index:9999;box-shadow:var(--shadow-lg);white-space:nowrap"></div>
@@ -3212,6 +3171,7 @@ setTimeout(initAllPills, 50);
   });
 })();
 </script>
+<div id="toast-container"></div>
 <!-- Runner profile modal -->
 <div class="runner-modal-overlay" id="runner-modal-overlay" onclick="closeRunnerModal(event)">
   <div class="runner-modal" id="runner-modal">
@@ -3322,3 +3282,11 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElemen
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
