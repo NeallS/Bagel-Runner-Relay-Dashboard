@@ -238,6 +238,20 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .cur-map-wrap{border-radius:6px;overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);flex:1;min-height:180px;position:relative}
 .cur-map-wrap iframe{display:block;width:100%;height:160px;border:none}
 .poi-map-wrap{border-radius:var(--rl);overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);height:480px;position:relative;box-shadow:var(--shadow)}
+.poi-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.poi-chip{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:5px 12px;border-radius:100px;border:0.5px solid var(--bdr2);background:var(--bg);color:var(--txt2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.poi-chip.active{background:var(--txt);color:#F5F1E8;border-color:var(--txt)}
+.poi-chip:hover:not(.active){background:var(--bg2)}
+.poi-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+@media(max-width:600px){.poi-cards{grid-template-columns:1fr}}
+.poi-combined-map-wrap{border-radius:var(--rl);overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);height:380px;position:relative;box-shadow:var(--shadow)}
+.poi-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.poi-card:hover{border-color:var(--bdr2)}
+.poi-card.highlighted{border-color:var(--txt);box-shadow:0 0 0 1px var(--txt)}
+.poi-cat-badge{font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;padding:2px 8px;border-radius:100px;display:inline-block;width:fit-content}
+.poi-name{font-size:13px;font-weight:600;color:var(--txt)}
+.poi-desc{font-size:12px;color:var(--txt3);line-height:1.45}
+.poi-empty{text-align:center;color:var(--txt3);font-size:13px;padding:32px 0;grid-column:span 2}
 .elev-wrap{background:var(--bg2);border:0.5px solid var(--bdr);border-radius:6px;padding:10px 10px 6px}
 .elev-wrap svg{width:100%;height:140px;display:block}
 .elev-stats{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:4px;padding:0 2px}
@@ -274,8 +288,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .pp-flip-in{animation:ppFlipIn .22s ease-out forwards;transform-origin:left center}
 .pp-flip-out-back{animation:ppFlipOutBack .22s ease-in forwards;transform-origin:right center}
 .pp-flip-in-back{animation:ppFlipInBack .22s ease-out forwards;transform-origin:right center}
-.passport{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);box-shadow:var(--shadow);display:flex;flex-direction:column;height:560px}
-@media(max-width:600px){.passport{height:500px}}
+.passport{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);box-shadow:var(--shadow);display:flex;flex-direction:column;height:calc(100vh - 210px);min-height:400px;max-height:700px}
+@media(max-width:600px){.passport{height:calc(100vh - 160px);max-height:none}}
 .rp-content{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg);border-radius:var(--rl) var(--rl) 0 0;min-height:0}
 .passport-cover{background:linear-gradient(135deg,var(--txt) 0%,var(--txt2) 100%);color:var(--bg);padding:2.5rem 1.5rem;text-align:center}
 .passport-stamp-icon{font-size:48px;margin-bottom:.5rem;line-height:1}
@@ -325,7 +339,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .upcoming-title{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
 
 /* ── Form / Google Form ── */
-.form-glink{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--btxt);background:var(--bbg);border:0.5px solid rgba(24,95,165,.2);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(24,95,165,.08)}
+.form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:var(--btxt);background:var(--bbg);border:0.5px solid rgba(24,95,165,.2);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(24,95,165,.08)}
 .form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 6px rgba(24,95,165,.12)}
 .form-glink:active{transform:scale(0.98)}
 
@@ -395,6 +409,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 #gallery-grid img{transition:opacity .2s}
 #gallery-grid img:hover{opacity:.88}
 @media(max-width:600px){#gallery-grid{columns:2 140px}}
+
 </style>
 </head>
 <body>
@@ -417,6 +432,10 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
         <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
         <span class="tl-label">POINTS OF INTEREST</span>
       </button>
+      <button class="tl-btn" data-tab="game" onclick="switchTab('game')" role="tab">
+        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+        <span class="tl-label">PHOTO GALLERY</span>
+      </button>
       <button class="tl-btn" data-tab="financials" onclick="switchTab('financials')" role="tab">
         <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
         <span class="tl-label">FINANCIALS</span>
@@ -424,10 +443,6 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
       <button class="tl-btn" data-tab="contacts" onclick="switchTab('contacts')" role="tab">
         <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
         <span class="tl-label">CONTACT INFO</span>
-      </button>
-      <button class="tl-btn" data-tab="game" onclick="switchTab('game')" role="tab">
-        <span class="tl-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
-        <span class="tl-label">📸 PHOTO GALLERY</span>
       </button>
     </div>
   </nav>
@@ -496,7 +511,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 
     <!-- Route overview map -->
     <div class="card" style="padding:0;overflow:hidden">
-      <div id="overview-map" style="height:220px;width:100%;background:var(--bg2)"></div>
+      <div id="overview-map" style="height:300px;width:100%;background:var(--bg2)"></div>
     </div>
 
     <!-- Current Leg / Next Leg tabbed card -->
@@ -517,7 +532,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
             <div class="cur-left">
               <div class="cur-num" id="cur-num">LEG -- OF 59</div>
               <div id="cur-leg-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"></div>
-              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:9px 12px;background:var(--bbg);border:0.5px solid rgba(24,95,165,.25);border-radius:var(--r);color:var(--btxt);font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:10px 12px;background:var(--rtxt);border:none;border-radius:var(--r);color:#F5F1E8;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s;box-shadow:0 2px 6px rgba(217,79,61,.25)" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
                 📋 &nbsp;LOG LEG TIME
               </a>
             </div>
@@ -689,24 +704,44 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
     <div class="hdr" style="margin-bottom:1rem">
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; POINTS OF INTEREST</div>
-        <div class="pg-title">Route POIs &nbsp;<span>Saved Places</span></div>
+        <div class="pg-title">Route POIs &nbsp;<span>Places to Explore</span></div>
       </div>
-    </div>
-    <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:48px 24px;text-align:center">
-      <span style="font-size:40px;line-height:1">📍</span>
-      <div style="font-size:14px;font-weight:600;color:var(--txt2)">Relay route points of interest are saved as a Google Maps list</div>
-      <a href="https://maps.app.goo.gl/JDRXx5oi72KPzAqe7" target="_blank" rel="noopener" class="form-glink">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        Open Points of Interest in Google Maps
-      </a>
+      <button class="refresh-btn" onclick="loadPOIs(true)">↻ Refresh</button>
     </div>
 
-    <!-- Full route overview map -->
-    <div class="sec">FULL ROUTE MAP</div>
-    <div class="poi-map-wrap" id="poi-map-wrap">
-      <div id="poi-route-map" style="width:100%;height:100%"></div>
+    <div id="poi-banner" class="banner info"><span>⏳</span><span>Loading points of interest…</span></div>
+
+    <div id="poi-main" style="display:none">
+      <!-- Sub-tabs -->
+      <div class="mtab-row" id="poi-tab-row" style="margin-bottom:12px">
+        <div class="mtab-pill" id="poi-tab-pill"></div>
+        <div class="mtab-lamp"></div>
+        <button class="mtab-btn active" data-mtab="poi-now" onclick="switchPOITab('poi-now')">NOW</button>
+        <button class="mtab-btn" data-mtab="poi-ahead" onclick="switchPOITab('poi-ahead')">AHEAD</button>
+        <button class="mtab-btn" data-mtab="poi-all" onclick="switchPOITab('poi-all')">ALL STOPS</button>
+      </div>
+
+      <!-- Combined route + POI map -->
+      <div class="sec">ROUTE MAP</div>
+      <div class="poi-combined-map-wrap">
+        <div id="poi-mini-map" style="width:100%;height:100%"></div>
+      </div>
+      <div class="legend" id="poi-map-legend" style="margin-bottom:1rem"></div>
+
+      <!-- Category filter chips -->
+      <div class="poi-chips" id="poi-chips"></div>
+
+      <!-- Card grid -->
+      <div class="poi-cards" id="poi-list"></div>
+
+      <!-- Google Maps link -->
+      <div style="margin-top:4px">
+        <a href="https://maps.app.goo.gl/JDRXx5oi72KPzAqe7" target="_blank" rel="noopener" class="form-glink" style="display:flex">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Full List in Google Maps
+        </a>
+      </div>
     </div>
-    <div class="legend" id="poi-map-legend"></div>
   </div>
 
   <!-- ═══════════════ FINANCIALS TAB ═══════════════ -->
@@ -760,6 +795,10 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; PHOTO GALLERY</div>
         <div class="pg-title">Race Photos &nbsp;<span>Nov 1–6 · Tokyo → Osaka</span></div>
       </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <a id="gallery-submit-btn" href="#" target="_blank" rel="noopener" class="form-glink">📷 Submit Photo</a>
+        <button class="refresh-btn" onclick="loadCommunityPhotos(true)">↻ Refresh</button>
+      </div>
     </div>
     <div id="gallery-day-filter" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem"></div>
     <div id="gallery-grid" style="columns:3 220px;column-gap:12px;row-gap:0">
@@ -778,6 +817,9 @@ const COORDS_TAB = 'Route Coordinates';   // sheet tab: Leg | Lat | Lng | Elevat
 const RPASS_TAB  = 'Relay Passport';      // sheet tab: Category | Challenge | Difficulty
 const CI_TAB     = 'Contact Information';  // sheet tab name for contact information
 const FT_TAB     = 'Financial Tracker';    // sheet tab fed by the expenses Google Form
+const POI_TAB          = 'Points of Interest';   // sheet tab: Name | Category | Leg | Description | Maps URL
+const COMMUNITY_PHOTOS_TAB = 'Community Photos';     // sheet tab fed by the photo submission form
+const COMMUNITY_PHOTOS_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdVczd63KU0yaBOPm1eBW-tSuOuu7XdBkN3taFqqXR88R03ew/viewform?usp=dialog';
 const csvURL     = tab => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
@@ -809,6 +851,7 @@ const AV = ['av-t','av-b','av-a','av-p','av-c','av-t','av-b','av-a','av-p'];
 let passportLoaded = false;
 let contactsLoaded   = false;
 let financeLoaded    = false;
+let poiLoaded        = false;
 // ─── CUSTOM DROPDOWN ─────────────────────────────────────────────────────────
 function setCselVal(id,label){
   const el=document.getElementById(id+'-val');
@@ -900,8 +943,8 @@ function switchTab(id){
   if(id==='contacts'&&!contactsLoaded)    loadContacts(false);
   if(id==='financials'&&!financeLoaded)   loadFinances(false);
   if(id==='poi'){
-    if(!poiMapDrawn) drawFullRouteMap();
-    else if(poiMap) setTimeout(()=>poiMap.invalidateSize(),0);
+    if(!poiLoaded) loadPOIs(false);
+    else setTimeout(()=>poiMiniMap&&poiMiniMap.invalidateSize(),0);
   }
   if(id==='game') buildPhotoGallery();
 }
@@ -1163,6 +1206,242 @@ async function loadContacts(force){
 }
 
 // ─── FINANCIAL TRACKER ───────────────────────────────────────────────────────
+// ── Category colours for POI badges ──────────────────────────────────────
+const POI_CAT_STYLE = {
+  'Temple/Shrine': {bg:'#E4E9D4',color:'#4A5830'},
+  'Food & Drink':  {bg:'#F8EDCC',color:'#7A5A10'},
+  'Viewpoint':     {bg:'#DDE8F0',color:'#1F3A5F'},
+  'Market':        {bg:'#F5E0E8',color:'#8A2040'},
+  'Other':         {bg:'#E8E4D8',color:'#4A4030'},
+};
+function poiCatStyle(cat){
+  return POI_CAT_STYLE[cat]||POI_CAT_STYLE['Other'];
+}
+
+let poiData = [];
+let poiActiveCat = 'All';
+let poiActiveTab = 'poi-now';
+let poiMiniMap = null;
+let poiMarkers = [];
+
+async function loadPOIs(force){
+  if(poiLoaded&&!force) return;
+  const banner = document.getElementById('poi-banner');
+  const main = document.getElementById('poi-main');
+  if(banner) banner.style.display='';
+  if(main) main.style.display='none';
+  try {
+    const res = await fetch(csvURL(POI_TAB)+'&cachebust='+Date.now());
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    if(!rows.length) throw new Error('empty');
+    const headers = rows[0].map(h=>h.trim());
+    const get = (row,key) => {
+      const i = headers.findIndex(h=>h.toLowerCase()===key.toLowerCase());
+      return i>=0?(row[i]||'').trim():'';
+    };
+    poiData = rows.slice(1).filter(r=>r.some(c=>c.trim())).map(r=>({
+      name: get(r,'Name'),
+      category: get(r,'Category')||'Other',
+      leg: parseInt(get(r,'Leg'))||0,
+      description: get(r,'Description'),
+      mapsUrl: get(r,'Maps URL'),
+      lat: parseFloat(get(r,'Lat'))||null,
+      lng: parseFloat(get(r,'Lng'))||null,
+    })).filter(p=>p.name);
+
+    poiLoaded = true;
+    if(banner) banner.style.display='none';
+    if(main) main.style.display='';
+    initPOIMap();
+    renderPOITab();
+    positionMtabPill(document.getElementById('poi-tab-row'));
+  } catch(e){
+    if(banner){ banner.className='banner warn'; banner.innerHTML='<span>⚠️</span><span>Could not load POI data. Add a "Points of Interest" tab to your sheet with columns: Name | Category | Leg | Description | Maps URL</span>'; }
+    if(main) main.style.display='none';
+  }
+}
+
+function initPOIMap(){
+  if(poiMiniMap) return;
+  const el = document.getElementById('poi-mini-map');
+  if(!el||!legsData.length||!Object.keys(coordsData).length) return;
+  poiMiniMap = L.map('poi-mini-map',{zoomControl:false,attributionControl:false,scrollWheelZoom:true,dragging:true,touchZoom:true,doubleClickZoom:true});
+  L.control.zoom({position:'bottomright'}).addTo(poiMiniMap);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(poiMiniMap);
+
+  // Build day→index mapping (same method as drawFullRouteMap)
+  const dayByLegIdx={};
+  (allDays.length?allDays:groupByDay(legsData)).forEach((day,di)=>{
+    day.legs.forEach(({i})=>{ dayByLegIdx[i]=di+1; });
+  });
+
+  // Draw full route colour-coded by day
+  const allLL=[];
+  let firstPoint=null, lastPoint=null;
+  legsData.forEach((l,i)=>{
+    const legNum=parseInt(l['Leg']||'');
+    const track=coordsData[legNum];
+    if(!track||!track.length) return;
+    const latlngs=track.map(p=>[p.y,p.x]);
+    allLL.push(...latlngs);
+    if(!firstPoint) firstPoint=latlngs[0];
+    lastPoint=latlngs[latlngs.length-1];
+    const day=dayByLegIdx[i]||1;
+    L.polyline(latlngs,{color:DAY_COLORS[day]||'#718355',weight:3,opacity:0.85}).addTo(poiMiniMap);
+  });
+  if(firstPoint) L.circleMarker(firstPoint,{radius:7,fillColor:'#718355',color:'#fff',weight:2,fillOpacity:1}).bindTooltip('START — Tokyo',{permanent:false,direction:'top'}).addTo(poiMiniMap);
+  if(lastPoint)  L.circleMarker(lastPoint, {radius:7,fillColor:'#D94F3D',color:'#fff',weight:2,fillOpacity:1}).bindTooltip('FINISH — Osaka',{permanent:false,direction:'top'}).addTo(poiMiniMap);
+  if(allLL.length) poiMiniMap.fitBounds(L.latLngBounds(allLL),{padding:[12,12]});
+
+  // Legend
+  const legendEl=document.getElementById('poi-map-legend');
+  if(legendEl){
+    const daysUsed=[...new Set(Object.values(dayByLegIdx))].sort((a,b)=>a-b);
+    legendEl.innerHTML=daysUsed.map(d=>
+      `<div class="li"><div class="sw" style="background:${DAY_COLORS[d]||'#718355'}"></div>Day ${d}</div>`
+    ).join('');
+  }
+  poiMapDrawn=true;
+}
+
+function switchPOITab(id){
+  poiActiveTab = id;
+  poiActiveCat = 'All';
+  const row = document.getElementById('poi-tab-row');
+  if(row){
+    row.querySelectorAll('.mtab-btn').forEach(b=>b.classList.remove('active'));
+    row.querySelector(`.mtab-btn[data-mtab="${id}"]`)?.classList.add('active');
+    positionMtabPill(row);
+  }
+  renderPOITab();
+}
+
+function setPOICat(cat){
+  poiActiveCat = cat;
+  renderPOITab();
+}
+
+function poiTabPOIs(){
+  const currentIdx = findCurrentIdx(legsData, trackerData);
+  const currentLeg = parseInt((legsData[currentIdx]||{})['Leg']||'0');
+  if(poiActiveTab==='poi-now'){
+    return {pois: poiData.filter(p=>p.leg&&Math.abs(p.leg-currentLeg)<=3), label:`Near Leg ${currentLeg}`};
+  } else if(poiActiveTab==='poi-ahead'){
+    return {pois: poiData.filter(p=>p.leg&&p.leg>currentLeg&&p.leg<=currentLeg+8), label:`Legs ${currentLeg+1}–${currentLeg+8}`};
+  }
+  return {pois: poiData, label:'All Stops'};
+}
+
+function renderPOITab(){
+  const {pois, label} = poiTabPOIs();
+
+  // Category chips — only cats present in this tab's pois
+  const cats = ['All',...[...new Set(pois.map(p=>p.category))].sort()];
+  const chipsEl = document.getElementById('poi-chips');
+  if(chipsEl){
+    if(poiActiveCat!=='All'&&!cats.includes(poiActiveCat)) poiActiveCat='All';
+    chipsEl.innerHTML = cats.map(c=>`<button class="poi-chip${c===poiActiveCat?' active':''}" onclick="setPOICat('${c}')">${c}</button>`).join('');
+  }
+
+  // Filter by category
+  const filtered = poiActiveCat==='All'?pois:pois.filter(p=>p.category===poiActiveCat);
+
+  // Render cards
+  const listEl = document.getElementById('poi-list');
+  if(listEl){
+    if(filtered.length){
+      listEl.innerHTML = filtered.map((p,i)=>poiCard(p,i)).join('');
+    } else {
+      listEl.innerHTML = `<div class="poi-empty">${pois.length?'No POIs in this category.':'No POIs logged for this window yet.'}</div>`;
+    }
+  }
+
+  // Update mini-map markers
+  updatePOIMarkers(filtered);
+}
+
+function parseMapsUrlCoords(url){
+  if(!url) return null;
+  // /@lat,lng,zoom — standard place/search URL
+  let m = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)[,z]/);
+  if(m) return [parseFloat(m[1]), parseFloat(m[2])];
+  // ?q=lat,lng or &q=lat,lng
+  m = url.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if(m) return [parseFloat(m[1]), parseFloat(m[2])];
+  // ?ll=lat,lng
+  m = url.match(/[?&]ll=(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if(m) return [parseFloat(m[1]), parseFloat(m[2])];
+  return null;
+}
+
+function poiLatLng(p){
+  // 1. Explicit Lat/Lng columns
+  if(p.lat&&p.lng) return [p.lat, p.lng];
+  // 2. Parse from Maps URL
+  const fromUrl = parseMapsUrlCoords(p.mapsUrl);
+  if(fromUrl) return fromUrl;
+  // 3. Fall back to leg midpoint
+  const track = coordsData[p.leg];
+  if(track&&track.length){
+    const mid = track[Math.floor(track.length/2)];
+    return [mid.y, mid.x];
+  }
+  return null;
+}
+
+function updatePOIMarkers(pois){
+  if(!poiMiniMap) return;
+  poiMarkers.forEach(m=>poiMiniMap.removeLayer(m));
+  poiMarkers = [];
+
+  pois.forEach((p,i)=>{
+    const ll = poiLatLng(p);
+    if(!ll) return;
+    const s = poiCatStyle(p.category);
+    const marker = L.circleMarker(ll,{
+      radius:9, fillColor:s.bg, color:s.color, weight:2.5, fillOpacity:1, interactive:true
+    }).bindTooltip(p.name,{permanent:false,direction:'top'}).addTo(poiMiniMap);
+    marker.on('click',()=>highlightPOICard(i));
+    poiMarkers.push(marker);
+  });
+}
+
+function highlightPOICard(idx){
+  document.querySelectorAll('.poi-card').forEach(c=>c.classList.remove('highlighted'));
+  const card = document.getElementById(`poi-card-${idx}`);
+  if(card){
+    card.classList.add('highlighted');
+    card.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+function highlightPOIMarker(idx){
+  if(poiMiniMap&&poiMarkers[idx]){
+    poiMiniMap.panTo(poiMarkers[idx].getLatLng(),{animate:true});
+    document.querySelectorAll('.poi-card').forEach(c=>c.classList.remove('highlighted'));
+    document.getElementById(`poi-card-${idx}`)?.classList.add('highlighted');
+  }
+}
+
+function poiCard(p,i){
+  const s = poiCatStyle(p.category);
+  const legBadge = p.leg?`<span style="font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3)">Leg ${p.leg}</span>`:'';
+  const link = p.mapsUrl
+    ?`<a href="${p.mapsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--btxt);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:2px">📍 Open in Maps ↗</a>`
+    :'';
+  return `<div class="poi-card" id="poi-card-${i}" onclick="highlightPOIMarker(${i})">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+      <span class="poi-cat-badge" style="background:${s.bg};color:${s.color}">${p.category}</span>
+      ${legBadge}
+    </div>
+    <div class="poi-name">${p.name}</div>
+    ${p.description?`<div class="poi-desc">${p.description}</div>`:''}
+    ${link}
+  </div>`;
+}
+
 async function loadFinances(force){
   if(financeLoaded&&!force) return;
   const banner   = document.getElementById('ft-banner');
@@ -1713,8 +1992,7 @@ function drawRoutePath(container, trackPoints){
   });
 
   // CartoDB Positron (light) / Dark Matter (dark) — minimal, no API key needed
-  const tileStyle='light_all';
-  L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tileStyle}/{z}/{x}/{y}{r}.png`,{
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
     maxZoom:19,
     subdomains:'abcd'
   }).addTo(leafletMap);
@@ -1755,8 +2033,7 @@ function drawFullRouteMap(){
     zoomSnap:0.25
   });
 
-  const tileStyle='light_all';
-  L.tileLayer(`https://{s}.basemaps.cartocdn.com/${tileStyle}/{z}/{x}/{y}{r}.png`,{
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
     maxZoom:19,
     subdomains:'abcd'
   }).addTo(poiMap);
@@ -2337,7 +2614,7 @@ function render(legs,tracker){
             onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:34px;height:34px;font-size:13px;flex-shrink:0'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:34px;height:34px;font-size:13px;flex-shrink:0">${initials}</div>`;
-    return `<div style="background:var(--card-person);border-radius:var(--r);padding:10px 12px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div style="background:var(--card-person);border-radius:var(--r);padding:10px 12px;cursor:pointer;border:0.5px solid var(--bdr)" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">${role.toUpperCase()}</div>
       <div style="display:flex;align-items:center;gap:8px;overflow:hidden">
         ${avHTML}<span style="font-size:14px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
@@ -2349,32 +2626,30 @@ function render(legs,tracker){
 
   // Leg stats mini-grid (fills dead space in the left panel)
   function statMini(label,value,sub){
-    return `<div style="background:var(--card-stat);border-radius:var(--r);padding:10px 12px">
+    return `<div style="background:var(--card-stat);border-radius:var(--r);padding:10px 12px;border:0.5px solid var(--bdr)">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
       <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">${value}</div>
       ${sub?`<div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px">${sub}</div>`:''}
     </div>`;
   }
-  // Card that doubles as a clickable link to the route map
-  function statLinkCard(label,url){
+  // Link card styled like the Log Leg Time button — spans both grid columns
+  function statLinkCard(label,url,linkText='🗺 Open route ↗'){
     if(url){
-      return `<a href="${url}" target="_blank" rel="noopener" style="background:var(--card-link);border-radius:var(--r);padding:10px 12px;display:block;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--btxt);margin-bottom:4px">${label}</div>
-        <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--btxt)">🗺 Open route ↗</div>
-      </a>`;
+      return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#C5D4E8;border-color:rgba(31,58,95,.3)">
+        <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em">${linkText}</span>
+      </a></div>`;
     }
-    return `<div style="background:var(--card-link);border-radius:var(--r);padding:10px 12px;opacity:.5">
-      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
-      <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt3)">—</div>
-    </div>`;
+    return '';
   }
   const expDurFmt=(()=>{if(!dur)return '—';const m=Math.floor(dur);const s=Math.round((dur-m)*60);return s>0?`${m}m ${s}s`:`${m} min`;})();
+  const curStartDisplay=actStart||cur['Exp. Start']||'—';
+  const curStartLabel=actStart?'ACT. START':'EST. START';
 
   // Revised est. finish for upcoming/running legs, plain date for completed legs
   const revFinCard=(!isCompleted&&revFinStr)
-    ? statMini('ESTIMATED FINISH',revFinStr,cur['Date']||'')
+    ? statMini('EST. FINISH',revFinStr,cur['Date']||'')
     : statMini('DAY',cur['Date']||'—');
-  const routeMapCard=statLinkCard('ROUTE MAP',routeUrl);
+  const routeMapCard=statLinkCard('ROUTE MAP',routeUrl,'🗺 Open route ↗');
 
   const legStatsEl=document.getElementById('cur-leg-stats');
   if(legStatsEl) legStatsEl.innerHTML=
@@ -2382,6 +2657,7 @@ function render(legs,tracker){
     runnerCard(cur['Runner 2'],'Runner')+
     statMini('DISTANCE',`${km} km`)+
     statMini('ESTIMATED DURATION',expDurFmt)+
+    statMini(curStartLabel,curStartDisplay)+
     revFinCard+
     routeMapCard;
 
@@ -2671,7 +2947,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
             onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:34px;height:34px;font-size:13px;flex-shrink:0'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:34px;height:34px;font-size:13px;flex-shrink:0">${initials}</div>`;
-    return `<div style="background:var(--card-person);border-radius:var(--r);padding:10px 12px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div style="background:var(--card-person);border-radius:var(--r);padding:10px 12px;cursor:pointer;border:0.5px solid var(--bdr)" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">${role.toUpperCase()}</div>
       <div style="display:flex;align-items:center;gap:8px;overflow:hidden">
         ${avHTML}<span style="font-size:14px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
@@ -2681,21 +2957,17 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
 
   // Stat mini — same helper as current leg
   function statMini(label,value,sub){
-    return `<div style="background:var(--card-stat);border-radius:var(--r);padding:10px 12px">
+    return `<div style="background:var(--card-stat);border-radius:var(--r);padding:10px 12px;border:0.5px solid var(--bdr)">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
       <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">${value}</div>
       ${sub?`<div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px">${sub}</div>`:''}
     </div>`;
   }
-  function statLinkCard(label,url,linkText='🗺 Open route ↗',color='var(--btxt)'){
-    if(url) return `<a href="${url}" target="_blank" rel="noopener" style="background:var(--card-link);border-radius:var(--r);padding:10px 12px;display:block;text-decoration:none;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
-      <div style="font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:${color}">${linkText}</div>
-    </a>`;
-    return `<div style="background:var(--card-link);border-radius:var(--r);padding:10px 12px;opacity:.5">
-      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
-      <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--txt3)">—</div>
-    </div>`;
+  function statLinkCard(label,url,linkText='🗺 Open route ↗'){
+    if(url) return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#C5D4E8;border-color:rgba(31,58,95,.3)">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em">${linkText}</span>
+    </a></div>`;
+    return '';
   }
 
   const durStr=dur?`${Math.floor(dur)}m ${Math.round((dur%1)*60)}s`:'—';
@@ -2710,7 +2982,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
           ${statMini('DISTANCE',`${dist} km`)}
           ${statMini('ESTIMATED DURATION',durStr)}
           ${statMini(startLabel,startDisplay)}
-          <div style="background:var(--card-stat);border-radius:var(--r);padding:10px 12px">
+          <div style="background:var(--card-stat);border-radius:var(--r);padding:10px 12px;border:0.5px solid var(--bdr)">
             <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">WEATHER</div>
             <div style="display:flex;align-items:center;gap:6px">
               <span id="weather-emoji" style="font-size:20px;line-height:1">—</span>
@@ -2719,7 +2991,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
             <span id="weather-desc" style="font-family:'Space Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px;display:block"></span>
           </div>
           ${statLinkCard('ROUTE MAP',routeUrl)}
-          ${statLinkCard('CAR START',carUrl,'📍 Open maps ↗','var(--atxt)')}
+          ${statLinkCard('CAR START',carUrl,'📍 Open maps ↗')}
         </div>
       </div>
       <div class="cur-right">
@@ -2744,7 +3016,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
       container.innerHTML='<div id="next-leg-leaflet-map" style="width:100%;height:100%"></div>';
       const latlngs=track.map(p=>[p.y,p.x]);
       nextLegMap=L.map('next-leg-leaflet-map',{zoomControl:false,scrollWheelZoom:false,attributionControl:false,zoomSnap:0.25});
-      L.tileLayer(`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png`,{maxZoom:19,subdomains:'abcd'}).addTo(nextLegMap);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(nextLegMap);
       nextLegPoly=L.polyline(latlngs,{color:getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#718355',weight:3.5,opacity:0.9}).addTo(nextLegMap);
       L.circleMarker(latlngs[0],{radius:6,fillColor:'#718355',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
       L.circleMarker(latlngs[latlngs.length-1],{radius:6,fillColor:'#D94F3D',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
@@ -2926,10 +3198,10 @@ function buildOverviewMap(legs, tracker, currentIdx){
 
   if(!overviewMap){
     overviewMap=L.map('overview-map',{
-      zoomControl:false,scrollWheelZoom:false,attributionControl:false,
-      dragging:false,touchZoom:false,doubleClickZoom:false,keyboard:false
+      zoomControl:true,scrollWheelZoom:true,attributionControl:false,
+      dragging:true,touchZoom:true,doubleClickZoom:true,keyboard:true
     });
-    L.tileLayer(`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png`,{maxZoom:19,subdomains:'abcd'}).addTo(overviewMap);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(overviewMap);
   }
 
   // Clear old layers (keep tile layer)
@@ -2945,9 +3217,9 @@ function buildOverviewMap(legs, tracker, currentIdx){
     const t=tracker[legNum]||{};
     const done=!!trackerActEnd(t);
     const active=i===currentIdx&&!done;
-    const color=done?'#718355':active?'#D94F3D':'#888';
-    const weight=done?3.5:active?4:1.5;
-    const opacity=done?0.9:active?1:0.35;
+    const color=done?'#718355':active?'#D94F3D':'#3D3D3D';
+    const weight=done?3.5:active?4:2;
+    const opacity=done?0.9:active?1:0.45;
     L.polyline(latlngs,{color,weight,opacity}).addTo(overviewMap);
 
     // Pulsing circle for active leg start
@@ -3018,8 +3290,63 @@ function checkMilestones(legs,tracker,distCovered,currentIdx){
 }
 
 // ─── PHOTO GALLERY ──────────────────────────────────────────────────────────
-let _galleryPhotos = []; // [{url, legNum, date, dayLabel, runners}]
+let _galleryPhotos = [];      // leg photos from tracker
+let _communityPhotos = [];    // [{url, caption, submitter, dayLabel, dayIdx}]
+let _communityLoaded = false;
 let _galleryFilter = 'all';
+
+async function loadCommunityPhotos(force){
+  if(_communityLoaded&&!force) return;
+  try {
+    const res = await fetch(csvURL(COMMUNITY_PHOTOS_TAB)+'&cachebust='+Date.now());
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    if(!rows.length) return;
+    const hdr = rows[0].map(h=>h.trim().toLowerCase());
+    const col = key => hdr.findIndex(h=>h.includes(key.toLowerCase()));
+    const photoCol   = col('submit photo')||col('photo')||col('video')||col('image')||col('drive')||col('url');
+    const captionCol = col('caption')||col('note')||col('description');
+    const nameCol    = col('your name')||col('name')||col('submitter')||col('from');
+    const dayCol     = col('day');
+
+    _communityPhotos = rows.slice(1).filter(r=>r.some(c=>c.trim())).map(r=>{
+      const rawUrl = photoCol>=0?(r[photoCol]||'').trim():'';
+      const url = drivePhotoUrl(rawUrl);
+      if(!url) return null;
+      const day = dayCol>=0?(r[dayCol]||'').trim():'';
+      const dayLabel = day&&day!=='General'?day:'General';
+      const dayIdx = day.match(/\d+/)?parseInt(day.match(/\d+/)[0]):99;
+      return {
+        url,
+        caption:   captionCol>=0?(r[captionCol]||'').trim():'',
+        submitter: nameCol>=0?(r[nameCol]||'').trim():'',
+        dayLabel,
+        dayIdx,
+        legNum: null,
+        runners: '',
+        community: true,
+      };
+    }).filter(Boolean);
+
+    _communityLoaded = true;
+  } catch(e){
+    // Silently skip — community photos are optional
+  }
+  renderGallery();
+}
+
+// Wire up submit button if form URL is configured
+(function(){
+  const btn = document.getElementById('gallery-submit-btn');
+  if(btn){
+    if(COMMUNITY_PHOTOS_FORM_URL){
+      btn.href = COMMUNITY_PHOTOS_FORM_URL;
+    } else {
+      btn.style.display = 'none';
+    }
+  }
+})();
 
 function drivePhotoUrl(raw) {
   if (!raw) return '';
@@ -3046,16 +3373,17 @@ function buildPhotoGallery(legs, tracker) {
         const t = tracker[lNum]||{};
         const raw = trackerPhoto(t);
         if (!raw) return;
-        // May be comma-separated if multiple photos
         raw.split(',').forEach(r => {
           const url = drivePhotoUrl(r.trim());
           if (url) photos.push({url, legNum: l['Leg'], date: day.date, dayLabel, dayIdx: di,
-            runners: [l['Runner 1 (Pacer)'], l['Runner 2']].filter(Boolean).join(' & ')});
+            runners: [l['Runner 1 (Pacer)'], l['Runner 2']].filter(Boolean).join(' & '),
+            community: false});
         });
       });
     });
     _galleryPhotos = photos;
   }
+  loadCommunityPhotos(false); // load community photos (no-op if already loaded)
   renderGallery();
 }
 
@@ -3064,40 +3392,50 @@ function renderGallery() {
   const filterBar = document.getElementById('gallery-day-filter');
   if (!grid) return;
 
-  const photos = _galleryPhotos;
+  // Merge leg photos + community photos, sorted by dayIdx then legNum
+  const all = [..._galleryPhotos, ..._communityPhotos]
+    .sort((a,b) => (a.dayIdx??99) - (b.dayIdx??99) || (parseInt(a.legNum)||999) - (parseInt(b.legNum)||999));
 
-  if (!photos.length) {
-    grid.innerHTML = '<div style="color:var(--txt3);font-size:12px;font-family:\'Space Mono\',monospace;padding:2rem 0">No photos logged yet — photos will appear here as legs are completed.</div>';
+  if (!all.length) {
+    grid.innerHTML = '<div style="color:var(--txt3);font-size:12px;font-family:\'Space Mono\',monospace;padding:2rem 0">No photos yet — photos will appear here as legs are completed.</div>';
     filterBar.innerHTML = '';
     return;
   }
 
-  // Build day filter buttons
-  const days = [...new Set(photos.map(p => p.dayLabel))];
+  // Build day filter buttons (deduplicated, in order)
+  const days = [...new Map(all.map(p=>[p.dayLabel,p.dayLabel])).keys()];
   filterBar.innerHTML = ['All', ...days].map(d => {
     const val = d === 'All' ? 'all' : d;
     const active = _galleryFilter === val;
     return `<button onclick="setGalleryFilter('${val}')" style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:5px 12px;border-radius:20px;border:0.5px solid ${active?'var(--green)':'var(--bdr2)'};background:${active?'var(--gbg)':'var(--bg2)'};color:${active?'var(--green)':'var(--txt2)'};cursor:pointer;transition:all .15s">${d.toUpperCase()}</button>`;
   }).join('');
 
-  const filtered = _galleryFilter === 'all' ? photos : photos.filter(p => p.dayLabel === _galleryFilter);
+  const filtered = _galleryFilter === 'all' ? all : all.filter(p => p.dayLabel === _galleryFilter);
 
   if (!filtered.length) {
     grid.innerHTML = '<div style="color:var(--txt3);font-size:12px;font-family:\'Space Mono\',monospace;padding:2rem 0">No photos for this day yet.</div>';
     return;
   }
 
-  grid.innerHTML = filtered.map(p => `
+  grid.innerHTML = filtered.map(p => {
+    const meta = p.community
+      ? `${p.dayLabel.toUpperCase()}${p.submitter?' · '+p.submitter:''}`
+      : `${p.dayLabel.toUpperCase()} · LEG ${p.legNum}`;
+    const sub = p.community
+      ? (p.caption||'')
+      : (p.runners||'');
+    return `
     <div style="break-inside:avoid;margin-bottom:12px;border-radius:var(--r);overflow:hidden;border:0.5px solid var(--bdr);background:var(--bg2)">
-      <img src="${p.url}" alt="Leg ${p.legNum}" loading="lazy"
+      <img src="${p.url}" alt="${p.community?'Community photo':'Leg '+p.legNum}" loading="lazy"
         style="width:100%;display:block;object-fit:cover;cursor:pointer"
-        onclick="openPhotoLightbox('${p.url}','${p.dayLabel}','${p.runners}','${p.legNum}')"
+        onclick="openPhotoLightbox('${p.url}','${meta}','${sub}',${p.legNum?`'${p.legNum}'`:'null'})"
         onerror="this.parentElement.style.display='none'"/>
       <div style="padding:7px 10px">
-        <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--txt3)">${p.dayLabel.toUpperCase()} · LEG ${p.legNum}</div>
-        ${p.runners?`<div style="font-size:11px;color:var(--txt2);margin-top:2px">${p.runners}</div>`:''}
+        <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--txt3)">${meta}</div>
+        ${sub?`<div style="font-size:11px;color:var(--txt2);margin-top:2px">${sub}</div>`:''}
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function setGalleryFilter(val) {
@@ -3119,7 +3457,7 @@ function openPhotoLightbox(url, day, runners, leg) {
   lb.innerHTML = `
     <img src="${url}" style="max-width:min(900px,94vw);max-height:80vh;object-fit:contain;border-radius:8px;display:block"/>
     <div style="text-align:center">
-      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;color:#aaa">${day.toUpperCase()} · LEG ${leg}</div>
+      <div style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;color:#aaa">${day.toUpperCase()}${leg&&leg!=='null'?' · LEG '+leg:''}</div>
       ${runners?`<div style="font-size:13px;color:#fff;margin-top:4px">${runners}</div>`:''}
       <div style="font-size:11px;color:#888;margin-top:6px">Click anywhere to close</div>
     </div>`;
@@ -3282,6 +3620,10 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElemen
 </script>
 </body>
 </html>
+
+
+
+
 
 
 
