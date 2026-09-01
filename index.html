@@ -245,6 +245,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .poi-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
 @media(max-width:600px){.poi-cards{grid-template-columns:1fr}}
 .poi-combined-map-wrap{border-radius:var(--rl);overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);height:380px;position:relative;box-shadow:var(--shadow)}
+.map-tiles{opacity:0.92}
 .poi-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 .poi-card:hover{border-color:var(--bdr2)}
 .poi-card.highlighted{border-color:var(--txt);box-shadow:0 0 0 1px var(--txt)}
@@ -1269,7 +1270,7 @@ function initPOIMap(){
   if(!el||!legsData.length||!Object.keys(coordsData).length) return;
   poiMiniMap = L.map('poi-mini-map',{zoomControl:false,attributionControl:false,scrollWheelZoom:true,dragging:true,touchZoom:true,doubleClickZoom:true});
   L.control.zoom({position:'bottomright'}).addTo(poiMiniMap);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(poiMiniMap);
+  L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=4c5ab357-ef61-4d11-8517-287f147a34f9',{maxZoom:20,className:'map-tiles'}).addTo(poiMiniMap);
 
   // Build day→index mapping (same method as drawFullRouteMap)
   const dayByLegIdx={};
@@ -1991,11 +1992,7 @@ function drawRoutePath(container, trackPoints){
     zoomSnap:0.25
   });
 
-  // CartoDB Positron (light) / Dark Matter (dark) — minimal, no API key needed
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
-    maxZoom:19,
-    subdomains:'abcd'
-  }).addTo(leafletMap);
+  L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=4c5ab357-ef61-4d11-8517-287f147a34f9',{maxZoom:20,className:'map-tiles'}).addTo(leafletMap);
 
   // Route polyline in dashboard green
   const poly=L.polyline(latlngs,{
@@ -2033,9 +2030,8 @@ function drawFullRouteMap(){
     zoomSnap:0.25
   });
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
-    maxZoom:19,
-    subdomains:'abcd'
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Canvas/MapServer/tile/{z}/{y}/{x}',{
+    maxZoom:16
   }).addTo(poiMap);
 
   // Map each leg index to its relay day number (1-based) via allDays grouping
@@ -3016,7 +3012,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
       container.innerHTML='<div id="next-leg-leaflet-map" style="width:100%;height:100%"></div>';
       const latlngs=track.map(p=>[p.y,p.x]);
       nextLegMap=L.map('next-leg-leaflet-map',{zoomControl:false,scrollWheelZoom:false,attributionControl:false,zoomSnap:0.25});
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(nextLegMap);
+      L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=4c5ab357-ef61-4d11-8517-287f147a34f9',{maxZoom:20,className:'map-tiles'}).addTo(nextLegMap);
       nextLegPoly=L.polyline(latlngs,{color:getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#718355',weight:3.5,opacity:0.9}).addTo(nextLegMap);
       L.circleMarker(latlngs[0],{radius:6,fillColor:'#718355',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
       L.circleMarker(latlngs[latlngs.length-1],{radius:6,fillColor:'#D94F3D',color:'#fff',weight:2,fillOpacity:1}).addTo(nextLegMap);
@@ -3201,7 +3197,7 @@ function buildOverviewMap(legs, tracker, currentIdx){
       zoomControl:true,scrollWheelZoom:true,attributionControl:false,
       dragging:true,touchZoom:true,doubleClickZoom:true,keyboard:true
     });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(overviewMap);
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=4c5ab357-ef61-4d11-8517-287f147a34f9',{maxZoom:20,className:'map-tiles'}).addTo(overviewMap);
   }
 
   // Clear old layers (keep tile layer)
