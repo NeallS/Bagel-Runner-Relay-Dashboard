@@ -22,13 +22,13 @@
   --amber:#D9A441;--abg:#F8EDCC;--atxt:#7A5A10;
   --bbg:#DDE8F0;--btxt:#1F3A5F;
   --rbg:#FAEAEC;--rtxt:#D94F3D;
-  --card-person:#F5E0E8;--card-stat:#DDE8F0;--card-link:#D8DFF0;
+  --card-person:#F5E0E8;--card-stat:#EDE8DB;--card-link:#D8DFF0;
 }
 
 
 
 body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-height:100vh;padding:0;-webkit-font-smoothing:antialiased}
-.wrap{max-width:960px;margin:0 auto;padding:1.5rem 1.25rem}
+.wrap{max-width:960px;margin:0 auto;padding:1.5rem 1.25rem;position:relative;z-index:1}
 @media(min-width:768px){.wrap{padding-top:84px}}
 @media(max-width:767px){.wrap{padding-bottom:96px}}
 
@@ -340,8 +340,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .upcoming-title{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
 
 /* ── Form / Google Form ── */
-.form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:#8A2040;background:#FAE0E8;border:0.5px solid rgba(138,32,64,.2);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(138,32,64,.08)}
-.form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 6px rgba(138,32,64,.15)}
+.form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:#7A5A10;background:#F8EDCC;border:0.5px solid rgba(122,90,16,.22);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(122,90,16,.08)}
+.form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 6px rgba(122,90,16,.15)}
 .form-glink:active{transform:scale(0.98)}
 
 .tbd{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--bg2);border:0.5px dashed var(--bdr2);border-radius:var(--r);padding:20px;font-size:13px;color:var(--txt2);font-style:italic}
@@ -414,6 +414,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 </style>
 </head>
 <body>
+<canvas id="bg-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
 <div class="wrap">
 
   <!-- Tubelight navigation -->
@@ -2686,7 +2687,7 @@ function render(legs,tracker){
   // Link card styled like the Log Leg Time button — spans both grid columns
   function statLinkCard(label,url,linkText='🗺 Open route ↗'){
     if(url){
-      return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#FAD4E0;border-color:rgba(138,32,64,.22)">
+      return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#F8EDCC;border-color:rgba(122,90,16,.22)">
         <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em">${linkText}</span>
       </a></div>`;
     }
@@ -3017,7 +3018,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
     </div>`;
   }
   function statLinkCard(label,url,linkText='🗺 Open route ↗'){
-    if(url) return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#FAD4E0;border-color:rgba(138,32,64,.22)">
+    if(url) return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#F8EDCC;border-color:rgba(122,90,16,.22)">
       <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em">${linkText}</span>
     </a></div>`;
     return '';
@@ -3670,6 +3671,169 @@ function closeRunnerModal(e){
   document.getElementById('runner-modal-overlay')?.classList.remove('open');
 }
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElementById('runner-modal-overlay')?.classList.remove('open'); });
+</script>
+
+<script>
+(function(){
+  const canvas=document.getElementById('bg-canvas');
+  const gl=canvas.getContext('webgl')||canvas.getContext('experimental-webgl');
+  if(!gl) return;
+
+  const VS=`attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
+  const FS=`
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform vec3 u_colors[8];
+uniform vec4 u_scene,u_shape,u_surface,u_finish,u_transform,u_space,u_cursor;
+#define u_resolution u_scene.xy
+#define u_time u_scene.z
+#define u_colorCount u_scene.w
+#define u_scale u_shape.x
+#define u_intensity u_shape.y
+#define u_warp u_shape.w
+#define u_detail u_surface.x
+#define u_contrast u_surface.y
+#define u_brightness u_surface.z
+#define u_saturation u_surface.w
+#define u_hue u_finish.x
+#define u_vignette u_finish.y
+#define u_grain u_finish.w
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+#define u_seed u_transform.x
+#else
+#define u_seed mod(u_transform.x,31.0)
+#endif
+#define u_rotate u_transform.y
+#define u_drift u_transform.z
+#define u_oklab u_transform.w
+#define u_offset u_space.xy
+#define u_mouse u_space.zw
+#define u_cursorPresence u_cursor.x
+#define u_cursorEffect u_cursor.y
+#define u_cursorStrength u_cursor.z
+#define u_cursorRadius u_cursor.w
+
+float hash21(vec2 p){
+#ifndef GL_FRAGMENT_PRECISION_HIGH
+  p=mod(p,31.0);
+#endif
+  p=fract(p*vec2(234.34,435.345));p+=dot(p,p+34.23);return fract(p.x*p.y);}
+float grainHash(vec2 p){vec3 p3=fract(vec3(p.xyx)*0.1031);p3+=dot(p3,p3.yzx+33.33);return fract((p3.x+p3.y)*p3.z);}
+float noise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);vec2 u=f*f*(3.0-2.0*f);
+  return mix(mix(hash21(i),hash21(i+vec2(1,0)),u.x),mix(hash21(i+vec2(0,1)),hash21(i+vec2(1,1)),u.x),u.y);}
+float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.03+vec2(17,9.2);a*=0.5;}return v;}
+vec3 mixColour(vec3 a,vec3 b,float t){return mix(a,b,t);}
+vec3 palette(float x){float n=max(u_colorCount-1.0,1.0);float f=clamp(x,0.0,1.0)*n;vec3 col=u_colors[0];
+  for(int i=0;i<7;i++){if(float(i)<n)col=mixColour(col,u_colors[i+1],smoothstep(0.0,1.0,clamp(f-float(i),0.0,1.0)));}return col;}
+vec3 hueRotate(vec3 col,float a){
+  const mat3 toYIQ=mat3(0.299,0.596,0.211,0.587,-0.274,-0.523,0.114,-0.322,0.312);
+  const mat3 toRGB=mat3(1.0,1.0,1.0,0.956,-0.272,-1.106,0.621,-0.647,1.703);
+  vec3 yiq=toYIQ*col;float ca=cos(a),sa=sin(a);
+  yiq=vec3(yiq.x,yiq.y*ca-yiq.z*sa,yiq.y*sa+yiq.z*ca);return toRGB*yiq;}
+vec3 shade(vec2 uv,vec2 p,float t){
+  float curtain=fbm(vec2(p.x*2.0+t*0.15,p.y*0.6-t*0.05)+u_seed);
+  float band=fbm(vec2(p.x*3.5-t*0.1,curtain*(2.0+u_intensity*3.0)));
+  float glow=smoothstep(0.15,0.85,band)*(1.0-abs(p.y)*0.7);
+  return palette(clamp(glow,0.0,1.0));}
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_resolution.xy;
+  vec2 screenUv=uv;
+  vec2 p=(gl_FragCoord.xy-0.5*u_resolution.xy)/min(u_resolution.x,u_resolution.y);
+  float cursorMask=0.0;
+  if(u_cursorPresence>0.001){
+    vec2 cursor=(0.5*u_mouse*u_resolution.xy)/min(u_resolution.x,u_resolution.y);
+    vec2 cursorDelta=p-cursor;
+    float cursorDistance=length(cursorDelta);
+    vec2 cursorDirection=cursorDelta/max(cursorDistance,0.0001);
+    cursorMask=u_cursorPresence*(1.0-smoothstep(0.0,u_cursorRadius,cursorDistance));
+    float ripple=sin(cursorDistance/max(u_cursorRadius,0.001)*18.0-u_time*5.0);
+    p-=cursorDirection*ripple*cursorMask*u_cursorStrength*0.07;
+  }
+  uv=p*min(u_resolution.x,u_resolution.y)/u_resolution.xy+0.5;
+  p*=u_scale;
+  p+=u_offset;
+  vec3 col=shade(uv,p,u_time);
+  if(abs(u_contrast-1.0)>0.0001)col=(col-0.5)*u_contrast+0.5;
+  if(abs(u_saturation-1.0)>0.0001){float luma=dot(col,vec3(0.299,0.587,0.114));col=mix(vec3(luma),col,u_saturation);}
+  if(abs(u_hue)>0.0001)col=hueRotate(col,u_hue);
+  if(abs(u_brightness)>0.0001)col+=u_brightness;
+  if(u_vignette>0.0001){float vd=length(screenUv-0.5)*1.41421356;col*=1.0-u_vignette*smoothstep(0.35,1.0,vd);}
+  if(u_grain>0.0001)col+=(grainHash(gl_FragCoord.xy+vec2(u_seed*17.0,u_seed*31.0))-0.5)*u_grain;
+  gl_FragColor=vec4(clamp(col,0.0,1.0),1.0);}`;
+
+  function compile(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+  const prog=gl.createProgram();
+  gl.attachShader(prog,compile(gl.VERTEX_SHADER,VS));
+  gl.attachShader(prog,compile(gl.FRAGMENT_SHADER,FS));
+  gl.linkProgram(prog);gl.useProgram(prog);
+
+  const buf=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(prog,'a_pos');
+  gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+
+  const U={
+    colors:gl.getUniformLocation(prog,'u_colors'),
+    scene:gl.getUniformLocation(prog,'u_scene'),
+    shape:gl.getUniformLocation(prog,'u_shape'),
+    surface:gl.getUniformLocation(prog,'u_surface'),
+    finish:gl.getUniformLocation(prog,'u_finish'),
+    transform:gl.getUniformLocation(prog,'u_transform'),
+    space:gl.getUniformLocation(prog,'u_space'),
+    cursor:gl.getUniformLocation(prog,'u_cursor'),
+  };
+
+  // Single navy family — dark to light
+  const COLORS=[
+    0.051,0.118,0.188, // #0D1E30 — deep navy
+    0.122,0.227,0.373, // #1F3A5F — navy (primary)
+    0.239,0.353,0.478, // #3D5A7A — mid navy
+    0.686,0.784,0.851, // #AFC7D9 — pale steel blue
+    0,0,0, 0,0,0, 0,0,0, 0,0,0,
+  ];
+  gl.uniform3fv(U.colors,COLORS);
+  gl.uniform4f(U.shape, 1.26,0.55,0.28,0.00);   // scale, intensity high, warp=0
+  gl.uniform4f(U.surface,1.82,1.10,0.08,1.20);   // detail, contrast boosted, brightness, saturation
+  gl.uniform4f(U.finish, 0.0,0.30,0.005,0.02);   // hue=0, vignette, blur, grain
+  gl.uniform4f(U.transform,1316.0,0.00,0.05,0.0);
+  gl.uniform4f(U.cursor,0.0,3.0,0.37,0.34);
+
+  let mouse={x:0,y:0},presence=0,raf=null;
+  const start=performance.now();
+
+  function resize(){
+    const dpr=Math.min(devicePixelRatio||1,2);
+    canvas.width=innerWidth*dpr;canvas.height=innerHeight*dpr;
+    gl.viewport(0,0,canvas.width,canvas.height);
+  }
+  window.addEventListener('resize',resize);resize();
+
+  window.addEventListener('mousemove',e=>{
+    mouse.x=(e.clientX/innerWidth)*2-1;
+    mouse.y=-((e.clientY/innerHeight)*2-1);
+    presence=1;
+  });
+  window.addEventListener('mouseleave',()=>{presence=0;});
+
+  function draw(){
+    const t=(performance.now()-start)/1000*0.57;
+    gl.uniform4f(U.scene,canvas.width,canvas.height,t,4.0);
+    gl.uniform4f(U.space,-0.16,0.12,mouse.x,mouse.y);
+    gl.uniform4f(U.cursor,presence,3.0,0.37,0.34);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    raf=requestAnimationFrame(draw);
+  }
+
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){cancelAnimationFrame(raf);raf=null;}
+    else if(!raf) draw();
+  });
+  draw();
+})();
 </script>
 </body>
 </html>
