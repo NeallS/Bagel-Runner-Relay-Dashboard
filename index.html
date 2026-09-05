@@ -340,8 +340,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 .upcoming-title{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
 
 /* ── Form / Google Form ── */
-.form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:var(--btxt);background:var(--bbg);border:0.5px solid rgba(24,95,165,.2);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(24,95,165,.08)}
-.form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 6px rgba(24,95,165,.12)}
+.form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:#8A2040;background:#FAE0E8;border:0.5px solid rgba(138,32,64,.2);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(138,32,64,.08)}
+.form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 6px rgba(138,32,64,.15)}
 .form-glink:active{transform:scale(0.98)}
 
 .tbd{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--bg2);border:0.5px dashed var(--bdr2);border-radius:var(--r);padding:20px;font-size:13px;color:var(--txt2);font-style:italic}
@@ -533,7 +533,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
             <div class="cur-left">
               <div class="cur-num" id="cur-num">LEG -- OF 59</div>
               <div id="cur-leg-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"></div>
-              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:10px 12px;background:var(--rtxt);border:none;border-radius:var(--r);color:#F5F1E8;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s;box-shadow:0 2px 6px rgba(217,79,61,.25)" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:10px 12px;background:var(--rtxt);border:none;border-radius:var(--r);color:#F5F1E8;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s,box-shadow .15s;box-shadow:0 3px 10px rgba(217,79,61,.35),0 1px 3px rgba(217,79,61,.2)" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
                 📋 &nbsp;LOG LEG TIME
               </a>
             </div>
@@ -657,11 +657,16 @@ body{font-family:'Sora',sans-serif;background:var(--bg3);color:var(--txt);min-he
 
     <!-- Team charts (tabbed) -->
     <div class="elev-wrap" style="margin-top:12px;padding-top:10px">
-      <div class="mtab-row" id="team-chart-tab-row" style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="mtab-row" id="team-chart-tab-row" style="margin-bottom:0">
         <div class="mtab-pill" id="team-chart-tab-pill"></div>
         <div class="mtab-lamp"></div>
         <button class="mtab-btn active" data-mtab="tperf-delta" onclick="switchTeamChartTab('tperf-delta')">TIME VS PLAN</button>
         <button class="mtab-btn" data-mtab="tperf-pace" onclick="switchTeamChartTab('tperf-pace')">PACE PER LEG</button>
+        </div>
+        <select id="team-chart-day-filter" onchange="_teamChartDay=this.value;if(_teamCompleted&&_teamFmtPace){const f=_teamChartDay?_teamCompleted.filter(d=>d.day===_teamChartDay):_teamCompleted;drawTeamDeltaChart(f,_teamFmtPace);drawTeamPaceChart(f,_teamFmtPace);document.dispatchEvent(new Event('chartsRedrawn'));}" style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;padding:5px 8px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg);color:var(--txt);cursor:pointer;outline:none">
+          <option value="">All Days</option>
+        </select>
       </div>
       <div class="mtab-panel active" id="tperf-delta">
         <svg id="team-delta-svg" viewBox="0 0 600 200" preserveAspectRatio="none" style="width:100%;height:200px;display:block">
@@ -2321,7 +2326,7 @@ function buildTeamPerf(legs,tracker){
       totalDistKm+=distKm;
       totalPaceWeighted+=actPace*distKm;paceCount++;
     }
-    completed.push({legNum:l['Leg'],distKm,proj,act,lag,actPace,projPace});
+    completed.push({legNum:l['Leg'],day:l['Date']||'',distKm,proj,act,lag,actPace,projPace});
   });
 
   // ── Running time card ──
@@ -2336,17 +2341,32 @@ function buildTeamPerf(legs,tracker){
   }
 
   _teamCompleted=completed; _teamFmtPace=fmtPace;
+
+  // Populate day filter dropdown
+  const daySel=document.getElementById('team-chart-day-filter');
+  if(daySel){
+    const days=[...new Set(completed.map(d=>d.day).filter(Boolean))];
+    const prev=daySel.value;
+    daySel.innerHTML=`<option value="">All Days</option>`+days.map((d,i)=>{
+      const label=d?new Date(d).toLocaleDateString('en-CA',{month:'short',day:'numeric'}):`Day ${i+1}`;
+      return `<option value="${d}">Day ${i+1} · ${label}</option>`;
+    }).join('');
+    if(days.includes(prev)) daySel.value=prev; else {daySel.value='';_teamChartDay='';}
+  }
+
   requestAnimationFrame(()=>{
-    drawTeamDeltaChart(completed,fmtPace);
-    drawTeamPaceChart(completed,fmtPace);
+    const filtered=_teamChartDay?completed.filter(d=>d.day===_teamChartDay):completed;
+    drawTeamDeltaChart(filtered,fmtPace);
+    drawTeamPaceChart(filtered,fmtPace);
     document.dispatchEvent(new Event('chartsRedrawn'));
   });
 }
-let _teamCompleted=null,_teamFmtPace=null;
+let _teamCompleted=null,_teamFmtPace=null,_teamChartDay='';
 window.addEventListener('resize',()=>{
   if(_teamCompleted&&_teamFmtPace){
-    drawTeamDeltaChart(_teamCompleted,_teamFmtPace);
-    drawTeamPaceChart(_teamCompleted,_teamFmtPace);
+    const filtered=_teamChartDay?_teamCompleted.filter(d=>d.day===_teamChartDay):_teamCompleted;
+    drawTeamDeltaChart(filtered,_teamFmtPace);
+    drawTeamPaceChart(filtered,_teamFmtPace);
     document.dispatchEvent(new Event('chartsRedrawn'));
   }
 });
@@ -2382,7 +2402,7 @@ function drawTeamDeltaChart(completed,fmtPace){
   }
 
   const W=getChartWidth(svg);
-  const H=200,pad=10,lPad=46,bPad=22;
+  const H=200,tPad=10,rPad=36,lPad=46,bPad=22;
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
   let cum=0;
   const pts=valid.map((d,i)=>{cum+=d.lag;return{i,display:-cum,legNum:d.legNum,lag:d.lag};});
@@ -2393,8 +2413,8 @@ function drawTeamDeltaChart(completed,fmtPace){
   const eMin=mid-span/2,eMax=mid+span/2;
 
   const n=pts.length;
-  const toX=i=>lPad+(i/(n-1||1))*(W-lPad-pad);
-  const toY=v=>pad+((eMax-v)/(eMax-eMin))*(H-pad-bPad);
+  const toX=i=>lPad+(i/(n-1||1))*(W-lPad-rPad);
+  const toY=v=>tPad+((eMax-v)/(eMax-eMin))*(H-tPad-bPad);
   const zeroY=toY(0);
 
   const coords=pts.map((p,i)=>[toX(i),toY(p.display)]);
@@ -2402,8 +2422,8 @@ function drawTeamDeltaChart(completed,fmtPace){
   const last=coords[coords.length-1],first=coords[0];
   const areaD=`${lineD} L${last[0].toFixed(1)},${zeroY.toFixed(1)} L${first[0].toFixed(1)},${zeroY.toFixed(1)} Z`;
 
-  const zY=Math.max(pad,Math.min(H-bPad,zeroY));
-  const aboveH=Math.max(0,zY-pad),belowH=Math.max(0,H-bPad-zY);
+  const zY=Math.max(tPad,Math.min(H-bPad,zeroY));
+  const aboveH=Math.max(0,zY-tPad),belowH=Math.max(0,H-bPad-zY);
   const id=svg.id;
 
   // Y-axis gridlines + labels
@@ -2411,29 +2431,33 @@ function drawTeamDeltaChart(completed,fmtPace){
   const yLines=[];
   for(let v=Math.ceil(eMin/step)*step;v<=eMax+0.01;v+=step){
     const y=toY(v);
-    if(y<pad-2||y>H-bPad+2) continue;
+    if(y<tPad-2||y>H-bPad+2) continue;
     const isZero=Math.abs(v)<0.1;
     const label=v>0.5?`+${Math.round(v)}`:v<-0.5?`${Math.round(v)}`:'0';
     yLines.push(`
-      <line x1="${lPad}" y1="${y.toFixed(1)}" x2="${W-pad}" y2="${y.toFixed(1)}" stroke="${isZero?'var(--txt3)':'var(--bdr)'}" stroke-width="${isZero?'1':'0.5'}" ${isZero?'':'stroke-dasharray="3,4"'}/>
+      <line x1="${lPad}" y1="${y.toFixed(1)}" x2="${W-rPad}" y2="${y.toFixed(1)}" stroke="${isZero?'var(--txt3)':'var(--bdr)'}" stroke-width="${isZero?'1':'0.5'}" ${isZero?'':'stroke-dasharray="3,4"'}/>
       <text x="${lPad-5}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">${label}</text>`);
   }
 
   // Y-axis unit label (rotated)
-  const midChartY=(pad+(H-pad-bPad)/2).toFixed(1);
+  const midChartY=(tPad+(H-tPad-bPad)/2).toFixed(1);
   const yUnit=`<text x="${(lPad-28).toFixed(1)}" y="${midChartY}" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="var(--txt3)" transform="rotate(-90,${(lPad-28).toFixed(1)},${midChartY})">min</text>`;
 
-  // X-axis leg labels
+  // X-axis leg labels — last label uses text-anchor="end" to avoid clipping
   const xIdxs=[0,...(n>4?[Math.floor((n-1)/2)]:[]),n-1].filter((v,i,a)=>a.indexOf(v)===i);
-  const xLabels=xIdxs.map(i=>`<text x="${toX(i).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">Leg ${pts[i].legNum}</text>`);
+  const xLabels=xIdxs.map((idx,pos)=>{
+    const isLast=pos===xIdxs.length-1;
+    const anchor=isLast?'end':'middle';
+    return `<text x="${toX(idx).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="${anchor}" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">Leg ${pts[idx].legNum}</text>`;
+  });
 
   const showDots=n<=30;
   const finalDisplay=pts[pts.length-1].display;
   const lineCol=finalDisplay>0.5?'var(--gtxt)':finalDisplay<-0.5?'var(--rtxt)':'var(--txt2)';
   svg.innerHTML=`
     <defs>
-      <clipPath id="${id}-a"><rect x="${lPad}" y="${pad}" width="${W-lPad-pad}" height="${aboveH}"/></clipPath>
-      <clipPath id="${id}-b"><rect x="${lPad}" y="${zY.toFixed(1)}" width="${W-lPad-pad}" height="${belowH}"/></clipPath>
+      <clipPath id="${id}-a"><rect x="${lPad}" y="${tPad}" width="${W-lPad-rPad}" height="${aboveH}"/></clipPath>
+      <clipPath id="${id}-b"><rect x="${lPad}" y="${zY.toFixed(1)}" width="${W-lPad-rPad}" height="${belowH}"/></clipPath>
     </defs>
     ${yUnit}
     ${yLines.join('')}
@@ -2469,7 +2493,7 @@ function drawTeamPaceChart(completed,fmtPace){
   }
 
   const W=getChartWidth(svg);
-  const H=200,pad=10,lPad=52,bPad=22;
+  const H=200,tPad=10,rPad=36,lPad=52,bPad=22;
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
 
   const paces=valid.map(d=>d.actPace);
@@ -2479,10 +2503,10 @@ function drawTeamPaceChart(completed,fmtPace){
   const range=maxP-minP||1;
 
   const n=valid.length;
-  const zoneW=(W-lPad-pad)/n;
+  const zoneW=(W-lPad-rPad)/n;
   const barW=Math.max(3,zoneW*0.6);
   const toX=i=>lPad+i*zoneW+zoneW/2;
-  const toY=v=>pad+((maxP-v)/range)*(H-pad-bPad);
+  const toY=v=>tPad+((maxP-v)/range)*(H-tPad-bPad);
   const baseY=H-bPad;
 
   // Y-axis gridlines + labels
@@ -2490,19 +2514,23 @@ function drawTeamPaceChart(completed,fmtPace){
   const yLines=[];
   for(let v=Math.ceil(minP/step)*step;v<=maxP+0.01;v+=step){
     const y=toY(v);
-    if(y<pad-2||y>H-bPad+2) continue;
+    if(y<tPad-2||y>H-bPad+2) continue;
     yLines.push(`
-      <line x1="${lPad}" y1="${y.toFixed(1)}" x2="${W-pad}" y2="${y.toFixed(1)}" stroke="var(--bdr)" stroke-width="0.5" stroke-dasharray="3,4"/>
+      <line x1="${lPad}" y1="${y.toFixed(1)}" x2="${W-rPad}" y2="${y.toFixed(1)}" stroke="var(--bdr)" stroke-width="0.5" stroke-dasharray="3,4"/>
       <text x="${lPad-5}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">${fmtPace(v)}</text>`);
   }
 
   // Y-axis unit label (rotated)
-  const midChartY=(pad+(H-pad-bPad)/2).toFixed(1);
+  const midChartY=(tPad+(H-tPad-bPad)/2).toFixed(1);
   const yUnit=`<text x="${(lPad-32).toFixed(1)}" y="${midChartY}" text-anchor="middle" font-family="Space Mono,monospace" font-size="9" fill="var(--txt3)" transform="rotate(-90,${(lPad-32).toFixed(1)},${midChartY})">min/km</text>`;
 
-  // X-axis leg labels
+  // X-axis leg labels — last label uses text-anchor="end" to avoid clipping
   const xIdxs=[0,...(n>4?[Math.floor((n-1)/2)]:[]),n-1].filter((v,i,a)=>a.indexOf(v)===i);
-  const xLabels=xIdxs.map(i=>`<text x="${toX(i).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="middle" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">Leg ${valid[i].legNum}</text>`);
+  const xLabels=xIdxs.map((idx,pos)=>{
+    const isLast=pos===xIdxs.length-1;
+    const anchor=isLast?'end':'middle';
+    return `<text x="${toX(idx).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="${anchor}" font-family="Space Mono,monospace" font-size="10" fill="var(--txt3)">Leg ${valid[idx].legNum}</text>`;
+  });
 
   // Bars + per-leg target tick
   const bars=valid.map((d,i)=>{
@@ -2629,16 +2657,18 @@ function render(legs,tracker){
     const avClass=runnerColors[name];
     const initials=name.slice(0,2).toUpperCase();
     const photoUrl=contactPhotos[name];
+    const roleCol='#4A5830';
     const avHTML=photoUrl
-      ?`<div class="av" style="background:var(--bg2);width:34px;height:34px;font-size:13px;flex-shrink:0">
+      ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
           <img src="${photoUrl}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
-            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:34px;height:34px;font-size:13px;flex-shrink:0'"/>
+            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)'"/>
         </div>`
-      :`<div class="av ${avClass}" style="width:34px;height:34px;font-size:13px;flex-shrink:0">${initials}</div>`;
-    return `<div style="background:var(--card-person);border-radius:var(--r);padding:10px 12px;cursor:pointer;border:0.5px solid var(--bdr)" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
-      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">${role.toUpperCase()}</div>
-      <div style="display:flex;align-items:center;gap:8px;overflow:hidden">
-        ${avHTML}<span style="font-size:14px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+      :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
+    return `<div style="background:var(--gbg);border-radius:var(--r);padding:12px 14px;cursor:pointer;border:1px solid rgba(74,88,48,.22);box-shadow:0 2px 8px rgba(74,88,48,.12),0 1px 2px rgba(74,88,48,.06);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+      ${avHTML}
+      <div style="overflow:hidden;min-width:0">
+        <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;color:${roleCol};margin-bottom:4px">${role.toUpperCase()}</div>
+        <div style="font-size:14px;font-weight:700;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</div>
       </div>
     </div>`;
   }
@@ -2656,7 +2686,7 @@ function render(legs,tracker){
   // Link card styled like the Log Leg Time button — spans both grid columns
   function statLinkCard(label,url,linkText='🗺 Open route ↗'){
     if(url){
-      return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#C5D4E8;border-color:rgba(31,58,95,.3)">
+      return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#FAD4E0;border-color:rgba(138,32,64,.22)">
         <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em">${linkText}</span>
       </a></div>`;
     }
@@ -2962,16 +2992,18 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
     const avClass=runnerColors[name];
     const initials=name.slice(0,2).toUpperCase();
     const photo=contactPhotos[name];
+    const roleCol='#4A5830';
     const avHTML=photo
-      ?`<div class="av" style="background:var(--bg2);width:34px;height:34px;font-size:13px;flex-shrink:0">
+      ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
           <img src="${photo}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
-            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:34px;height:34px;font-size:13px;flex-shrink:0'"/>
+            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)'"/>
         </div>`
-      :`<div class="av ${avClass}" style="width:34px;height:34px;font-size:13px;flex-shrink:0">${initials}</div>`;
-    return `<div style="background:var(--card-person);border-radius:var(--r);padding:10px 12px;cursor:pointer;border:0.5px solid var(--bdr)" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
-      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">${role.toUpperCase()}</div>
-      <div style="display:flex;align-items:center;gap:8px;overflow:hidden">
-        ${avHTML}<span style="font-size:14px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+      :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
+    return `<div style="background:var(--gbg);border-radius:var(--r);padding:12px 14px;cursor:pointer;border:1px solid rgba(74,88,48,.22);box-shadow:0 2px 8px rgba(74,88,48,.12),0 1px 2px rgba(74,88,48,.06);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+      ${avHTML}
+      <div style="overflow:hidden;min-width:0">
+        <div style="font-family:'Space Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;color:${roleCol};margin-bottom:4px">${role.toUpperCase()}</div>
+        <div style="font-size:14px;font-weight:700;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</div>
       </div>
     </div>`;
   }
@@ -2985,7 +3017,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
     </div>`;
   }
   function statLinkCard(label,url,linkText='🗺 Open route ↗'){
-    if(url) return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#C5D4E8;border-color:rgba(31,58,95,.3)">
+    if(url) return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:#FAD4E0;border-color:rgba(138,32,64,.22)">
       <span style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em">${linkText}</span>
     </a></div>`;
     return '';
