@@ -273,6 +273,10 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .cur-runner-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:640px){.cur-runner-row{grid-template-columns:1fr}}
 .kana-slot{margin-left:auto;padding-left:8px;font-family:'Share Tech Mono',monospace;writing-mode:vertical-rl;text-orientation:upright;font-size:11px;font-weight:700;letter-spacing:.08em;color:rgba(255,200,118,.4);flex-shrink:0;line-height:1}
+.tap-chevron{color:var(--txt3);font-size:17px;font-weight:700;flex-shrink:0;line-height:1}
+.runner-tap-card{transition:transform .1s ease,opacity .15s ease,border-color .15s ease}
+.runner-tap-card:active{transform:scale(0.97);opacity:.85}
+@media(hover:hover){.runner-tap-card:hover{border-color:rgba(255,178,62,.55)}.runner-tap-card:hover .tap-chevron{color:var(--atxt)}}
 .cur-timing{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);overflow:hidden}
 .cur-timing .t-cell{padding:11px 10px;border-left:0.5px solid var(--bdr)}
 .cur-timing .t-cell:first-child{border-left:none}
@@ -649,7 +653,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
           <div class="cur-runner-row" id="cur-runners"></div>
 
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:12px;background:var(--rtxt);border:none;border-radius:var(--r);color:#FFFFFF;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s,box-shadow .15s,transform .1s;box-shadow:0 3px 10px rgba(255,64,109,.35),0 1px 3px rgba(255,64,109,.2)" class="log-leg-btn">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" onclick="haptic()" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:12px;background:var(--rtxt);border:none;border-radius:var(--r);color:#FFFFFF;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s,box-shadow .15s,transform .1s;box-shadow:0 3px 10px rgba(255,64,109,.35),0 1px 3px rgba(255,64,109,.2)" class="log-leg-btn">
             📋 &nbsp;LOG LEG TIME
           </a>
 
@@ -2849,11 +2853,14 @@ function render(legs,tracker){
             onerror="const p=this.parentElement;p.className='av ${avClass}';p.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
-    return `<div style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(255,178,62,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div class="runner-tap-card" style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(255,178,62,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       ${avHTML}
       <div style="overflow:hidden;min-width:0">
         <div style="font-family:'Share Tech Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.1em;color:${roleCol};margin-bottom:5px">${role.toUpperCase()}</div>
-        <div style="font-size:19px;font-weight:700;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</div>
+        <div style="display:flex;align-items:center;gap:4px;overflow:hidden">
+          <span style="font-size:19px;font-weight:700;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+          <span class="tap-chevron">›</span>
+        </div>
       </div>
       ${kana?`<span class="kana-slot">${kana}</span>`:''}
     </div>`;
@@ -3186,11 +3193,14 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
             onerror="const p=this.parentElement;p.className='av ${avClass}';p.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
-    return `<div style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(255,178,62,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div class="runner-tap-card" style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(255,178,62,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       ${avHTML}
       <div style="overflow:hidden;min-width:0">
         <div style="font-family:'Share Tech Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.1em;color:${roleCol};margin-bottom:5px">${role.toUpperCase()}</div>
-        <div style="font-size:19px;font-weight:700;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</div>
+        <div style="display:flex;align-items:center;gap:4px;overflow:hidden">
+          <span style="font-size:19px;font-weight:700;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
+          <span class="tap-chevron">›</span>
+        </div>
       </div>
       ${kana?`<span class="kana-slot">${kana}</span>`:''}
     </div>`;
