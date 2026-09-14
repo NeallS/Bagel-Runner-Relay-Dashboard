@@ -1004,6 +1004,7 @@ function positionMtabPill(row){
   if(lamp){lamp.style.left=active.offsetLeft+'px';lamp.style.width=active.offsetWidth+'px';}
 }
 function switchMissionTab(id){
+  haptic();
   const card=document.getElementById('detail-card');
   if(card){
     card.querySelectorAll('.mtab-btn').forEach(b=>b.classList.remove('active'));
@@ -1417,6 +1418,7 @@ function initPOIMap(){
 }
 
 function switchPOITab(id){
+  haptic();
   poiActiveTab = id;
   poiActiveCat = 'All';
   const row = document.getElementById('poi-tab-row');
@@ -3788,6 +3790,7 @@ function openPhotoLightbox(url, day, runners, leg) {
 
 <script>
 function openRunnerModal(name){
+  haptic();
   const overlay=document.getElementById('runner-modal-overlay');
   const avEl=document.getElementById('runner-modal-av');
   const nameEl=document.getElementById('runner-modal-name');
