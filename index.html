@@ -364,9 +364,21 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .fc-meta{font-size:12px;color:var(--txt3);display:flex;flex-wrap:wrap;gap:6px 14px}
 .fc-meta b{color:var(--txt2);font-weight:600}
 .fc-pills{display:flex;flex-wrap:wrap;gap:4px}
-.mbar-wrap{display:flex;align-items:center;gap:8px}
-.mbar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;width:70px;flex-shrink:0}
-.mbar-fill{height:100%;background:var(--green);border-radius:3px}
+/* ── Runner Progress cards ── */
+.runner-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.runner-grid{grid-template-columns:1fr}}
+.rp-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;cursor:pointer}
+@media(hover:hover){.rp-card:hover{border-color:var(--bdr2)}}
+.rp-card:active{transform:scale(0.99);opacity:.92}
+.rp-head{display:flex;align-items:center;gap:10px}
+.rp-name{font-size:15px;font-weight:700;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rp-stats{display:flex;gap:16px;margin-left:auto;text-align:right;flex-shrink:0}
+.rp-stat-val{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--txt);font-variant-numeric:tabular-nums}
+.rp-stat-lbl{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.05em;color:var(--txt3);text-transform:uppercase;margin-top:2px}
+.rp-progress-row{display:flex;align-items:center;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);margin-bottom:5px}
+.rp-progress-row b{color:var(--txt2);font-weight:700}
+.rp-bar{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;border:0.5px solid var(--bdr)}
+.rp-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--accent))}
 .terrain{display:inline-flex;align-items:center;font-size:10px;padding:2px 7px;border-radius:4px;font-family:'Share Tech Mono',monospace}
 .t-protected{background:var(--gbg);color:var(--gtxt)}
 .t-mixed{background:var(--abg);color:var(--atxt)}
@@ -756,12 +768,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
       <!-- RUNNER PROGRESS -->
       <div class="mtab-panel" id="mtab-leaderboard">
-        <div class="tbl-wrap" style="border:none;border-radius:0;margin-top:6px">
-          <table class="tbl">
-            <thead><tr><th>RUNNER</th><th>LEGS</th><th>TOTAL KM</th><th>AVERAGE PACE</th><th>KM COVERED / ASSIGNED</th></tr></thead>
-            <tbody id="runner-tbl"></tbody>
-          </table>
-        </div>
+        <div class="runner-grid" id="runner-grid" style="margin-top:6px"></div>
       </div>
 
     </div><!-- /tabbed detail -->
@@ -2974,13 +2981,13 @@ function render(legs,tracker){
     }
   });
   const sorted=Object.entries(stats).sort((a,b)=>a[0].localeCompare(b[0]));
-  const rtbody=document.getElementById('runner-tbl'); rtbody.innerHTML='';
+  const rgrid=document.getElementById('runner-grid'); rgrid.innerHTML='';
   sorted.forEach(([name,s],i)=>{
     const col=AV[i%AV.length]; runnerColors[name]=col;
     const covered=coveredKm[name]||0;
     const barPct=s.km>0?Math.round((covered/s.km)*100):0;
     const avgPaceMin=paceCount[name]?paceSum[name]/paceCount[name]:null;
-    const avgPace=avgPaceMin!=null?(()=>{const m=Math.floor(avgPaceMin);const s=Math.round((avgPaceMin-m)*60);return `${m}:${String(s).padStart(2,'0')} /km`;})():'—';
+    const avgPace=avgPaceMin!=null?(()=>{const m=Math.floor(avgPaceMin);const s=Math.round((avgPaceMin-m)*60);return `${m}:${String(s).padStart(2,'0')}`;})():'—';
     const initials=name.slice(0,2).toUpperCase();
     const photoUrl=contactPhotos[name];
     const avatarHTML=photoUrl
@@ -2990,20 +2997,24 @@ function render(legs,tracker){
             onerror="const p=this.parentElement;p.className='av av-md ${col}';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av av-md ${col}">${initials}</div>`;
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td><div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    const card=document.createElement('div');
+    card.className='rp-card';
+    card.onclick=()=>openRunnerModal(name);
+    card.innerHTML=`
+      <div class="rp-head">
         ${avatarHTML}
-        <span style="font-size:13px;font-weight:500">${name}</span>
-      </div></td>
-      <td class="mono">${s.legs}</td>
-      <td class="mono">${s.km} km</td>
-      <td class="mono" style="color:var(--txt2)">${avgPace}</td>
-      <td><div class="mbar-wrap">
-        <div class="mbar"><div class="mbar-fill" style="width:${barPct}%"></div></div>
-        <span class="mono" style="color:var(--txt3);font-size:11px;white-space:nowrap">${covered} / ${s.km} km</span>
-      </div></td>`;
-    rtbody.appendChild(tr);
+        <div class="rp-name">${name}</div>
+        <div class="rp-stats">
+          <div><div class="rp-stat-val">${s.legs}</div><div class="rp-stat-lbl">legs</div></div>
+          <div><div class="rp-stat-val">${s.km}</div><div class="rp-stat-lbl">km</div></div>
+          <div><div class="rp-stat-val">${avgPace}</div><div class="rp-stat-lbl">/km</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="rp-progress-row"><span>COVERED</span><b>${covered} / ${s.km} km</b></div>
+        <div class="rp-bar"><div class="rp-bar-fill" style="width:${barPct}%"></div></div>
+      </div>`;
+    rgrid.appendChild(card);
   });
 
   document.getElementById('last-refresh').textContent='Last refreshed: '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
