@@ -217,9 +217,12 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .lag-num.behind{color:var(--rtxt)}
 .lag-num.even{color:var(--txt)}
 .lag-sub{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--txt3);margin-top:5px}
+/* Tint layered over the opaque --bg color (not painted directly on the page's
+   fixed ambient shader) so the card stays fully opaque and legible no matter
+   what the animated background behind it is doing at the time. */
 #lag-card{transition:border-color .3s ease,background .3s ease}
-#lag-card.lag-ahead{border-color:rgba(60,255,166,.4);background:var(--gbg)}
-#lag-card.lag-behind{border-color:rgba(255,64,109,.4);background:var(--rbg)}
+#lag-card.lag-ahead{border-color:rgba(60,255,166,.4);background:linear-gradient(var(--gbg),var(--gbg)),var(--bg)}
+#lag-card.lag-behind{border-color:rgba(255,64,109,.4);background:linear-gradient(var(--rbg),var(--rbg)),var(--bg)}
 #lag-card.lag-even{border-color:var(--bdr);background:var(--bg)}
 /* ── Pills ── */
 .pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;font-family:'Share Tech Mono',monospace}
@@ -2508,11 +2511,25 @@ function buildTeamPerf(legs,tracker){
     const projPace=plannedKm>0&&!isNaN(proj)?proj/plannedKm:NaN;
     const lag=!isNaN(sheetLag)?sheetLag:(!isNaN(act)&&!isNaN(proj)?act-proj:NaN);
 
+    // Cumulative clock-time drift as of this leg's actual finish, vs. its own
+    // fixed original schedule — the same formula calcTotalLag() uses for the
+    // Daily Lead/Lag stat. Computed per-leg here so the Time vs Plan chart's
+    // running total can snap to it instead of drifting apart from summing
+    // each leg's own duration delta (which misses the relay's initial start
+    // offset and any gaps between legs that calcTotalLag's clock comparison
+    // naturally captures).
+    let clockDrift=NaN;
+    const actEndDT=parseDateTime(l['Date']||'',trackerActEnd(t));
+    const expStartDT=parseDateTime(l['Date']||'',l['Exp. Start']||'');
+    if(actEndDT&&expStartDT&&!isNaN(proj)){
+      clockDrift=(actEndDT-new Date(expStartDT.getTime()+proj*60000))/60000;
+    }
+
     if(!isNaN(actPace)&&distKm>0){
       totalDistKm+=distKm;
       totalPaceWeighted+=actPace*distKm;paceCount++;
     }
-    completed.push({legNum:l['Leg'],day:l['Date']||'',distKm,proj,act,lag,actPace,projPace});
+    completed.push({legNum:l['Leg'],day:l['Date']||'',distKm,proj,act,lag,actPace,projPace,clockDrift});
   });
 
   // ── Running time card ──
@@ -2590,8 +2607,17 @@ function drawTeamDeltaChart(completed,fmtPace){
   const W=getChartWidth(svg);
   const H=200,tPad=10,rPad=36,lPad=46,bPad=22;
   svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  // Prefer each leg's authoritative clock-time drift (actual finish vs. that
+  // leg's own fixed schedule) when available — this snaps the running total
+  // back in sync with the Daily Lead/Lag stat's math instead of letting a
+  // pure sum of per-leg duration deltas drift apart from it. Only falls back
+  // to carrying the sum forward when a leg is missing the timestamps needed
+  // for the clock comparison.
   let cum=0;
-  const pts=valid.map((d,i)=>{cum+=d.lag;return{i,display:-cum,legNum:d.legNum,lag:d.lag};});
+  const pts=valid.map((d,i)=>{
+    cum=!isNaN(d.clockDrift)?d.clockDrift:cum+d.lag;
+    return{i,display:-cum,legNum:d.legNum,lag:d.lag};
+  });
   const vals=pts.map(p=>p.display);
   const minV=Math.min(0,...vals),maxV=Math.max(0,...vals);
   const span=Math.max(maxV-minV,5)*1.3;
