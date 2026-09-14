@@ -1,5 +1,5 @@
 // Bump this on every deploy that changes app-shell files so old caches get cleared.
-const CACHE_NAME = 'bagel-relay-shell-v2';
+const CACHE_NAME = 'bagel-relay-shell-v3';
 
 const APP_SHELL = [
   './',
@@ -7,6 +7,7 @@ const APP_SHELL = [
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './icons/icon-512-maskable.png',
   './icons/apple-touch-icon.png',
   './icons/favicon-32.png',
 ];
