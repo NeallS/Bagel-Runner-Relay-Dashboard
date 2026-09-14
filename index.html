@@ -16,32 +16,32 @@
 <meta name="apple-mobile-web-app-title" content="Bagel Relay">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Rampart+One&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#161829;--bg2:#100F1D;--bg3:#0A0913;
-  --txt:#F2EEE4;--txt2:#C7C4DA;--txt3:#8B87A6;
-  --bdr:rgba(230,225,255,.10);--bdr2:rgba(230,225,255,.20);
+  --bg:#2B2B30;--bg2:#232327;--bg3:#1B1B1F;
+  --txt:#EEEAE3;--txt2:#C9C6C3;--txt3:#8F8C89;
+  --bdr:rgba(238,234,227,.08);--bdr2:rgba(238,234,227,.16);
   --r:10px;--rl:16px;
-  --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 4px 16px rgba(0,0,0,.55);
-  --shadow-lg:0 1px 0 rgba(255,255,255,.06) inset,0 10px 30px rgba(0,0,0,.6),0 0 0 1px rgba(255,45,158,.10);
-  --bg-glass:rgba(16,15,29,.78);
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 4px 16px rgba(0,0,0,.45);
+  --shadow-lg:0 1px 0 rgba(255,255,255,.06) inset,0 10px 30px rgba(0,0,0,.5),0 0 0 1px rgba(123,92,255,.12);
+  --bg-glass:rgba(35,35,39,.78);
   --green:#3CFFA6;--gbg:rgba(60,255,166,.12);--gtxt:#3CFFA6;
   --amber:#FFB23E;--abg:rgba(255,178,62,.14);--atxt:#FFC876;
   --rbg:rgba(255,64,109,.14);--rtxt:#FF406D;
-  --accent:#FF2D9E;--accent2:#33E2FF;
-  --ink:#0A0913;
-  --grad:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+  --accent:#7B5CFF;--accent2:#2FD3C5;
+  --ink:#1B1B1F;
+  --grad:linear-gradient(135deg,var(--accent2) 0%,var(--accent) 100%);
 }
 
 
 
 body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:var(--txt);min-height:100vh;padding:0;-webkit-font-smoothing:antialiased}
 .halftone-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;mix-blend-mode:overlay;background-image:radial-gradient(circle,#fff 1px,transparent 1.3px);background-size:4px 4px}
-.grain-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background:linear-gradient(rgba(255,45,158,.05),rgba(51,226,255,.05)),radial-gradient(ellipse at 50% -10%,rgba(255,45,158,.16),transparent 55%)}
+.grain-overlay{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;background:linear-gradient(rgba(123,92,255,.05),rgba(47,211,197,.05)),radial-gradient(ellipse at 50% -10%,rgba(123,92,255,.14),transparent 55%)}
 .wrap{max-width:960px;margin:0 auto;padding:1.5rem 1.25rem;position:relative;z-index:1}
 @media(min-width:768px){.wrap{padding-top:84px}}
 @media(max-width:767px){.wrap{padding-bottom:96px}}
@@ -49,8 +49,8 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 /* ── Tubelight Nav ── */
 .tubelight-nav{position:fixed;top:1.25rem;left:50%;transform:translateX(-50%);z-index:500}
 @media(max-width:767px){.tubelight-nav{top:auto;bottom:1.25rem;width:calc(100% - 2rem);max-width:440px}}
-.tl-track{display:flex;align-items:center;gap:0;background:var(--bg-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:0.5px solid var(--bdr);border-radius:100px;padding:5px;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.4),0 1px 4px rgba(0,0,0,.3),0 0 0 1px rgba(255,45,158,.06)}
-.tl-pill{position:absolute;top:5px;height:calc(100% - 10px);background:var(--grad);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none;box-shadow:0 0 16px rgba(255,45,158,.45)}
+.tl-track{display:flex;align-items:center;gap:0;background:var(--bg-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:0.5px solid var(--bdr);border-radius:100px;padding:5px;position:relative;box-shadow:0 4px 24px rgba(0,0,0,.4),0 1px 4px rgba(0,0,0,.3),0 0 0 1px rgba(123,92,255,.06)}
+.tl-pill{position:absolute;top:5px;height:calc(100% - 10px);background:var(--grad);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none;box-shadow:0 0 16px rgba(123,92,255,.45)}
 .tl-lamp{position:absolute;top:5px;height:calc(100% - 10px);border-radius:100px;pointer-events:none;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:1;overflow:visible}
 .tl-lamp::before{content:'';position:absolute;top:-3px;left:20%;right:20%;height:5px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:50%;filter:blur(2.5px);opacity:.9}
 .tl-lamp::after{content:'';position:absolute;top:-3px;left:5%;right:5%;height:24px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:.28;filter:blur(12px);border-radius:50%}
@@ -76,7 +76,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 @media(max-width:600px){.countdown-timer{font-size:20px}}
 /* ── Mission sub-tabs ── */
 .mtab-row{display:flex;position:relative;gap:0;padding:4px;background:var(--bg-glass);backdrop-filter:blur(12px);border-radius:100px;margin-bottom:0;border:0.5px solid var(--bdr);box-shadow:0 2px 10px rgba(0,0,0,.3)}
-.mtab-pill{position:absolute;top:4px;height:calc(100% - 8px);background:var(--grad);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none;box-shadow:0 0 14px rgba(255,45,158,.4)}
+.mtab-pill{position:absolute;top:4px;height:calc(100% - 8px);background:var(--grad);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none;box-shadow:0 0 14px rgba(123,92,255,.4)}
 .mtab-lamp{position:absolute;top:4px;height:calc(100% - 8px);border-radius:100px;pointer-events:none;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:1;overflow:visible}
 .mtab-lamp::before{content:'';position:absolute;top:-3px;left:20%;right:20%;height:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:50%;filter:blur(2px);opacity:.8}
 .mtab-lamp::after{content:'';position:absolute;top:-3px;left:5%;right:5%;height:20px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:.24;filter:blur(10px);border-radius:50%}
@@ -129,22 +129,30 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
 /* ── Header ── */
 .hdr{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:var(--shadow)}
-.hdr::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 14px,rgba(255,45,158,.07) 14px 15px,transparent 15px 30px,rgba(51,226,255,.06) 30px 31px);-webkit-mask-image:linear-gradient(115deg,transparent 12%,#000 68%);mask-image:linear-gradient(115deg,transparent 12%,#000 68%);pointer-events:none}
-.hdr::after{content:'';position:absolute;top:-60%;right:-8%;width:55%;height:240%;background:radial-gradient(circle,rgba(255,45,158,.20),transparent 65%);pointer-events:none;filter:blur(2px)}
-.hdr-left,.hdr-right{position:relative;z-index:1}
+.hdr-shader{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hdr-shader canvas{display:block;width:100%!important;height:100%!important}
+.hdr::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(100deg,rgba(27,27,31,.8) 0%,rgba(27,27,31,.2) 38%,rgba(27,27,31,.2) 62%,rgba(27,27,31,.8) 100%)}
+.hdr-left,.hdr-right{position:relative;z-index:2}
 .hdr-left{display:flex;flex-direction:column;gap:5px;min-width:0}
 .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
 .hdr-countdown{text-align:right}
 .hdr-controls{display:flex;align-items:center;gap:12px}
 .eyebrow{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--txt2)}
-.pg-title{font-family:'Rampart One',sans-serif;font-size:19px;font-weight:400;letter-spacing:.01em;line-height:1.35;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.pg-title span{font-family:'Zen Kaku Gothic New',sans-serif;color:var(--txt3);font-weight:400;font-size:13px;margin-left:2px;-webkit-text-fill-color:var(--txt3)}
+.pg-title{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:.9;letter-spacing:.01em;color:var(--txt)}
+.pg-title span{font-family:'Bebas Neue',sans-serif;color:var(--accent);font-weight:400;font-size:28px;margin-left:6px}
+@media(min-width:600px){.pg-title,.pg-title span{font-size:34px}}
+/* ── Mission Control hero title (glass-torus shader fills the header behind it) ── */
+.hero-lockup{margin:2px 0 6px}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:.86;letter-spacing:.01em;color:var(--txt);margin:0;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+@media(min-width:600px){.hero-title{font-size:36px}}
+.hero-title span{color:var(--accent)}
+.hero-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);letter-spacing:.05em;margin-bottom:8px;display:block}
 .day-pill{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--green);background:var(--gbg);border:0.5px solid rgba(60,255,166,.35);border-radius:100px;padding:3px 10px;width:fit-content}
 .live{display:flex;align-items:center;gap:7px;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.06em}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(60,255,166,.8);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .countdown-label{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--txt3)}
-.countdown-timer{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;color:var(--txt);letter-spacing:.02em;line-height:1.1;text-shadow:0 0 14px rgba(255,45,158,.35),0 0 26px rgba(51,226,255,.15)}
+.countdown-timer{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;color:var(--txt);letter-spacing:.02em;line-height:1.1;text-shadow:0 0 14px rgba(123,92,255,.35),0 0 26px rgba(47,211,197,.15)}
 .countdown-timer .cd-unit{font-size:10px;font-weight:400;color:var(--txt3);letter-spacing:.04em;text-shadow:none}
 
 /* ── Banner ── */
@@ -166,8 +174,8 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 @media(max-width:600px){.sval{font-size:20px}.lag-num{font-size:20px}}
 
 /* ── Section label ── */
-.sec{display:flex;align-items:center;gap:9px;font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt2);margin:1.75rem 0 .75rem;padding-bottom:.6rem;border-bottom:0.5px solid var(--bdr2)}
-.sec::before{content:'';width:14px;height:2px;flex-shrink:0;background:var(--grad);box-shadow:0 0 6px rgba(255,45,158,.65)}
+.sec{display:flex;align-items:center;gap:9px;font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--txt2);margin:1.75rem 0 .75rem;padding-bottom:.6rem;border-bottom:0.5px solid var(--bdr2);text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.sec::before{content:'';width:14px;height:2px;flex-shrink:0;background:var(--grad);box-shadow:0 0 6px rgba(123,92,255,.65)}
 
 /* ── Card ── */
 .card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:1.25rem 1.5rem;box-shadow:var(--shadow);margin-bottom:1rem}
@@ -243,7 +251,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .av-sm{width:28px;height:28px;font-size:10px}
 .av-sm img{width:28px;height:28px}
 .av-t{background:rgba(60,255,166,.16);color:#3CFFA6}
-.av-b{background:rgba(51,226,255,.16);color:#33E2FF}
+.av-b{background:rgba(47,211,197,.16);color:#2FD3C5}
 .av-a{background:rgba(255,178,62,.18);color:#FFC876}
 .av-p{background:rgba(157,111,255,.18);color:#B79CFF}
 .av-c{background:rgba(255,64,109,.18);color:#FF7A98}
@@ -263,7 +271,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .poi-map-wrap{border-radius:var(--rl);overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);height:480px;position:relative;box-shadow:var(--shadow)}
 .poi-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
 .poi-chip{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.04em;padding:5px 12px;border-radius:100px;border:0.5px solid var(--bdr2);background:var(--bg);color:var(--txt2);cursor:pointer;transition:all .15s;white-space:nowrap}
-.poi-chip.active{background:var(--grad);color:var(--ink);border-color:transparent;font-weight:900;box-shadow:0 0 12px rgba(255,45,158,.4)}
+.poi-chip.active{background:var(--grad);color:var(--ink);border-color:transparent;font-weight:900;box-shadow:0 0 12px rgba(123,92,255,.4)}
 @media(hover:hover){.poi-chip:hover:not(.active){background:var(--bg2)}}
 .poi-chip:active{transform:scale(0.96);opacity:.8}
 .poi-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
@@ -273,7 +281,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .poi-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 @media(hover:hover){.poi-card:hover{border-color:var(--bdr2)}}
 .poi-card:active{transform:scale(0.99);opacity:.9}
-.poi-card.highlighted{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 0 14px rgba(255,45,158,.25)}
+.poi-card.highlighted{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 0 14px rgba(123,92,255,.25)}
 .poi-cat-badge{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.06em;padding:2px 8px;border-radius:100px;display:inline-block;width:fit-content}
 .poi-name{font-size:13px;font-weight:600;color:var(--txt)}
 .poi-desc{font-size:12px;color:var(--txt3);line-height:1.45}
@@ -343,7 +351,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .passport-nav-btn:disabled{opacity:.3;cursor:default}
 .passport-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 .passport-dot{width:8px;height:8px;border-radius:50%;background:var(--bg2);border:0.5px solid var(--bdr2);cursor:pointer;transition:all .15s;padding:0}
-.passport-dot.active{background:var(--grad);border-color:transparent;box-shadow:0 0 8px rgba(255,45,158,.5)}
+.passport-dot.active{background:var(--grad);border-color:transparent;box-shadow:0 0 8px rgba(123,92,255,.5)}
 .badge-case{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-top:.75rem}
 .badge{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;border-radius:var(--rl);border:0.5px solid var(--bdr);background:var(--bg2);cursor:pointer;opacity:.4;filter:grayscale(1);transition:all .25s ease}
 @media(hover:hover){.badge:hover{opacity:.75;transform:translateY(-2px)}}
@@ -395,7 +403,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   .hdr-right{flex-direction:row;align-items:center;justify-content:space-between;width:100%;gap:10px}
   .hdr-countdown{text-align:left}
   .eyebrow{display:none}
-  .pg-title{font-size:17px}
+  .pg-title,.pg-title span{font-size:24px}
   .countdown-timer{font-size:16px}
   .refresh-btn{font-size:11px;padding:0 10px;height:32px}
   .theme-toggle{width:32px;height:32px}
@@ -449,11 +457,11 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 @media(max-width:600px){#gallery-grid{columns:2 140px}}
 
 /* ── Install-app banner (iOS hint / Android prompt) ── */
-.pwa-banner{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(0);width:calc(100% - 2rem);max-width:420px;z-index:900;display:flex;align-items:center;gap:12px;background:var(--bg-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:12px 14px;box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 0 1px rgba(255,45,158,.08);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease}
+.pwa-banner{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(0);width:calc(100% - 2rem);max-width:420px;z-index:900;display:flex;align-items:center;gap:12px;background:var(--bg-glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:12px 14px;box-shadow:0 8px 28px rgba(0,0,0,.45),0 0 0 1px rgba(123,92,255,.08);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease}
 @media(min-width:768px){.pwa-banner{bottom:1.25rem;left:auto;right:1.25rem;transform:translateY(8px);width:340px}}
 .pwa-banner.show{opacity:1;pointer-events:all;transform:translateX(-50%) translateY(0)}
 @media(min-width:768px){.pwa-banner.show{transform:translateY(0)}}
-.pwa-banner-icon{width:34px;height:34px;border-radius:10px;background:var(--grad);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 12px rgba(255,45,158,.4)}
+.pwa-banner-icon{width:34px;height:34px;border-radius:10px;background:var(--grad);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 12px rgba(123,92,255,.4)}
 .pwa-banner-body{flex:1;min-width:0}
 .pwa-banner-title{font-size:12px;font-weight:700;color:var(--txt);margin-bottom:2px}
 .pwa-banner-sub{font-size:11px;color:var(--txt3);line-height:1.4}
@@ -506,9 +514,13 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
     <!-- Header -->
     <div class="hdr">
+      <div class="hdr-shader" id="hdr-shader"></div>
       <div class="hdr-left">
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; MISSION CONTROL</div>
-        <div class="pg-title">Tokyo &rarr; Osaka &nbsp;<span>Nov 1–6</span></div>
+        <div class="hero-lockup">
+          <h1 class="hero-title">TOKYO<br><span>&rarr; OSAKA</span></h1>
+        </div>
+        <div class="hero-sub">NOV 1–6</div>
         <div class="day-pill" id="day-pill">DAY 1 OF 6</div>
       </div>
       <div class="hdr-right">
@@ -915,7 +927,7 @@ let nextLegPoly     = null; // stored poly for re-fitting after tab reveal
 let poiMapDrawn     = false;
 
 const DAY_COLORS = {
-  1:'#3CFFA6', 2:'#33E2FF', 3:'#FFB23E', 4:'#FF406D', 5:'#B79CFF', 6:'#FF7AC0'
+  1:'#3CFFA6', 2:'#2FD3C5', 3:'#FFB23E', 4:'#FF406D', 5:'#B79CFF', 6:'#FF7AC0'
 };
 
 const AV = ['av-t','av-b','av-a','av-p','av-c','av-t','av-b','av-a','av-p'];
@@ -1283,7 +1295,7 @@ async function loadContacts(force){
 const POI_CAT_STYLE = {
   'Temple/Shrine': {bg:'rgba(255,178,62,.16)',color:'#FFC876'},
   'Food & Drink':  {bg:'rgba(255,64,109,.16)',color:'#FF7A98'},
-  'Viewpoint':     {bg:'rgba(51,226,255,.16)',color:'#33E2FF'},
+  'Viewpoint':     {bg:'rgba(47,211,197,.16)',color:'#2FD3C5'},
   'Market':        {bg:'rgba(157,111,255,.16)',color:'#B79CFF'},
   'Other':         {bg:'rgba(139,135,166,.16)',color:'#C7C4DA'},
 };
@@ -3831,91 +3843,44 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElemen
   const canvas=document.getElementById('bg-canvas');
   const gl=canvas.getContext('webgl')||canvas.getContext('experimental-webgl');
   if(!gl) return;
+  const reduceMotion=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Halftone dot-matrix: dot size at each grid cell follows a slow-drifting
+  // noise field, like a moving light passing over a screentone print.
   const VS=`attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0,1);}`;
   const FS=`
-#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
-#else
-precision mediump float;
-#endif
-uniform vec3 u_colors[8];
-uniform vec4 u_scene,u_shape,u_surface,u_finish,u_transform,u_space,u_cursor;
-#define u_resolution u_scene.xy
-#define u_time u_scene.z
-#define u_colorCount u_scene.w
-#define u_scale u_shape.x
-#define u_intensity u_shape.y
-#define u_warp u_shape.w
-#define u_detail u_surface.x
-#define u_contrast u_surface.y
-#define u_brightness u_surface.z
-#define u_saturation u_surface.w
-#define u_hue u_finish.x
-#define u_vignette u_finish.y
-#define u_grain u_finish.w
-#ifdef GL_FRAGMENT_PRECISION_HIGH
-#define u_seed u_transform.x
-#else
-#define u_seed mod(u_transform.x,31.0)
-#endif
-#define u_rotate u_transform.y
-#define u_drift u_transform.z
-#define u_oklab u_transform.w
-#define u_offset u_space.xy
-#define u_mouse u_space.zw
-#define u_cursorPresence u_cursor.x
-#define u_cursorEffect u_cursor.y
-#define u_cursorStrength u_cursor.z
-#define u_cursorRadius u_cursor.w
-
-float hash21(vec2 p){
-#ifndef GL_FRAGMENT_PRECISION_HIGH
-  p=mod(p,31.0);
-#endif
-  p=fract(p*vec2(234.34,435.345));p+=dot(p,p+34.23);return fract(p.x*p.y);}
-float grainHash(vec2 p){vec3 p3=fract(vec3(p.xyx)*0.1031);p3+=dot(p3,p3.yzx+33.33);return fract((p3.x+p3.y)*p3.z);}
+uniform vec2 u_resolution;
+uniform float u_time;
+float hash21(vec2 p){p=fract(p*vec2(234.34,435.345));p+=dot(p,p+34.23);return fract(p.x*p.y);}
 float noise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);vec2 u=f*f*(3.0-2.0*f);
   return mix(mix(hash21(i),hash21(i+vec2(1,0)),u.x),mix(hash21(i+vec2(0,1)),hash21(i+vec2(1,1)),u.x),u.y);}
-float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<5;i++){v+=a*noise(p);p=p*2.03+vec2(17,9.2);a*=0.5;}return v;}
-vec3 mixColour(vec3 a,vec3 b,float t){return mix(a,b,t);}
-vec3 palette(float x){float n=max(u_colorCount-1.0,1.0);float f=clamp(x,0.0,1.0)*n;vec3 col=u_colors[0];
-  for(int i=0;i<7;i++){if(float(i)<n)col=mixColour(col,u_colors[i+1],smoothstep(0.0,1.0,clamp(f-float(i),0.0,1.0)));}return col;}
-vec3 hueRotate(vec3 col,float a){
-  const mat3 toYIQ=mat3(0.299,0.596,0.211,0.587,-0.274,-0.523,0.114,-0.322,0.312);
-  const mat3 toRGB=mat3(1.0,1.0,1.0,0.956,-0.272,-1.106,0.621,-0.647,1.703);
-  vec3 yiq=toYIQ*col;float ca=cos(a),sa=sin(a);
-  yiq=vec3(yiq.x,yiq.y*ca-yiq.z*sa,yiq.y*sa+yiq.z*ca);return toRGB*yiq;}
-vec3 shade(vec2 uv,vec2 p,float t){
-  float curtain=fbm(vec2(p.x*2.0+t*0.15,p.y*0.6-t*0.05)+u_seed);
-  float band=fbm(vec2(p.x*3.5-t*0.1,curtain*(2.0+u_intensity*3.0)));
-  float glow=smoothstep(0.15,0.85,band)*(1.0-abs(p.y)*0.7);
-  return palette(clamp(glow,0.0,1.0));}
+float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<4;i++){v+=a*noise(p);p=p*2.0+vec2(11.0,7.0);a*=0.5;}return v;}
 void main(){
-  vec2 uv=gl_FragCoord.xy/u_resolution.xy;
-  vec2 screenUv=uv;
-  vec2 p=(gl_FragCoord.xy-0.5*u_resolution.xy)/min(u_resolution.x,u_resolution.y);
-  float cursorMask=0.0;
-  if(u_cursorPresence>0.001){
-    vec2 cursor=(0.5*u_mouse*u_resolution.xy)/min(u_resolution.x,u_resolution.y);
-    vec2 cursorDelta=p-cursor;
-    float cursorDistance=length(cursorDelta);
-    vec2 cursorDirection=cursorDelta/max(cursorDistance,0.0001);
-    cursorMask=u_cursorPresence*(1.0-smoothstep(0.0,u_cursorRadius,cursorDistance));
-    float ripple=sin(cursorDistance/max(u_cursorRadius,0.001)*18.0-u_time*5.0);
-    p-=cursorDirection*ripple*cursorMask*u_cursorStrength*0.07;
-  }
-  uv=p*min(u_resolution.x,u_resolution.y)/u_resolution.xy+0.5;
-  p*=u_scale;
-  p+=u_offset;
-  vec3 col=shade(uv,p,u_time);
-  if(abs(u_contrast-1.0)>0.0001)col=(col-0.5)*u_contrast+0.5;
-  if(abs(u_saturation-1.0)>0.0001){float luma=dot(col,vec3(0.299,0.587,0.114));col=mix(vec3(luma),col,u_saturation);}
-  if(abs(u_hue)>0.0001)col=hueRotate(col,u_hue);
-  if(abs(u_brightness)>0.0001)col+=u_brightness;
-  if(u_vignette>0.0001){float vd=length(screenUv-0.5)*1.41421356;col*=1.0-u_vignette*smoothstep(0.35,1.0,vd);}
-  if(u_grain>0.0001)col+=(grainHash(gl_FragCoord.xy+vec2(u_seed*17.0,u_seed*31.0))-0.5)*u_grain;
-  gl_FragColor=vec4(clamp(col,0.0,1.0),1.0);}`;
+  vec3 bg=vec3(0.106,0.106,0.122);
+  vec3 teal=vec3(0.184,0.827,0.773);
+  vec3 violet=vec3(0.482,0.361,1.0);
+
+  float cell=11.0;
+  vec2 cellUv=gl_FragCoord.xy/cell;
+  vec2 cellId=floor(cellUv);
+  vec2 cellCenterPx=(cellId+0.5)*cell;
+  vec2 fieldP=(cellCenterPx-0.5*u_resolution.xy)/min(u_resolution.x,u_resolution.y);
+
+  float field=fbm(fieldP*1.8+vec2(u_time*0.05,-u_time*0.035));
+  field=smoothstep(0.18,0.82,field);
+
+  vec2 local=fract(cellUv)-0.5;
+  float dist=length(local);
+  float radius=field*0.38;
+  float dotMask=1.0-smoothstep(radius-0.05,radius+0.03,dist);
+
+  float mixT=clamp(fieldP.x*0.5+0.5+sin(u_time*0.12+fieldP.y*2.0)*0.18,0.0,1.0);
+  vec3 dotColor=mix(teal,violet,mixT);
+
+  vec3 col=mix(bg,dotColor,dotMask*0.42);
+  gl_FragColor=vec4(col,1.0);
+}`;
 
   function compile(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
   const prog=gl.createProgram();
@@ -3929,33 +3894,10 @@ void main(){
   const loc=gl.getAttribLocation(prog,'a_pos');
   gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
 
-  const U={
-    colors:gl.getUniformLocation(prog,'u_colors'),
-    scene:gl.getUniformLocation(prog,'u_scene'),
-    shape:gl.getUniformLocation(prog,'u_shape'),
-    surface:gl.getUniformLocation(prog,'u_surface'),
-    finish:gl.getUniformLocation(prog,'u_finish'),
-    transform:gl.getUniformLocation(prog,'u_transform'),
-    space:gl.getUniformLocation(prog,'u_space'),
-    cursor:gl.getUniformLocation(prog,'u_cursor'),
-  };
+  const uRes=gl.getUniformLocation(prog,'u_resolution');
+  const uTime=gl.getUniformLocation(prog,'u_time');
 
-  // Night-drive family — void to neon glow
-  const COLORS=[
-    0.039,0.035,0.063, // #0A0910 — void
-    0.098,0.047,0.145, // #190C25 — deep plum
-    0.482,0.098,0.365, // #7B195D — muted magenta-wine
-    0.400,0.741,0.792, // #66BDCA — desaturated cyan glow
-    0,0,0, 0,0,0, 0,0,0, 0,0,0,
-  ];
-  gl.uniform3fv(U.colors,COLORS);
-  gl.uniform4f(U.shape, 1.26,0.55,0.28,0.00);   // scale, intensity high, warp=0
-  gl.uniform4f(U.surface,1.82,1.10,0.08,1.15);   // detail, contrast boosted, brightness, saturation
-  gl.uniform4f(U.finish, 0.0,0.34,0.005,0.035);   // hue=0, vignette, blur, grain
-  gl.uniform4f(U.transform,1316.0,0.00,0.05,0.0);
-  gl.uniform4f(U.cursor,0.0,3.0,0.37,0.34);
-
-  let mouse={x:0,y:0},presence=0,raf=null;
+  let raf=null;
   const start=performance.now();
 
   function resize(){
@@ -3965,27 +3907,130 @@ void main(){
   }
   window.addEventListener('resize',resize);resize();
 
-  window.addEventListener('mousemove',e=>{
-    mouse.x=(e.clientX/innerWidth)*2-1;
-    mouse.y=-((e.clientY/innerHeight)*2-1);
-    presence=1;
-  });
-  window.addEventListener('mouseleave',()=>{presence=0;});
-
-  function draw(){
-    const t=(performance.now()-start)/1000*0.57;
-    gl.uniform4f(U.scene,canvas.width,canvas.height,t,4.0);
-    gl.uniform4f(U.space,-0.16,0.12,mouse.x,mouse.y);
-    gl.uniform4f(U.cursor,presence,3.0,0.37,0.34);
+  function draw(now){
+    const t=reduceMotion?0.6:(now-start)/1000;
+    gl.uniform2f(uRes,canvas.width,canvas.height);
+    gl.uniform1f(uTime,t);
     gl.drawArrays(gl.TRIANGLES,0,3);
-    raf=requestAnimationFrame(draw);
+    if(!reduceMotion) raf=requestAnimationFrame(draw);
   }
 
   document.addEventListener('visibilitychange',()=>{
     if(document.hidden){cancelAnimationFrame(raf);raf=null;}
-    else if(!raf) draw();
+    else if(!raf) requestAnimationFrame(draw);
   });
-  draw();
+  requestAnimationFrame(draw);
+})();
+</script>
+
+<!-- Hero shader: raymarched glass torus filling the Mission Control header -->
+<script>
+(function(){
+  var container = document.getElementById('hdr-shader');
+  if(!container) return;
+  var canvas = document.createElement('canvas');
+  container.appendChild(canvas);
+  var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if(!gl) return;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var VS = 'attribute vec2 a_pos;void main(){gl_Position=vec4(a_pos,0.0,1.0);}';
+  var FS = [
+    'precision highp float;',
+    'uniform vec2 u_resolution;',
+    'uniform float u_time;',
+    'uniform vec3 u_teal;',
+    'uniform vec3 u_violet;',
+    'vec3 rotateAxis(vec3 p, vec3 axis, float a){',
+    '  return p*cos(a) + cross(axis,p)*sin(a) + axis*dot(axis,p)*(1.0-cos(a));',
+    '}',
+    'float sdTorus(vec3 p, vec2 t){ vec2 q = vec2(length(p.xz)-t.x, p.y); return length(q)-t.y; }',
+    'vec3 spinAxis = normalize(vec3(0.35, 0.9, 0.25));',
+    'float map(vec3 p){',
+    '  p = rotateAxis(p, spinAxis, u_time*0.22);',
+    '  return sdTorus(p, vec2(1.05, 0.44));',
+    '}',
+    'vec3 calcNormal(vec3 p){',
+    '  vec2 e = vec2(0.0015,0.0);',
+    '  return normalize(vec3(',
+    '    map(p+e.xyy)-map(p-e.xyy),',
+    '    map(p+e.yxy)-map(p-e.yxy),',
+    '    map(p+e.yyx)-map(p-e.yyx)',
+    '  ));',
+    '}',
+    'float raymarch(vec3 ro, vec3 rd, out vec3 hitP){',
+    '  float t = 0.0;',
+    '  for(int i=0;i<70;i++){',
+    '    vec3 p = ro+rd*t;',
+    '    float d = map(p);',
+    '    if(d<0.0015){ hitP=p; return t; }',
+    '    t += d;',
+    '    if(t>9.0) break;',
+    '  }',
+    '  return -1.0;',
+    '}',
+    'void main(){',
+    '  float divisor = max(u_resolution.y, u_resolution.x/2.0);',
+    '  vec2 uv = (gl_FragCoord.xy-0.5*u_resolution.xy)/divisor;',
+    '  uv *= 1.55;',
+    '  vec3 ro = vec3(0.0, 0.15, 2.6);',
+    '  vec3 rd = normalize(vec3(uv, -1.7));',
+    '  vec3 hitP;',
+    '  float t = raymarch(ro, rd, hitP);',
+    '  if(t<0.0){ gl_FragColor = vec4(0.0); return; }',
+    '  vec3 n = calcNormal(hitP);',
+    '  vec3 viewDir = -rd;',
+    '  float fresnel = pow(1.0-max(dot(n,viewDir),0.0), 2.4);',
+    '  float band = clamp(n.y*0.5+0.5, 0.0, 1.0);',
+    '  vec3 base = mix(u_violet, u_teal, band);',
+    '  vec3 col = base*0.32;',
+    '  col += fresnel*mix(u_teal,u_violet,0.5)*1.3;',
+    '  vec3 lightDir = normalize(vec3(sin(u_time*0.5)*1.0, 0.9, cos(u_time*0.5)*1.0));',
+    '  float spec = pow(max(dot(reflect(-lightDir,n), viewDir),0.0), 50.0);',
+    '  col += spec*0.9;',
+    '  float alpha = clamp(fresnel*1.4+0.55, 0.0, 1.0);',
+    '  gl_FragColor = vec4(clamp(col,0.0,1.0), alpha);',
+    '}'
+  ].join('\n');
+
+  function compile(type,src){ var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s); return s; }
+  var prog = gl.createProgram();
+  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
+  gl.linkProgram(prog); gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog,'a_pos');
+  gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+
+  var uRes = gl.getUniformLocation(prog,'u_resolution');
+  var uTime = gl.getUniformLocation(prog,'u_time');
+  gl.uniform3f(gl.getUniformLocation(prog,'u_teal'), 0.184,0.827,0.773);
+  gl.uniform3f(gl.getUniformLocation(prog,'u_violet'), 0.482,0.361,1.0);
+
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+  function resize(){
+    var dpr = Math.min(window.devicePixelRatio||1,2);
+    canvas.width = container.clientWidth*dpr;
+    canvas.height = container.clientHeight*dpr;
+    gl.viewport(0,0,canvas.width,canvas.height);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var start = performance.now();
+  function draw(now){
+    var t = reduceMotion ? 0.4 : (now-start)/1000;
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.uniform1f(uTime, t);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    if(!reduceMotion) requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
 })();
 </script>
 
