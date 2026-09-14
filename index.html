@@ -307,6 +307,31 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 @media(hover:hover){.log-leg-btn:hover{opacity:.82}}
 .log-leg-btn:active{opacity:.75;transform:scale(0.97)}
 .mono{font-family:'Share Tech Mono',monospace;font-size:12px}
+
+/* ── Contact cards ── */
+.contact-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.contact-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;transition:border-color .15s,box-shadow .15s}
+@media(hover:hover){.contact-card:hover{border-color:var(--bdr2)}}
+.cc-head{display:flex;align-items:center;gap:12px}
+.cc-name{font-size:14px;font-weight:700;color:var(--txt)}
+.cc-fields{display:flex;flex-direction:column;gap:8px;padding-top:8px;border-top:0.5px solid var(--bdr)}
+.cc-field{display:flex;flex-direction:column;gap:3px}
+.cc-label{font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--txt3);text-transform:uppercase}
+.cc-value{font-size:13px;color:var(--txt2)}
+.cc-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--atxt);background:var(--abg);border-radius:100px;padding:6px 12px;text-decoration:none;width:fit-content;font-weight:600}
+@media(hover:hover){.cc-link:hover{opacity:.85}}
+.cc-link:active{transform:scale(0.97)}
+
+/* ── Financial cards ── */
+.fin-cards{display:flex;flex-direction:column;gap:10px}
+.fin-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.fc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.fc-item{font-size:14px;font-weight:600;color:var(--txt)}
+.fc-date{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);margin-top:3px}
+.fc-amount{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:700;color:var(--atxt);white-space:nowrap}
+.fc-meta{font-size:12px;color:var(--txt3);display:flex;flex-wrap:wrap;gap:6px 14px}
+.fc-meta b{color:var(--txt2);font-weight:600}
+.fc-pills{display:flex;flex-wrap:wrap;gap:4px}
 .mbar-wrap{display:flex;align-items:center;gap:8px}
 .mbar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;width:70px;flex-shrink:0}
 .mbar-fill{height:100%;background:var(--green);border-radius:3px}
@@ -530,7 +555,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         </div>
         <div class="hdr-controls">
 
-          <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+          <button class="refresh-btn" onclick="haptic();loadData()">↻ Refresh</button>
           <div class="live"><div class="dot"></div>LIVE</div>
         </div>
       </div>
@@ -757,7 +782,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; RELAY PASSPORT</div>
         <div class="pg-title">Relay Passport &nbsp;<span>Challenges &amp; Stamps</span></div>
       </div>
-      <button class="refresh-btn" onclick="loadPassport(true)">↻ Refresh</button>
+      <button class="refresh-btn" onclick="haptic();loadPassport(true)">↻ Refresh</button>
     </div>
     <div id="rp-banner" class="banner info"><span>⏳</span><span>Loading relay passport…</span></div>
     <div id="rp-passport" class="passport" style="display:none">
@@ -777,7 +802,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; POINTS OF INTEREST</div>
         <div class="pg-title">Route POIs &nbsp;<span>Places to Explore</span></div>
       </div>
-      <button class="refresh-btn" onclick="loadPOIs(true)">↻ Refresh</button>
+      <button class="refresh-btn" onclick="haptic();loadPOIs(true)">↻ Refresh</button>
     </div>
 
     <div id="poi-banner" class="banner info"><span>⏳</span><span>Loading points of interest…</span></div>
@@ -824,7 +849,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdN9C_6bfChBL8LJrlDLhjJODgXIEfiUhFIyTTcddvYYoJbjg/viewform?usp=dialog" target="_blank" rel="noopener" class="form-glink">📝 Log Expense</a>
-        <button class="refresh-btn" onclick="loadFinances(true)">↻ Refresh</button>
+        <button class="refresh-btn" onclick="haptic();loadFinances(true)">↻ Refresh</button>
       </div>
     </div>
     <div id="ft-banner" class="banner info"><span>⏳</span><span>Loading financial tracker…</span></div>
@@ -833,11 +858,8 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
       <div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px">Loading…</div>
     </div>
     <div class="sec" style="margin-top:1rem">EXPENSE LOG</div>
-    <div class="tbl-wrap" style="background:var(--bg);border:0.5px solid var(--bdr)">
-      <table class="tbl">
-        <thead><tr id="ft-thead-row"><th colspan="10" style="color:var(--txt3);font-style:italic">Loading…</th></tr></thead>
-        <tbody id="ft-tbody"></tbody>
-      </table>
+    <div id="ft-cards" class="fin-cards">
+      <div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px">Loading…</div>
     </div>
   </div>
 
@@ -848,14 +870,11 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; CONTACT INFO</div>
         <div class="pg-title">Contacts &nbsp;<span>Runners &amp; Support</span></div>
       </div>
-      <button class="refresh-btn" onclick="loadContacts(true)">↻ Refresh</button>
+      <button class="refresh-btn" onclick="haptic();loadContacts(true)">↻ Refresh</button>
     </div>
     <div id="ci-banner" class="banner info"><span>⏳</span><span>Loading contact info…</span></div>
-    <div class="tbl-wrap" style="background:var(--bg);border:0.5px solid var(--bdr)">
-      <table class="tbl">
-        <thead><tr id="ci-thead-row"><th colspan="10" style="color:var(--txt3);font-style:italic">Loading…</th></tr></thead>
-        <tbody id="ci-tbody"></tbody>
-      </table>
+    <div id="ci-cards" class="contact-cards">
+      <div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px;grid-column:1/-1">Loading…</div>
     </div>
   </div>
 
@@ -868,7 +887,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
       </div>
       <div style="display:flex;align-items:center;gap:8px">
         <a id="gallery-submit-btn" href="#" target="_blank" rel="noopener" class="form-glink">📷 Submit Photo</a>
-        <button class="refresh-btn" onclick="loadCommunityPhotos(true)">↻ Refresh</button>
+        <button class="refresh-btn" onclick="haptic();loadCommunityPhotos(true)">↻ Refresh</button>
       </div>
     </div>
     <div id="gallery-day-filter" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem"></div>
@@ -905,6 +924,12 @@ const POI_TAB          = 'Points of Interest';   // sheet tab: Name | Category |
 const COMMUNITY_PHOTOS_TAB = 'Community Photos';     // sheet tab fed by the photo submission form
 const COMMUNITY_PHOTOS_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdVczd63KU0yaBOPm1eBW-tSuOuu7XdBkN3taFqqXR88R03ew/viewform?usp=dialog';
 const csvURL     = tab => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
+
+// ─── HAPTICS ─────────────────────────────────────────────────────────────────
+// Vibration API — supported on Android (Chrome, in-browser or installed as PWA).
+// iOS Safari/PWA has no Vibration API at all, so this silently no-ops there.
+const canVibrate = 'vibrate' in navigator;
+function haptic(pattern){ if(canVibrate) navigator.vibrate(pattern||10); }
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let legsData        = [];
@@ -991,6 +1016,7 @@ function switchMissionTab(id){
   if(row) positionMtabPill(row);
 }
 function switchLegTab(id){
+  haptic();
   const container=document.getElementById('legtab-'+id)?.closest('div[style*="overflow:hidden"]');
   if(container){
     container.querySelectorAll('.mtab-btn').forEach(b=>b.classList.remove('active'));
@@ -1008,6 +1034,7 @@ function switchLegTab(id){
 }
 
 function switchTeamChartTab(id){
+  haptic();
   const row=document.getElementById('team-chart-tab-row');
   if(row){
     row.querySelectorAll('.mtab-btn').forEach(b=>b.classList.remove('active'));
@@ -1019,6 +1046,7 @@ function switchTeamChartTab(id){
   document.getElementById(id)?.classList.add('active');
 }
 function switchTab(id){
+  haptic();
   document.querySelectorAll('.tl-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelector(`.tl-btn[data-tab="${id}"]`)?.classList.add('active');
@@ -1056,8 +1084,10 @@ function getStamps(){
 }
 function toggleStamp(key){
   const stamps=getStamps();
+  const nowChecked=!stamps[key];
   if(stamps[key]) delete stamps[key]; else stamps[key]=true;
   localStorage.setItem(PASSPORT_STAMPS_KEY, JSON.stringify(stamps));
+  haptic(nowChecked?[15,30,15]:10);
   renderPassport();
 }
 function updatePassportTabBadge(totalDone,totalChallenges){
@@ -1071,6 +1101,7 @@ function passportGo(delta){
   if(!passportData) return;
   const newPage=Math.max(0,Math.min(passportData.length,passportPage+delta));
   if(newPage===passportPage) return;
+  haptic();
   passportPage=newPage;
   renderPassport();
 }
@@ -1217,9 +1248,8 @@ function driveThumb(url,sz){
 
 async function loadContacts(force){
   if(contactsLoaded&&!force) return;
-  const banner  =document.getElementById('ci-banner');
-  const theadRow=document.getElementById('ci-thead-row');
-  const tbody   =document.getElementById('ci-tbody');
+  const banner=document.getElementById('ci-banner');
+  const cards =document.getElementById('ci-cards');
   banner.className='banner info';
   banner.innerHTML='<span>⏳</span><span>Loading contact info…</span>';
   try{
@@ -1233,52 +1263,46 @@ async function loadContacts(force){
     const photoIdx=hdr.findIndex(h=>/photo|image|picture/i.test(h));
     const nameIdx =hdr.findIndex(h=>/^name$|^runner$|^contact/i.test(h));
 
-    // Build visible headers: skip the photo column (rendered inline with name)
-    const visibleHdr=hdr.filter((_,i)=>i!==photoIdx);
-    theadRow.innerHTML=hdr.map((h,i)=>{
-      if(i===photoIdx) return null;
-      return i===nameIdx?`<th style="min-width:180px">${h}</th>`:`<th>${h}</th>`;
-    }).filter(th=>th!==null).join('');
-
-    tbody.innerHTML='';
+    cards.innerHTML='';
     rows.slice(1).filter(r=>r.some(c=>c.replace(/^"|"$/g,'').trim())).forEach(r=>{
       const cells=r.map(c=>c.replace(/^"|"$/g,'').trim());
       const photoUrl=photoIdx>=0?driveThumb(cells[photoIdx]||'',200):'';
-      const tr=document.createElement('tr');
+      const name=nameIdx>=0?(cells[nameIdx]||''):'';
 
-      const tds=hdr.map((h,i)=>{
-        if(i===photoIdx) return null; // handled inline with name
+      const initials=name.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+      const avatarColor=AV[Object.keys(runnerColors).length%AV.length];
+      if(!runnerColors[name]) runnerColors[name]=avatarColor;
+      const avClass=runnerColors[name]||'av-t';
+      const avatar=photoUrl
+        ?`<div class="av" style="background:var(--bg2);overflow:hidden;flex-shrink:0;width:56px;height:56px">
+            <img src="${photoUrl}" alt="${initials}" width="56" height="56"
+              style="width:56px;height:56px;object-fit:cover;border-radius:50%;display:block"
+              onerror="const p=this.parentElement;p.className='av ${avClass}';p.innerHTML='${initials}'"/>
+          </div>`
+        :`<div class="av ${avClass}" style="width:56px;height:56px;font-size:17px">${initials}</div>`;
+
+      const fieldsHtml=hdr.map((h,i)=>{
+        if(i===photoIdx||i===nameIdx) return '';
         const v=cells[i]||'';
+        if(!v) return '';
 
-        // Name cell — prepend avatar circle (photo or initials)
-        if(i===nameIdx){
-          const initials=v.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
-          const avatarColor=AV[Object.keys(runnerColors).length%AV.length];
-          if(!runnerColors[v]) runnerColors[v]=avatarColor;
-          const avClass=runnerColors[v]||'av-t';
-          const avatar=photoUrl
-            ?`<div class="av" style="background:var(--bg2);overflow:hidden;flex-shrink:0;width:48px;height:48px">
-                <img src="${photoUrl}" alt="${initials}" width="48" height="48"
-                  style="width:48px;height:48px;object-fit:cover;border-radius:50%;display:block"
-                  onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}'"/>
-              </div>`
-            :`<div class="av ${avClass}" style="width:48px;height:48px;font-size:16px">${initials}</div>`;
-          return `<td style="font-size:14px;font-weight:600;min-width:180px">
-            <div style="display:flex;align-items:center;gap:12px">${avatar}<span>${v||'—'}</span></div></td>`;
-        }
-
-        // Phone
+        // Phone — tappable call button
         if(/^[\+\d\s\-\(\)]{7,}$/.test(v)&&v.replace(/\D/g,'').length>=7)
-          return `<td style="font-size:13px"><a href="tel:${v.replace(/\s/g,'')}" style="color:var(--atxt);text-decoration:none">${v}</a></td>`;
-        // Email
+          return `<div class="cc-field"><span class="cc-label">${h}</span><a class="cc-link" href="tel:${v.replace(/\s/g,'')}" onclick="haptic()">📞 ${v}</a></div>`;
+        // Email — tappable mail button
         if(/@/.test(v))
-          return `<td style="font-size:13px"><a href="mailto:${v}" style="color:var(--atxt);text-decoration:none">${v}</a></td>`;
+          return `<div class="cc-field"><span class="cc-label">${h}</span><a class="cc-link" href="mailto:${v}" onclick="haptic()">✉️ ${v}</a></div>`;
 
-        return `<td style="font-size:13px">${v||'—'}</td>`;
-      }).filter(td=>td!==null);
+        return `<div class="cc-field"><span class="cc-label">${h}</span><span class="cc-value">${v}</span></div>`;
+      }).join('');
 
-      tr.innerHTML=tds.join('');
-      tbody.appendChild(tr);
+      const card=document.createElement('div');
+      card.className='contact-card';
+      card.innerHTML=`
+        <div class="cc-head">${avatar}<div class="cc-name">${name||'—'}</div></div>
+        ${fieldsHtml?`<div class="cc-fields">${fieldsHtml}</div>`:''}
+      `;
+      cards.appendChild(card);
     });
     banner.className='banner ok';
     banner.innerHTML=`<span>✅</span><span>Loaded — ${rows.length-1} contacts.</span>`;
@@ -1504,6 +1528,7 @@ function highlightPOICard(idx){
 }
 
 function highlightPOIMarker(idx){
+  haptic();
   if(poiMiniMap&&poiMarkers[idx]){
     poiMiniMap.panTo(poiMarkers[idx].getLatLng(),{animate:true});
     document.querySelectorAll('.poi-card').forEach(c=>c.classList.remove('highlighted'));
@@ -1530,9 +1555,8 @@ function poiCard(p,i){
 
 async function loadFinances(force){
   if(financeLoaded&&!force) return;
-  const banner   = document.getElementById('ft-banner');
-  const theadRow = document.getElementById('ft-thead-row');
-  const tbody    = document.getElementById('ft-tbody');
+  const banner = document.getElementById('ft-banner');
+  const cards  = document.getElementById('ft-cards');
   banner.className='banner info';
   banner.innerHTML='<span>⏳</span><span>Loading financial tracker…</span>';
   try{
@@ -1555,7 +1579,9 @@ async function loadFinances(force){
         : `$${n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
     const forIdx    = hdr.findIndex(h=>/who was it purchased for|purchased for|for whom/i.test(h));
     const byIdx     = hdr.findIndex(h=>/purchased by|paid by|who paid|who bought|spent by/i.test(h));
-    const itemIdx   = hdr.findIndex(h=>/item|description|what was/i.test(h));
+    // "item purchased" wording, but not the "when was it purchased" date column
+    const itemIdx   = hdr.findIndex(h=>!/^when/i.test(h)&&/item|description|what was/i.test(h));
+    const dateIdx   = hdr.findIndex(h=>/^when|^date$|purchase date/i.test(h));
 
     // Hide Timestamp and Notes columns from the table
     const hiddenIdx = new Set(hdr.map((h,i)=>/^timestamp$|^notes$/i.test(h)?i:-1).filter(i=>i>=0));
@@ -1563,8 +1589,10 @@ async function loadFinances(force){
 
     const dataRows=rows.slice(1).filter(r=>r.some(c=>c.replace(/^"|"$/g,'').trim()));
 
-    theadRow.innerHTML=visibleIdx.map(i=>`<th>${hdr[i]}</th>`).join('');
-    tbody.innerHTML='';
+    // Columns already surfaced elsewhere on the card (item, date, amount, for, by) are skipped here
+    const extraIdx = visibleIdx.filter(i=>i!==itemIdx&&i!==dateIdx&&i!==amountIdx&&i!==forIdx&&i!==byIdx);
+
+    cards.innerHTML='';
 
     let grandTotal=0;
     const perPerson={}; // {name: amountOwed}
@@ -1584,28 +1612,41 @@ async function loadFinances(force){
         names.forEach(n=>{ perPerson[n]=(perPerson[n]||0)+share; });
       }
 
-      const tr=document.createElement('tr');
-      tr.innerHTML=visibleIdx.map(i=>{
-        const v=cells[i]||'';
-        // "Who was it purchased for?" — render as name tag chips (handles any combo of names)
-        if(i===forIdx){
-          const tags=splitNames(v);
-          if(!tags.length) return `<td>—</td>`;
-          return `<td><div style="display:flex;flex-wrap:wrap;gap:4px">${tags.map(n=>{
+      const item=itemIdx>=0?(cells[itemIdx]||''):'';
+      const date=dateIdx>=0?(cells[dateIdx]||''):'';
+      const amtNum=amountIdx>=0?parseFloat((cells[amountIdx]||'').replace(/[^0-9.\-]/g,'')):NaN;
+      const amtDisplay=isNaN(amtNum)?(cells[amountIdx]||'—'):fmtMoney(amtNum);
+
+      const pillsHtml=names.length
+        ?`<div class="fc-pills">${names.map(n=>{
             if(!runnerColors[n]) runnerColors[n]=AV[Object.keys(runnerColors).length%AV.length];
             return `<span class="pill pill-up" style="font-size:10px">${n}</span>`;
-          }).join('')}</div></td>`;
-        }
-        // Amount column — monospace, right-aligned, formatted
-        if(i===amountIdx){
-          const num=parseFloat(v.replace(/[^0-9.\-]/g,''));
-          return `<td class="mono" style="text-align:right;font-weight:700">${isNaN(num)?(v||'—'):fmtMoney(num)}</td>`;
-        }
-        if(i===itemIdx) return `<td style="font-weight:500">${v||'—'}</td>`;
-        if(i===byIdx)   return `<td>${v||'—'}</td>`;
-        return `<td style="font-size:13px;color:var(--txt2)">${v||'—'}</td>`;
-      }).join('');
-      tbody.appendChild(tr);
+          }).join('')}</div>`
+        :'';
+
+      const extraHtml=extraIdx.map(i=>{
+        const v=cells[i]||'';
+        return v?`<span><b>${hdr[i]}</b> ${v}</span>`:'';
+      }).filter(Boolean).join('');
+
+      const metaParts=[];
+      if(buyer) metaParts.push(`<span><b>Paid by</b> ${buyer}</span>`);
+      if(extraHtml) metaParts.push(extraHtml);
+
+      const card=document.createElement('div');
+      card.className='fin-card';
+      card.innerHTML=`
+        <div class="fc-top">
+          <div>
+            <div class="fc-item">${item||'—'}</div>
+            ${date?`<div class="fc-date">${date}</div>`:''}
+          </div>
+          <div class="fc-amount">${amtDisplay}</div>
+        </div>
+        ${metaParts.length?`<div class="fc-meta">${metaParts.join('')}</div>`:''}
+        ${pillsHtml}
+      `;
+      cards.appendChild(card);
     });
 
     // Summary cards removed — settlement section is the primary summary
@@ -2766,7 +2807,7 @@ function render(legs,tracker){
     const avHTML=photoUrl
       ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
           <img src="${photoUrl}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
-            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)'"/>
+            onerror="const p=this.parentElement;p.className='av ${avClass}';p.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
     return `<div style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(255,178,62,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
@@ -2820,7 +2861,7 @@ function render(legs,tracker){
     const avHTML=photoUrl
       ?`<div class="av" style="width:52px;height:52px;font-size:18px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
           <img src="${photoUrl}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
-            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}'"/>
+            onerror="const p=this.parentElement;p.className='av ${avClass}';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:52px;height:52px;font-size:18px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
     const kana=roleKana[role]||role;
@@ -2898,7 +2939,7 @@ function render(legs,tracker){
       ?`<div class="av av-md" style="background:var(--bg2)">
           <img src="${photoUrl}" alt="${initials}" width="36" height="36"
             style="object-fit:cover;border-radius:50%;display:block"
-            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av av-md ${col}'"/>
+            onerror="const p=this.parentElement;p.className='av av-md ${col}';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av av-md ${col}">${initials}</div>`;
     const tr=document.createElement('tr');
@@ -3135,7 +3176,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
     const avHTML=photo
       ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
           <img src="${photo}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
-            onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}';this.parentElement.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)'"/>
+            onerror="const p=this.parentElement;p.className='av ${avClass}';p.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
     return `<div style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(255,178,62,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
@@ -3182,7 +3223,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
               const initials=name.slice(0,2).toUpperCase();
               const photoUrl=contactPhotos[name];
               const avHTML=photoUrl
-                ?`<div class="av" style="width:48px;height:48px;font-size:16px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)"><img src="${photoUrl}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%" onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}'"/></div>`
+                ?`<div class="av" style="width:48px;height:48px;font-size:16px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)"><img src="${photoUrl}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%" onerror="const p=this.parentElement;p.className='av ${avClass}';p.innerHTML='${initials}'"/></div>`
                 :`<div class="av ${avClass}" style="width:48px;height:48px;font-size:16px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
               const kana=_kana[role]||role;
               return `<div style="background:var(--abg);border-radius:var(--r);padding:12px;border:1px solid rgba(255,178,62,.30);box-shadow:0 2px 8px rgba(0,0,0,.10);display:flex;align-items:flex-start;gap:10px;min-height:110px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
@@ -3322,7 +3363,7 @@ function buildRestTracker(legs,currentIdx,tracker){
     const colIdx=Object.keys(runnerLegs).indexOf(name);
     const col=AV[colIdx%AV.length]||'av-teal';
     const avHTML=photo
-      ?`<div class="av av-sm" style="background:var(--bg2)"><img src="${photo}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%" onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av av-sm ${col}'"/></div>`
+      ?`<div class="av av-sm" style="background:var(--bg2)"><img src="${photo}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%" onerror="const p=this.parentElement;p.className='av av-sm ${col}';p.innerHTML='${initials}'"/></div>`
       :`<div class="av av-sm ${col}">${initials}</div>`;
     const lastChip=lastIdx>=0
       ?`<span class="rest-chip rest-chip-done">Leg ${legs[lastIdx]['Leg']} · ${lastTime||'?'}</span>`
@@ -3377,7 +3418,7 @@ function buildLeaderboard(legs,tracker){
         ?`<div class="av" style="background:var(--bg2);width:26px;height:26px;font-size:10px">
             <img src="${photoUrl}" alt="${initials}" width="26" height="26"
               style="object-fit:cover;border-radius:50%;display:block"
-              onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='av ${avClass}'"/>
+              onerror="const p=this.parentElement;p.className='av ${avClass}';p.innerHTML='${initials}'"/>
           </div>`
         :`<div class="av ${avClass}" style="width:26px;height:26px;font-size:10px">${initials}</div>`;
       return `<tr>
@@ -3436,10 +3477,16 @@ function buildOverviewMap(legs, tracker, currentIdx){
     const t=tracker[legNum]||{};
     const done=!!trackerActEnd(t);
     const active=i===currentIdx&&!done;
-    const color=done?'#3CFFA6':active?'#FF406D':'#3A3752';
-    const weight=done?3.5:active?4:2;
-    const opacity=done?0.9:active?1:0.45;
-    L.polyline(latlngs,{color,weight,opacity}).addTo(overviewMap);
+    const remaining=!done&&!active;
+    // Remaining route drawn as a dashed violet line — visible against the dark
+    // tiles (unlike the near-invisible grey used before) without competing
+    // with the solid green (done) / pink (active) legs.
+    const color=done?'#3CFFA6':active?'#FF406D':'#7B5CFF';
+    const weight=done?3.5:active?4:2.5;
+    const opacity=done?0.9:active?1:0.6;
+    const lineOpts={color,weight,opacity};
+    if(remaining) lineOpts.dashArray='6,8';
+    L.polyline(latlngs,lineOpts).addTo(overviewMap);
 
     // Pulsing circle for active leg start
     if(active){
@@ -3754,7 +3801,7 @@ function openRunnerModal(name){
   if(photo){
     avEl.className='runner-modal-av';
     avEl.style.background='var(--bg2)';
-    avEl.innerHTML=`<img src="${photo}" alt="${initials}" onerror="this.parentElement.innerHTML='${initials}';this.parentElement.className='runner-modal-av ${col}'"/>`;
+    avEl.innerHTML=`<img src="${photo}" alt="${initials}" onerror="const p=this.parentElement;p.className='runner-modal-av ${col}';p.innerHTML='${initials}'"/>`;
   } else {
     avEl.className=`runner-modal-av ${col}`;
     avEl.style.background='';
