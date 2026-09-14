@@ -272,6 +272,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .cur-date{font-size:12px;color:var(--txt2)}
 .cur-runner-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:640px){.cur-runner-row{grid-template-columns:1fr}}
+.kana-slot{margin-left:auto;padding-left:8px;font-family:'Share Tech Mono',monospace;writing-mode:vertical-rl;text-orientation:upright;font-size:11px;font-weight:700;letter-spacing:.08em;color:rgba(255,200,118,.4);flex-shrink:0;line-height:1}
 .cur-timing{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);overflow:hidden}
 .cur-timing .t-cell{padding:11px 10px;border-left:0.5px solid var(--bdr)}
 .cur-timing .t-cell:first-child{border-left:none}
@@ -2833,6 +2834,7 @@ function render(legs,tracker){
   }
 
   // Runner cards — card-style, placed side by side in the runner row
+  const roleKana={'Pacer':'ペーサー','Runner':'ランナー'};
   function runnerCard(name,role){
     if(!name) return '';
     if(!runnerColors[name]) runnerColors[name]=AV[Object.keys(runnerColors).length%AV.length];
@@ -2840,6 +2842,7 @@ function render(legs,tracker){
     const initials=name.slice(0,2).toUpperCase();
     const photoUrl=contactPhotos[name];
     const roleCol='#FFC876';
+    const kana=roleKana[role]||'';
     const avHTML=photoUrl
       ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
           <img src="${photoUrl}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
@@ -2852,6 +2855,7 @@ function render(legs,tracker){
         <div style="font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;color:${roleCol};margin-bottom:4px">${role.toUpperCase()}</div>
         <div style="font-size:14px;font-weight:700;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</div>
       </div>
+      ${kana?`<span class="kana-slot">${kana}</span>`:''}
     </div>`;
   }
 
@@ -3167,6 +3171,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
   const carUrl=(next['Car Start (Maps URL)']||'').trim();
 
   // Runner card — card-style matching stat cards
+  const roleKana={'Pacer':'ペーサー','Runner':'ランナー'};
   function runnerChip(name, role){
     if(!name) return '';
     if(!runnerColors[name]) runnerColors[name]=AV[Object.keys(runnerColors).length%AV.length];
@@ -3174,6 +3179,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
     const initials=name.slice(0,2).toUpperCase();
     const photo=contactPhotos[name];
     const roleCol='#FFC876';
+    const kana=roleKana[role]||'';
     const avHTML=photo
       ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
           <img src="${photo}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
@@ -3186,6 +3192,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
         <div style="font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;color:${roleCol};margin-bottom:4px">${role.toUpperCase()}</div>
         <div style="font-size:14px;font-weight:700;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</div>
       </div>
+      ${kana?`<span class="kana-slot">${kana}</span>`:''}
     </div>`;
   }
 
