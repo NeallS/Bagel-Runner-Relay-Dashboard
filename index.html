@@ -265,6 +265,28 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .cdown{font-family:'Share Tech Mono',monospace;font-size:36px;font-weight:700;line-height:1;color:var(--txt)}
 .cdown-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.07em;color:var(--txt3);margin-top:4px}
 
+/* ── Current Leg card (regrouped: warning > topline > runners > CTA > timing > map > elevation) ── */
+.cur-warn-banner{display:flex;align-items:center;gap:8px;border:1.5px solid rgba(255,64,109,.5);background:var(--rbg);border-radius:var(--r);padding:10px 14px;font-family:'Share Tech Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.05em;color:var(--rtxt)}
+.cur-topline{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.cur-legnum{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--txt3)}
+.cur-date{font-size:12px;color:var(--txt2)}
+.cur-runner-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:640px){.cur-runner-row{grid-template-columns:1fr}}
+.cur-timing{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);overflow:hidden}
+.cur-timing .t-cell{padding:11px 10px;border-left:0.5px solid var(--bdr)}
+.cur-timing .t-cell:first-child{border-left:none}
+.cur-timing .t-label{font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.06em;color:var(--txt3);margin-bottom:4px;text-transform:uppercase}
+.cur-timing .t-val{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--txt);font-variant-numeric:tabular-nums}
+.cur-timing .t-val.accent{color:var(--atxt)}
+@media(max-width:640px){
+  .cur-timing{grid-template-columns:1fr 1fr}
+  .cur-timing .t-cell:nth-child(3){border-left:none}
+  .cur-timing .t-cell:nth-child(n+3){border-top:0.5px solid var(--bdr)}
+}
+.map-chip{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:5px;background:rgba(27,27,31,.82);backdrop-filter:blur(6px);border:0.5px solid var(--bdr2);border-radius:100px;padding:6px 12px;font-family:'Share Tech Mono',monospace;font-size:9.5px;font-weight:700;color:var(--atxt);text-decoration:none;z-index:400}
+@media(hover:hover){.map-chip:hover{opacity:.85}}
+.cur-map-wrap.cur-map-lg{height:220px;flex:none}
+
 /* ── Map + Elevation ── */
 .cur-map-wrap{border-radius:var(--r);overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);flex:1;min-height:180px;position:relative}
 .cur-map-wrap iframe{display:block;width:100%;height:160px;border:none}
@@ -613,22 +635,31 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
       </div>
       <!-- CURRENT LEG panel -->
       <div class="mtab-panel active" id="legtab-curleg">
-        <div style="padding:1.25rem 1.5rem">
-          <div class="cur-layout">
-            <div class="cur-left">
-              <div class="cur-num" id="cur-num">LEG -- OF 59</div>
-              <div id="cur-leg-stats" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"></div>
-              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:10px 12px;background:var(--rtxt);border:none;border-radius:var(--r);color:#FFFFFF;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s,box-shadow .15s,transform .1s;box-shadow:0 3px 10px rgba(255,64,109,.35),0 1px 3px rgba(255,64,109,.2)" class="log-leg-btn">
-                📋 &nbsp;LOG LEG TIME
-              </a>
-            </div>
-            <div class="cur-right">
-              <div class="cur-map-wrap" id="cur-map">
-                <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
-              </div>
-            </div>
+        <div style="padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:14px">
+
+          <div class="cur-warn-banner" id="cur-warning" style="display:none">⚠ Both drivers running · limited car support</div>
+
+          <div class="cur-topline">
+            <span class="cur-legnum" id="cur-num">LEG -- OF 59</span>
+            <span class="cur-date mono" id="cur-date"></span>
           </div>
-          <div class="elev-wrap" style="margin-top:14px">
+
+          <div class="cur-runner-row" id="cur-runners"></div>
+
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:12px;background:var(--rtxt);border:none;border-radius:var(--r);color:#FFFFFF;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s,box-shadow .15s,transform .1s;box-shadow:0 3px 10px rgba(255,64,109,.35),0 1px 3px rgba(255,64,109,.2)" class="log-leg-btn">
+            📋 &nbsp;LOG LEG TIME
+          </a>
+
+          <div class="cur-timing" id="cur-timing"></div>
+
+          <div class="cur-map-wrap cur-map-lg">
+            <div id="cur-map" style="width:100%;height:100%">
+              <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
+            </div>
+            <a class="map-chip" id="cur-map-link" href="#" target="_blank" rel="noopener" style="display:none">📍 Open in Maps ↗</a>
+          </div>
+
+          <div class="elev-wrap">
             <div class="elev-stats" id="elev-stats"></div>
             <svg id="elev-svg" viewBox="0 0 600 170" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
               <text x="300" y="90" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="9" fill="var(--txt3)">elevation loading…</text>
@@ -2788,9 +2819,10 @@ function render(legs,tracker){
   const isRunning=!!(actStart&&!actEnd);
   const isCompleted=!!(actEnd);
 
-  document.getElementById('cur-num').textContent=`LEG ${cur['Leg']} OF ${total} · ${cur['Date']||''}`;
+  document.getElementById('cur-num').textContent=`LEG ${cur['Leg']} OF ${total}`;
+  document.getElementById('cur-date').textContent=cur['Date']||'';
 
-  // Revised estimated finish (exp. start + lag + duration) — used in the DAY stat card for upcoming legs
+  // Revised estimated finish (exp. start + lag + duration) — used for the FINISH timing cell on upcoming legs
   const expSDate=parseDateTime(cur['Date']||'',cur['Exp. Start']||'');
   let revFinStr=null;
   if(expSDate){
@@ -2798,7 +2830,7 @@ function render(legs,tracker){
     revFinStr=revFin.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
   }
 
-  // Runner cards — card-style, same size as stat cards, placed in the stats grid
+  // Runner cards — card-style, placed side by side in the runner row
   function runnerCard(name,role){
     if(!name) return '';
     if(!runnerColors[name]) runnerColors[name]=AV[Object.keys(runnerColors).length%AV.length];
@@ -2823,76 +2855,41 @@ function render(legs,tracker){
 
   const routeUrl=(cur['Route URL']||cur['Route Link']||cur['Komoot URL']||'').trim();
 
-  // Leg stats mini-grid (fills dead space in the left panel)
-  function statMini(label,value,sub){
-    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;border:0.5px solid var(--bdr)">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">${value}</div>
-      ${sub?`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px">${sub}</div>`:''}
-    </div>`;
-  }
-  // Link card styled like the Log Leg Time button — spans both grid columns
-  function statLinkCard(label,url,linkText='🗺 Open route ↗'){
-    if(url){
-      return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:var(--abg);border-color:rgba(255,178,62,.22)">
-        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em">${linkText}</span>
-      </a></div>`;
-    }
-    return '';
+  // Timing strip cell — Distance / Duration / Start / Finish, one cohesive row
+  function timingCell(label,value,accent){
+    return `<div class="t-cell"><div class="t-label">${label}</div><div class="t-val${accent?' accent':''}">${value}</div></div>`;
   }
   const expDurFmt=(()=>{if(!dur)return '—';const m=Math.floor(dur);const s=Math.round((dur-m)*60);return s>0?`${m}m ${s}s`:`${m} min`;})();
   const curStartDisplay=actStart||cur['Exp. Start']||'—';
   const curStartLabel=actStart?'ACT. START':'EST. START';
+  const finishLabel=isCompleted?'ACTUAL FINISH':'EST. FINISH';
+  const finishVal=isCompleted?(actEnd||'—'):(revFinStr||'—');
 
-  // Revised est. finish for upcoming/running legs, plain date for completed legs
-  const revFinCard=(!isCompleted&&revFinStr)
-    ? statMini('EST. FINISH',revFinStr,cur['Date']||'')
-    : statMini('DAY',cur['Date']||'—');
-  const routeMapCard=statLinkCard('ROUTE MAP',routeUrl,'🗺 Open route ↗');
-
-  // Driver shortage warning — fires when both support drivers are also running
+  // Driver shortage warning — fires when both support drivers are also running.
+  // Shown as its own full-width banner above everything (only when it applies)
+  // instead of a box wrapped around the runner cards.
   const runningDrivers=parseInt(cur['# Running Driver']||'0');
   const driverWarn=runningDrivers>=2;
-  const roleKana={'Pacer':'ペーサー','Runner':'ランナー'};
-  function verticalRunnerCard(name, role){
-    if(!name) return '';
-    if(!runnerColors[name]) runnerColors[name]=AV[Object.keys(runnerColors).length%AV.length];
-    const avClass=runnerColors[name];
-    const initials=name.slice(0,2).toUpperCase();
-    const photoUrl=contactPhotos[name];
-    const avHTML=photoUrl
-      ?`<div class="av" style="width:52px;height:52px;font-size:18px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
-          <img src="${photoUrl}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%"
-            onerror="const p=this.parentElement;p.className='av ${avClass}';p.innerHTML='${initials}'"/>
-        </div>`
-      :`<div class="av ${avClass}" style="width:52px;height:52px;font-size:18px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
-    const kana=roleKana[role]||role;
-    return `<div style="background:var(--abg);border-radius:var(--r);padding:12px;cursor:pointer;border:1px solid rgba(255,178,62,.30);box-shadow:0 2px 8px rgba(0,0,0,.10);display:flex;align-items:flex-start;gap:10px;min-height:110px" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
-      ${avHTML}
-      <div style="display:flex;gap:8px;flex:1;height:100%">
-        <span style="writing-mode:vertical-rl;text-orientation:upright;font-size:10px;font-weight:700;color:#FFC876;letter-spacing:.05em;line-height:1">${kana}</span>
-        <span style="writing-mode:vertical-rl;text-orientation:upright;font-size:13px;font-weight:700;color:var(--txt);letter-spacing:.05em;line-height:1">${name}</span>
-      </div>
-    </div>`;
-  }
+  const warnEl=document.getElementById('cur-warning');
+  if(warnEl) warnEl.style.display=driverWarn?'flex':'none';
 
-  function runnerPairHTML(r1,r2){
-    const cards=runnerCard(r1,'Pacer')+runnerCard(r2,'Runner');
-    if(!driverWarn) return cards;
-    return `<div style="grid-column:span 2;border:1.5px solid rgba(255,64,109,.55);border-radius:var(--rl);padding:10px;background:rgba(255,64,109,.04)">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--rtxt);margin-bottom:8px">⚠ BOTH DRIVERS RUNNING · LIMITED CAR SUPPORT</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${verticalRunnerCard(r1,'Pacer')+verticalRunnerCard(r2,'Runner')}</div>
-    </div>`;
-  }
+  const runnersEl=document.getElementById('cur-runners');
+  if(runnersEl) runnersEl.innerHTML=runnerCard(cur['Runner 1 (Pacer)'],'Pacer')+runnerCard(cur['Runner 2'],'Runner');
 
-  const legStatsEl=document.getElementById('cur-leg-stats');
-  if(legStatsEl) legStatsEl.innerHTML=
-    runnerPairHTML(cur['Runner 1 (Pacer)'],cur['Runner 2'])+
-    statMini('DISTANCE',`${km} km`)+
-    statMini('ESTIMATED DURATION',expDurFmt)+
-    statMini(curStartLabel,curStartDisplay)+
-    revFinCard+
-    routeMapCard;
+  const timingEl=document.getElementById('cur-timing');
+  if(timingEl) timingEl.innerHTML=
+    timingCell('DISTANCE',`${km} km`)+
+    timingCell('DURATION',expDurFmt)+
+    timingCell(curStartLabel,curStartDisplay)+
+    timingCell(finishLabel,finishVal,true);
+
+  // "Open in Maps" now lives as a chip overlaid on the map itself instead of
+  // a separate redundant link tile.
+  const mapLinkEl=document.getElementById('cur-map-link');
+  if(mapLinkEl){
+    mapLinkEl.href=routeUrl;
+    mapLinkEl.style.display=routeUrl?'flex':'none';
+  }
 
   // renderMap handles both the overhead path and elevation profile.
   // It fetches RWGPS data async and renders in dashboard style; falls back
