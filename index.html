@@ -278,12 +278,14 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .cur-timing .t-label{font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.06em;color:var(--txt3);margin-bottom:4px;text-transform:uppercase}
 .cur-timing .t-val{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--txt);font-variant-numeric:tabular-nums}
 .cur-timing .t-val.accent{color:var(--atxt)}
+.cur-timing .t-sub{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--txt3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:640px){
   .cur-timing{grid-template-columns:1fr 1fr}
   .cur-timing .t-cell:nth-child(3){border-left:none}
   .cur-timing .t-cell:nth-child(n+3){border-top:0.5px solid var(--bdr)}
 }
 .map-chip{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:5px;background:rgba(27,27,31,.82);backdrop-filter:blur(6px);border:0.5px solid var(--bdr2);border-radius:100px;padding:6px 12px;font-family:'Share Tech Mono',monospace;font-size:9.5px;font-weight:700;color:var(--atxt);text-decoration:none;z-index:400}
+.map-chip-bottom{top:auto;bottom:10px}
 @media(hover:hover){.map-chip:hover{opacity:.85}}
 .cur-map-wrap.cur-map-lg{height:220px;flex:none}
 
@@ -670,7 +672,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
       <!-- NEXT LEG panel -->
       <div class="mtab-panel" id="legtab-nextleg">
         <div style="padding:1.25rem 1.5rem">
-          <div id="next-runner-card"><div style="color:var(--txt3);font-size:12px">Loading…</div></div>
+          <div id="next-runner-card" style="display:flex;flex-direction:column;gap:14px"><div style="color:var(--txt3);font-size:12px">Loading…</div></div>
         </div>
       </div>
     </div>
@@ -3187,79 +3189,48 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
     </div>`;
   }
 
-  // Stat mini — same helper as current leg
-  function statMini(label,value,sub){
-    return `<div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;border:0.5px solid var(--bdr)">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:4px">${label}</div>
-      <div style="font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">${value}</div>
-      ${sub?`<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px">${sub}</div>`:''}
-    </div>`;
+  // Timing strip cell — same shape as the Current Leg card's strip
+  function timingCell(label,value,accent){
+    return `<div class="t-cell"><div class="t-label">${label}</div><div class="t-val${accent?' accent':''}">${value}</div></div>`;
   }
-  function statLinkCard(label,url,linkText='🗺 Open route ↗'){
-    if(url) return `<div style="grid-column:span 2"><a href="${url}" target="_blank" rel="noopener" class="form-glink" style="display:flex;width:100%;box-sizing:border-box;background:var(--abg);border-color:rgba(255,178,62,.22)">
-      <span style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em">${linkText}</span>
-    </a></div>`;
-    return '';
+  function weatherCell(){
+    return `<div class="t-cell">
+      <div class="t-label">WEATHER</div>
+      <div class="t-val"><span id="weather-emoji">—</span> <span id="weather-temp">—</span></div>
+      <div class="t-sub" id="weather-desc"></div>
+    </div>`;
   }
 
   const durStr=dur?`${Math.floor(dur)}m ${Math.round((dur%1)*60)}s`:'—';
+  const nd=parseInt(next['# Running Driver']||'0');
+  const driverWarn=nd>=2;
 
   card.innerHTML=`
-    <div class="cur-layout">
-      <div class="cur-left">
-        <div class="cur-num">LEG ${next['Leg']} OF ${legs.length} · ${date}</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
-          ${(()=>{
-            const nd=parseInt(next['# Running Driver']||'0');
-            const chips=runnerChip(r1,'Pacer')+runnerChip(r2,'Runner');
-            if(nd<2) return chips;
-            // Vertical card variant for next-leg warning
-            const _kana={'Pacer':'ペーサー','Runner':'ランナー'};
-            function vChip(name,role){
-              if(!name) return '';
-              if(!runnerColors[name]) runnerColors[name]=AV[Object.keys(runnerColors).length%AV.length];
-              const avClass=runnerColors[name];
-              const initials=name.slice(0,2).toUpperCase();
-              const photoUrl=contactPhotos[name];
-              const avHTML=photoUrl
-                ?`<div class="av" style="width:48px;height:48px;font-size:16px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)"><img src="${photoUrl}" alt="${initials}" style="object-fit:cover;border-radius:50%;width:100%;height:100%" onerror="const p=this.parentElement;p.className='av ${avClass}';p.innerHTML='${initials}'"/></div>`
-                :`<div class="av ${avClass}" style="width:48px;height:48px;font-size:16px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
-              const kana=_kana[role]||role;
-              return `<div style="background:var(--abg);border-radius:var(--r);padding:12px;border:1px solid rgba(255,178,62,.30);box-shadow:0 2px 8px rgba(0,0,0,.10);display:flex;align-items:flex-start;gap:10px;min-height:110px;cursor:pointer" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
-                ${avHTML}
-                <div style="display:flex;gap:8px;flex:1;height:100%">
-                  <span style="writing-mode:vertical-rl;text-orientation:upright;font-size:10px;font-weight:700;color:#FFC876;letter-spacing:.05em;line-height:1">${kana}</span>
-                  <span style="writing-mode:vertical-rl;text-orientation:upright;font-size:12px;font-weight:700;color:var(--txt);letter-spacing:.05em;line-height:1">${name}</span>
-                </div>
-              </div>`;
-            }
-            return `<div style="grid-column:span 2;border:1.5px solid rgba(255,64,109,.55);border-radius:var(--rl);padding:10px;background:rgba(255,64,109,.04)">
-              <div style="font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--rtxt);margin-bottom:8px">⚠ BOTH DRIVERS RUNNING · LIMITED CAR SUPPORT</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${vChip(r1,'Pacer')+vChip(r2,'Runner')}</div>
-            </div>`;
-          })()}
-          ${statMini('DISTANCE',`${dist} km`)}
-          ${statMini('ESTIMATED DURATION',durStr)}
-          ${statMini(startLabel,startDisplay)}
-          <div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;border:0.5px solid var(--bdr)">
-            <div style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.07em;color:var(--txt3);margin-bottom:6px">WEATHER</div>
-            <div style="display:flex;align-items:center;gap:6px">
-              <span id="weather-emoji" style="font-size:20px;line-height:1">—</span>
-              <span id="weather-temp" style="font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:700;color:var(--txt)">—</span>
-            </div>
-            <span id="weather-desc" style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--txt3);margin-top:2px;display:block"></span>
-          </div>
-          ${statLinkCard('ROUTE MAP',routeUrl)}
-          ${statLinkCard('CAR START',carUrl,'📍 Open maps ↗')}
-        </div>
-      </div>
-      <div class="cur-right">
-        <div class="cur-map-wrap" id="next-cur-map">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
-        </div>
-      </div>
+    <div class="cur-warn-banner" style="display:${driverWarn?'flex':'none'}">⚠ Both drivers running · limited car support</div>
+
+    <div class="cur-topline">
+      <span class="cur-legnum">LEG ${next['Leg']} OF ${legs.length}</span>
+      <span class="cur-date mono">${date}</span>
     </div>
-    <div class="elev-wrap" style="margin-top:14px">
+
+    <div class="cur-runner-row">${runnerChip(r1,'Pacer')+runnerChip(r2,'Runner')}</div>
+
+    <div class="cur-timing">
+      ${timingCell('DISTANCE',`${dist} km`)}
+      ${timingCell('DURATION',durStr)}
+      ${timingCell(startLabel,startDisplay)}
+      ${weatherCell()}
+    </div>
+
+    <div class="cur-map-wrap cur-map-lg">
+      <div id="next-cur-map" style="width:100%;height:100%">
+        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
+      </div>
+      <a class="map-chip" href="${routeUrl}" target="_blank" rel="noopener" style="display:${routeUrl?'flex':'none'}">📍 Open in Maps ↗</a>
+      <a class="map-chip map-chip-bottom" href="${carUrl}" target="_blank" rel="noopener" style="display:${carUrl?'flex':'none'}">🚗 Car Start ↗</a>
+    </div>
+
+    <div class="elev-wrap">
       <div class="elev-stats" id="next-elev-stats"></div>
       <svg id="next-elev-svg" viewBox="0 0 600 170" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
         <text x="300" y="90" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="9" fill="var(--txt3)">elevation loading…</text>
