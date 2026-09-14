@@ -659,7 +659,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
             <div id="cur-map" style="width:100%;height:100%">
               <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
             </div>
-            <a class="map-chip" id="cur-map-link" href="#" target="_blank" rel="noopener" style="display:none">📍 Open in Maps ↗</a>
+            <a class="map-chip" id="cur-map-link" href="#" target="_blank" rel="noopener" onclick="haptic()" style="display:none">📍 Open in Maps ↗</a>
           </div>
 
           <div class="elev-wrap">
@@ -3233,8 +3233,8 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
       <div id="next-cur-map" style="width:100%;height:100%">
         <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
       </div>
-      <a class="map-chip" href="${routeUrl}" target="_blank" rel="noopener" style="display:${routeUrl?'flex':'none'}">📍 Open in Maps ↗</a>
-      <a class="map-chip map-chip-bottom" href="${carUrl}" target="_blank" rel="noopener" style="display:${carUrl?'flex':'none'}">🚗 Car Start ↗</a>
+      <a class="map-chip" href="${routeUrl}" target="_blank" rel="noopener" onclick="haptic()" style="display:${routeUrl?'flex':'none'}">📍 Open in Maps ↗</a>
+      <a class="map-chip map-chip-bottom" href="${carUrl}" target="_blank" rel="noopener" onclick="haptic()" style="display:${carUrl?'flex':'none'}">🚗 Car Start ↗</a>
     </div>
 
     <div class="elev-wrap">
