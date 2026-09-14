@@ -379,6 +379,26 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .rp-progress-row b{color:var(--txt2);font-weight:700}
 .rp-bar{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;border:0.5px solid var(--bdr)}
 .rp-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--accent))}
+
+/* ── Live Tracker timeline ── */
+.timeline{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:6px 18px 6px 6px;box-shadow:var(--shadow)}
+.tl-row{display:grid;grid-template-columns:28px 1fr;gap:12px;padding:12px 0}
+.tl-marker{display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:2px;border:2px solid var(--bg)}
+.tl-line{flex:1;width:2px;background:var(--bdr2);margin-top:4px}
+.tl-row:last-child .tl-line{display:none}
+.tl-done .tl-dot{background:var(--green);box-shadow:0 0 8px rgba(60,255,166,.5)}
+.tl-done .tl-line{background:rgba(60,255,166,.25)}
+.tl-running .tl-dot{background:var(--amber);box-shadow:0 0 0 4px rgba(255,178,62,.25);animation:tl-pulse 1.6s ease-in-out infinite}
+.tl-upcoming .tl-dot{background:var(--bg2);border-color:var(--bdr2)}
+@keyframes tl-pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,178,62,.25)}50%{box-shadow:0 0 0 8px rgba(255,178,62,.12)}}
+@media(prefers-reduced-motion:reduce){.tl-running .tl-dot{animation:none}}
+.tl-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:3px}
+.tl-legnum{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.04em}
+.tl-runners{font-size:14px;font-weight:600;color:var(--txt)}
+.tl-upcoming .tl-runners{color:var(--txt2);font-weight:500}
+.tl-summary{font-family:'Share Tech Mono',monospace;font-size:11.5px;color:var(--txt3)}
+.tl-summary b{color:var(--txt2);font-weight:700}
 .terrain{display:inline-flex;align-items:center;font-size:10px;padding:2px 7px;border-radius:4px;font-family:'Share Tech Mono',monospace}
 .t-protected{background:var(--gbg);color:var(--gtxt)}
 .t-mixed{background:var(--abg);color:var(--atxt)}
@@ -749,16 +769,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
             <div class="csel-panel" id="tracker-csel-panel"></div>
           </div>
         </div>
-        <div class="tbl-wrap" style="border:none;border-radius:0">
-          <table class="tbl">
-            <thead><tr>
-              <th>LEG</th><th>RUNNERS</th>
-              <th>EST. START</th><th>ACT. START</th><th>ACT. FINISH</th>
-              <th>ACT. DUR</th><th>LEAD/LAG</th><th>STATUS</th>
-            </tr></thead>
-            <tbody id="tracker-tbl"></tbody>
-          </table>
-        </div>
+        <div class="timeline" id="tracker-tbl" style="border:none;border-radius:0;box-shadow:none;margin-top:6px"></div>
       </div>
 
       <!-- RUNNER REST -->
@@ -1794,15 +1805,6 @@ function fmtLag(min, isCompleted){
   if(m>0.5)  return `<span class="lag-positive">▼ ${abs} min behind</span>`;
   return isCompleted ? `<span class="lag-zero">— On time</span>` : '—';
 }
-function statusPill(s){
-  const v=(s||'').toLowerCase();
-  if(v.includes('ahead'))   return `<span class="pill pill-ok">▲ Ahead</span>`;
-  if(v.includes('behind'))  return `<span class="pill pill-beh">▼ Behind</span>`;
-  if(v.includes('running')||v.includes('run')) return `<span class="pill pill-run">🏃 Running</span>`;
-  if(v.includes('on time')) return `<span class="pill pill-ok">✅ On time</span>`;
-  if(v.includes('upcoming'))return `<span class="pill pill-up">Upcoming</span>`;
-  return `<span class="pill pill-up">${s||'—'}</span>`;
-}
 function lagPill(lag){
   if(lag<-0.5) return `<span class="pill pill-ok">▲ ${Math.round(Math.abs(lag))} min ahead</span>`;
   if(lag>0.5)  return `<span class="pill pill-beh">▼ ${Math.round(lag)} min behind</span>`;
@@ -1889,7 +1891,6 @@ function trackerActEnd(t)  { return tGet(t,'Actual End Time','Actual Finish','Ac
 function trackerDur(t)     { return tGet(t,'Total Elapsed Time (Moving + Stopping Time)','Act. Duration','Act. Dur (min)','Actual Duration (min)','actual_duration'); }
 function trackerLag(t)     { return tGet(t,'Leg Lead/Lag (min)','Lead/Lag','Lead / Lag (min)','lag'); }
 function trackerPace(t)    { return tGet(t,'Actual Pace (min/km)','Act. Pace (min/km)','Act. Pace','actual_pace'); }
-function trackerStatus(t)  { return tGet(t,'Status','status'); }
 function trackerActDist(t) { return tGet(t,'Actual Distance (km)','Actual Pace (km)','Actual Distance','Act. Distance (km)','Act. Distance','actual_distance'); }
 function trackerPhoto(t)   { return tGet(t,'Photos','Photo','Photo URL','Image','Photo Link','photo','image'); }
 
@@ -2044,8 +2045,8 @@ function renderTracker(){
 
   const currentIdx=findCurrentIdx(legsData,trackerData);
   const currentDayDate=(legsData[currentIdx]||{})['Date']||''; // date string of the active leg's day
-  const tbody=document.getElementById('tracker-tbl');
-  tbody.innerHTML='';
+  const list=document.getElementById('tracker-tbl');
+  list.innerHTML='';
   day.legs.forEach(({l,i})=>{
     const legNum=parseInt(l['Leg']||i+1);
     const t=trackerData[legNum]||{};
@@ -2053,40 +2054,54 @@ function renderTracker(){
     const actEnd=trackerActEnd(t);
     const actDur=trackerDur(t);
     const lag=trackerLag(t);
-    const status=trackerStatus(t)||(actEnd?'Completed':i===currentIdx?'Running':'Upcoming');
     const isCur=i===currentIdx;
     const isIncomplete=!actEnd;
+    const state=actEnd?'done':(isCur?'running':'upcoming');
 
     // Only apply lag revision to incomplete legs on the SAME day as the active leg.
     // Future days reset to zero lag (overnight rest), so show the original planned time.
     const isSameDay=(l['Date']||'')=== currentDayDate;
-    let expStartCell;
-    if(isIncomplete&&l['Exp. Start']){
+    let plannedStr=fmt24(l['Exp. Start'],l['Date']);
+    let plannedTitle='';
+    if(isIncomplete&&l['Exp. Start']&&isSameDay&&currentLagTotal!==0){
       const expSDate=parseDateTime(l['Date']||'',l['Exp. Start']||'');
-      if(isSameDay&&expSDate&&currentLagTotal!==0){
+      if(expSDate){
         const revS=new Date(expSDate.getTime()+currentLagTotal*60000);
-        const revStr=revS.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+        plannedStr='~'+revS.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
         const lagDir=currentLagTotal>0?'behind':'ahead';
-        expStartCell=`<span class="mono" style="color:var(--txt2)" title="Planned: ${fmt24(l['Exp. Start'],l['Date'])} · shifted ${Math.round(Math.abs(currentLagTotal))} min ${lagDir}">~${revStr}</span>`;
-      } else {
-        expStartCell=`<span class="mono" style="color:var(--txt2)">${fmt24(l['Exp. Start'],l['Date'])}</span>`;
+        plannedTitle=` title="Planned: ${fmt24(l['Exp. Start'],l['Date'])} · shifted ${Math.round(Math.abs(currentLagTotal))} min ${lagDir}"`;
       }
-    } else {
-      expStartCell=`<span class="mono" style="color:var(--txt3)">${fmt24(l['Exp. Start'],l['Date'])}</span>`;
     }
 
-    const tr=document.createElement('tr');
-    if(isCur) tr.style.background='var(--abg)';
-    tr.innerHTML=`
-      <td class="mono" style="color:var(--txt2)">${l['Leg']}</td>
-      <td style="font-size:13px;font-weight:${isCur?'600':'400'}">${l['Runner 1 (Pacer)']} <span style="color:var(--txt3)">+</span> ${l['Runner 2']}</td>
-      <td>${expStartCell}</td>
-      <td class="mono" style="${actStart?'color:var(--gtxt)':'color:var(--txt3)'}">${actStart?fmt24(actStart,l['Date']):'—'}</td>
-      <td class="mono" style="${actEnd?'color:var(--gtxt)':'color:var(--txt3)'}">${actEnd?fmt24(actEnd,l['Date']):'—'}</td>
-      <td class="mono">${actDur?parseFloat(actDur).toFixed(1)+' min':'—'}</td>
-      <td>${fmtLag(lag,!!actEnd)}</td>
-      <td>${statusPill(status)}</td>`;
-    tbody.appendChild(tr);
+    let summary;
+    if(state==='done'){
+      const durStr=actDur?parseFloat(actDur).toFixed(0)+' min':'—';
+      summary=`<b>${fmt24(actStart,l['Date'])}</b> &rarr; <b>${fmt24(actEnd,l['Date'])}</b> &middot; ${durStr} &middot; ${fmtLag(lag,true)}`;
+    } else if(state==='running'){
+      const expSDate=parseDateTime(l['Date']||'',l['Exp. Start']||'');
+      const expDurVal=parseFloat(l['Exp. Duration (min)']||'');
+      let estFinStr='—';
+      if(expSDate&&!isNaN(expDurVal)){
+        const estFin=new Date(expSDate.getTime()+(expDurVal+currentLagTotal)*60000);
+        estFinStr=estFin.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+      }
+      summary=actStart
+        ? `Started <b>${fmt24(actStart,l['Date'])}</b> &middot; est. finish <b>${estFinStr}</b>`
+        : `Up next &middot; est. start <b>${fmt24(l['Exp. Start'],l['Date'])}</b> &middot; est. finish <b>${estFinStr}</b>`;
+    } else {
+      summary=`<span${plannedTitle}>Planned start <b>${plannedStr}</b></span>`;
+    }
+    const badge=state==='running'?`<span class="pill pill-run">🏃 Running</span>`:'';
+
+    const row=document.createElement('div');
+    row.className=`tl-row tl-${state}`;
+    row.innerHTML=`
+      <div class="tl-marker"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-content">
+        <div class="tl-top"><span class="tl-legnum">LEG ${l['Leg']}</span><span class="tl-runners">${l['Runner 1 (Pacer)']} <span style="color:var(--txt3);font-weight:400">+</span> ${l['Runner 2']}</span>${badge}</div>
+        <div class="tl-summary">${summary}</div>
+      </div>`;
+    list.appendChild(row);
   });
 }
 
