@@ -2582,7 +2582,7 @@ function drawTeamDeltaChart(completed,fmtPace){
   if(!svg) return;
   const valid=completed.filter(d=>!isNaN(d.lag));
   if(valid.length<2){
-    svg.innerHTML=`<text x="300" y="110" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="16" fill="var(--txt3)">Need 2+ completed legs</text>`;
+    svg.innerHTML=`<text x="300" y="110" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="9" fill="var(--txt3)">Need 2+ completed legs</text>`;
     if(statsEl) statsEl.innerHTML='';
     return;
   }
@@ -2622,7 +2622,7 @@ function drawTeamDeltaChart(completed,fmtPace){
     const label=v>0.5?`+${Math.round(v)}`:v<-0.5?`${Math.round(v)}`:'0';
     yLines.push(`
       <line x1="${lPad}" y1="${y.toFixed(1)}" x2="${W-rPad}" y2="${y.toFixed(1)}" stroke="${isZero?'var(--txt3)':'var(--bdr)'}" stroke-width="${isZero?'1':'0.5'}" ${isZero?'':'stroke-dasharray="3,4"'}/>
-      <text x="${lPad-5}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="Share Tech Mono,monospace" font-size="10" fill="var(--txt3)">${label}</text>`);
+      <text x="${lPad-5}" y="${(y+3.5).toFixed(1)}" text-anchor="end" font-family="Share Tech Mono,monospace" font-size="9" fill="var(--txt3)">${label}</text>`);
   }
 
   // Y-axis unit label (rotated)
@@ -2634,7 +2634,7 @@ function drawTeamDeltaChart(completed,fmtPace){
   const xLabels=xIdxs.map((idx,pos)=>{
     const isLast=pos===xIdxs.length-1;
     const anchor=isLast?'end':'middle';
-    return `<text x="${toX(idx).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="${anchor}" font-family="Share Tech Mono,monospace" font-size="10" fill="var(--txt3)">Leg ${pts[idx].legNum}</text>`;
+    return `<text x="${toX(idx).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="${anchor}" font-family="Share Tech Mono,monospace" font-size="9" fill="var(--txt3)">Leg ${pts[idx].legNum}</text>`;
   });
 
   const showDots=n<=30;
@@ -2662,8 +2662,16 @@ function drawTeamDeltaChart(completed,fmtPace){
 
   if(statsEl){
     const absMin=Math.abs(Math.round(finalDisplay));
-    const dir=finalDisplay>0.5?`<span style="color:var(--gtxt)">▲ ${absMin} min ahead</span>`:finalDisplay<-0.5?`<span style="color:var(--rtxt)">▼ ${absMin} min behind</span>`:`<span style="color:var(--txt3)">On schedule</span>`;
-    statsEl.innerHTML=`<span style="color:var(--txt3)">Cumulative vs plan</span>${dir}<span style="color:var(--txt3)">${valid.length} legs</span>`;
+    const totalCol=finalDisplay>0.5?'var(--gtxt)':finalDisplay<-0.5?'var(--rtxt)':'var(--txt3)';
+    const totalVal=finalDisplay>0.5?`▲ ${absMin}m`:finalDisplay<-0.5?`▼ ${absMin}m`:'On pace';
+    const avgLag=finalDisplay/valid.length;
+    const avgAbs=Math.abs(avgLag).toFixed(1);
+    const avgCol=avgLag>0.5?'var(--gtxt)':avgLag<-0.5?'var(--rtxt)':'var(--txt3)';
+    const avgVal=avgLag>0.5?`▲ ${avgAbs}m`:avgLag<-0.5?`▼ ${avgAbs}m`:'0m';
+    statsEl.innerHTML=
+      `<div class="estat"><span class="estat-val" style="color:${totalCol}">${totalVal}</span><span class="estat-lbl">vs plan</span></div>`+
+      `<div class="estat"><span class="estat-val" style="color:${avgCol}">${avgVal}</span><span class="estat-lbl">avg / leg</span></div>`+
+      `<div class="estat"><span class="estat-val" style="color:var(--txt2)">${valid.length}</span><span class="estat-lbl">legs tracked</span></div>`;
   }
 }
 
@@ -2673,7 +2681,7 @@ function drawTeamPaceChart(completed,fmtPace){
   if(!svg) return;
   const valid=completed.filter(d=>!isNaN(d.actPace)&&d.actPace>0);
   if(valid.length<1){
-    svg.innerHTML=`<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="Share Tech Mono,monospace" font-size="11" fill="var(--txt3)">No pace data yet</text>`;
+    svg.innerHTML=`<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-family="Share Tech Mono,monospace" font-size="9" fill="var(--txt3)">No pace data yet</text>`;
     if(statsEl) statsEl.innerHTML='';
     return;
   }
@@ -2703,7 +2711,7 @@ function drawTeamPaceChart(completed,fmtPace){
     if(y<tPad-2||y>H-bPad+2) continue;
     yLines.push(`
       <line x1="${lPad}" y1="${y.toFixed(1)}" x2="${W-rPad}" y2="${y.toFixed(1)}" stroke="var(--bdr)" stroke-width="0.5" stroke-dasharray="3,4"/>
-      <text x="${lPad-5}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="Share Tech Mono,monospace" font-size="10" fill="var(--txt3)">${fmtPace(v)}</text>`);
+      <text x="${lPad-5}" y="${(y+3.5).toFixed(1)}" text-anchor="end" font-family="Share Tech Mono,monospace" font-size="9" fill="var(--txt3)">${fmtPace(v)}</text>`);
   }
 
   // Y-axis unit label (rotated)
@@ -2715,7 +2723,7 @@ function drawTeamPaceChart(completed,fmtPace){
   const xLabels=xIdxs.map((idx,pos)=>{
     const isLast=pos===xIdxs.length-1;
     const anchor=isLast?'end':'middle';
-    return `<text x="${toX(idx).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="${anchor}" font-family="Share Tech Mono,monospace" font-size="10" fill="var(--txt3)">Leg ${valid[idx].legNum}</text>`;
+    return `<text x="${toX(idx).toFixed(1)}" y="${(H-4).toFixed(1)}" text-anchor="${anchor}" font-family="Share Tech Mono,monospace" font-size="9" fill="var(--txt3)">Leg ${valid[idx].legNum}</text>`;
   });
 
   // Bars + per-leg target tick
@@ -2740,8 +2748,10 @@ function drawTeamPaceChart(completed,fmtPace){
   if(statsEl){
     const avgPace=valid.reduce((s,d)=>s+d.actPace*d.distKm,0)/valid.reduce((s,d)=>s+d.distKm,0);
     const minPace=Math.min(...paces),maxPace=Math.max(...paces);
-    const hasTarget=valid.some(d=>!isNaN(d.projPace));
-    statsEl.innerHTML=`<span style="color:var(--txt3)">avg ${fmtPace(avgPace)}/km</span><span style="color:var(--txt3)">fastest ${fmtPace(minPace)}/km</span><span style="color:var(--txt3)">slowest ${fmtPace(maxPace)}/km</span>${hasTarget?'<span style="color:var(--txt2)">— target pace per leg</span>':''}`;
+    statsEl.innerHTML=
+      `<div class="estat"><span class="estat-val" style="color:var(--txt)">${fmtPace(avgPace)}</span><span class="estat-lbl">avg /km</span></div>`+
+      `<div class="estat"><span class="estat-val" style="color:var(--gtxt)">${fmtPace(minPace)}</span><span class="estat-lbl">fastest</span></div>`+
+      `<div class="estat"><span class="estat-val" style="color:var(--txt3)">${fmtPace(maxPace)}</span><span class="estat-lbl">slowest</span></div>`;
   }
 }
 
