@@ -397,17 +397,8 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .tl-summary{font-family:'Share Tech Mono',monospace;font-size:11.5px;color:var(--txt3)}
 .tl-summary b{color:var(--txt2);font-weight:700}
 
-/* ── Upcoming cards ── */
-.up-cards{display:flex;flex-direction:column;gap:10px}
-.up-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
-.up-card.up-current{border-color:rgba(255,178,62,.4);background:var(--abg)}
-.up-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.up-legnum{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.05em}
-.up-current .up-legnum{color:var(--atxt)}
-.up-runners{font-size:14px;font-weight:600;color:var(--txt)}
-.up-meta{display:flex;gap:14px;font-family:'Share Tech Mono',monospace;font-size:11.5px;color:var(--txt3)}
-.up-meta b{color:var(--txt2);font-weight:700}
-.up-links{display:flex;gap:6px;margin-top:2px}
+/* ── Timeline "incomplete leg" extras: exposure badge + route/car links ── */
+.tl-extra{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap}
 .up-link{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--txt2);background:var(--bg2);border:0.5px solid var(--bdr);border-radius:100px;padding:5px 11px;text-decoration:none;font-family:'Share Tech Mono',monospace}
 @media(hover:hover){.up-link:hover{border-color:var(--bdr2)}}
 
@@ -481,7 +472,6 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .section-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem .75rem;border-bottom:0.5px solid var(--bdr);flex-wrap:wrap;gap:8px}
 .section-title{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
 .upcoming-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px}
-.upcoming-title{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
 
 /* ── Form / Google Form ── */
 .form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:var(--atxt);background:var(--abg);border:0.5px solid rgba(255,178,62,.28);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(255,178,62,.1)}
@@ -737,43 +727,29 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <div class="mtab-row" id="detail-mtab-row">
           <div class="mtab-pill"></div>
           <div class="mtab-lamp"></div>
-          <button class="mtab-btn active" data-mtab="upcoming" onclick="switchMissionTab('upcoming')">UPCOMING</button>
-          <button class="mtab-btn" data-mtab="tracker" onclick="switchMissionTab('tracker')">LIVE TRACKER</button>
+          <button class="mtab-btn active" data-mtab="tracker" onclick="switchMissionTab('tracker')">LIVE TRACKER</button>
           <button class="mtab-btn" data-mtab="rest" onclick="switchMissionTab('rest')">RUNNER REST</button>
           <button class="mtab-btn" data-mtab="leaderboard" onclick="switchMissionTab('leaderboard')">RUNNER PROGRESS</button>
         </div>
       </div>
 
-      <!-- UPCOMING -->
-      <div class="mtab-panel active" id="mtab-upcoming">
-        <div class="section-hdr" style="border-radius:0">
-          <div class="upcoming-title" id="upcoming-day-label">Day --</div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <select id="runner-filter-select" onchange="selectedRunner=this.value;renderUpcoming()" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;padding:6px 10px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg);color:var(--txt);cursor:pointer;outline:none">
-              <option value="">All Runners</option>
-            </select>
-            <div class="csel" id="day-csel">
-              <button class="csel-btn" onclick="toggleCsel('day-csel')">
-                <span class="csel-val" id="day-csel-val">Day 1</span>
-                <svg class="csel-chevron" width="10" height="6" fill="none" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
-              <div class="csel-panel" id="day-csel-panel"></div>
-            </div>
-          </div>
-        </div>
-        <div class="up-cards" id="upcoming" style="margin-top:10px"></div>
-      </div>
-
-      <!-- LIVE TRACKER -->
-      <div class="mtab-panel" id="mtab-tracker">
+      <!-- LIVE TRACKER (merged with the former Upcoming tab — a day's legs
+           shown as one timeline, with planning info like exposure/route
+           links on incomplete legs and actual results on completed ones) -->
+      <div class="mtab-panel active" id="mtab-tracker">
         <div class="section-hdr" style="border-radius:0">
           <div class="section-title" id="tracker-day-label">Day --</div>
-          <div class="csel" id="tracker-csel">
-            <button class="csel-btn" onclick="toggleCsel('tracker-csel')">
-              <span class="csel-val" id="tracker-csel-val">Day 1</span>
-              <svg class="csel-chevron" width="10" height="6" fill="none" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <div class="csel-panel" id="tracker-csel-panel"></div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <select id="runner-filter-select" onchange="selectedRunner=this.value;renderTracker()" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;padding:6px 10px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg);color:var(--txt);cursor:pointer;outline:none">
+              <option value="">All Runners</option>
+            </select>
+            <div class="csel" id="tracker-csel">
+              <button class="csel-btn" onclick="toggleCsel('tracker-csel')">
+                <span class="csel-val" id="tracker-csel-val">Day 1</span>
+                <svg class="csel-chevron" width="10" height="6" fill="none" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="csel-panel" id="tracker-csel-panel"></div>
+            </div>
           </div>
         </div>
         <div class="timeline" id="tracker-tbl" style="border:none;border-radius:0;box-shadow:none;margin-top:6px"></div>
@@ -1004,9 +980,8 @@ let coordsData      = {};   // {legNum: [{x:lng, y:lat, e:elev, d:cumMetres}]}
 let runnerColors    = {};
 let cdInterval      = null;
 let allDays         = [];   // [{date, legs:[{l,i}]}]
-let selectedDay     = 0;    // index for upcoming tabs
 let selectedRunner  = '';   // '' = all runners
-let selectedTracker = 0;    // index for live tracker tabs
+let selectedTracker = 0;    // index into allDays for the merged Live Tracker tab
 let currentLagTotal = 0;   // overall lag in minutes (positive = behind); used for revised time estimates
 let overviewMap     = null; // Leaflet map for Mission Control route overview
 let overviewDrawn   = false;
@@ -2050,11 +2025,29 @@ function renderTracker(){
   const dateStr=day.date?new Date(day.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):`Day ${selectedTracker+1}`;
   document.getElementById('tracker-day-label').textContent=dateStr;
 
+  // Populate runner dropdown on first render
+  const runnerSel=document.getElementById('runner-filter-select');
+  if(runnerSel&&runnerSel.options.length<=1){
+    const allRunners=[...new Set(legsData.flatMap(l=>[l['Runner 1 (Pacer)'],l['Runner 2']]).filter(Boolean))].sort();
+    allRunners.forEach(name=>{
+      const opt=document.createElement('option');
+      opt.value=name; opt.textContent=name;
+      runnerSel.appendChild(opt);
+    });
+  }
+  if(runnerSel) runnerSel.value=selectedRunner;
+
   const currentIdx=findCurrentIdx(legsData,trackerData);
   const currentDayDate=(legsData[currentIdx]||{})['Date']||''; // date string of the active leg's day
   const list=document.getElementById('tracker-tbl');
   list.innerHTML='';
+  let shown=0;
   day.legs.forEach(({l,i})=>{
+    const r1=l['Runner 1 (Pacer)']||'';
+    const r2=l['Runner 2']||'';
+    if(selectedRunner&&r1!==selectedRunner&&r2!==selectedRunner) return;
+    shown++;
+
     const legNum=parseInt(l['Leg']||i+1);
     const t=trackerData[legNum]||{};
     const actStart=trackerActStart(t);
@@ -2098,97 +2091,35 @@ function renderTracker(){
     } else {
       summary=`<span${plannedTitle}>Planned start <b>${plannedStr}</b></span>`;
     }
-    const badge=state==='running'?`<span class="pill pill-run">🏃 Running</span>`:'';
+    const runningBadge=state==='running'?`<span class="pill pill-run">🏃 Running</span>`:'';
+
+    // Exposure + route/car links only matter before a leg is actually done —
+    // once it's completed you no longer need directions to it.
+    let extra='';
+    if(isIncomplete){
+      const carUrl=(l['Car Start (Maps URL)']||'').trim();
+      const routeUrl=(l['Route URL']||l['Route Link']||l['Komoot URL']||'').trim();
+      const routeLink=routeUrl?`<a href="${routeUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">🗺 Route</a>`:'';
+      const carLink=carUrl?`<a href="${carUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">📍 Car Start</a>`:'';
+      extra=`<div class="tl-extra">${exposureBadge(l['Route Exposure'])}${routeLink}${carLink}</div>`;
+    }
+
+    const highlight=selectedRunner?(selectedRunner===r1?`<span style="font-weight:700;color:var(--txt)">${r1}</span> <span style="color:var(--txt3);font-weight:400">+</span> ${r2}`:`${r1} <span style="color:var(--txt3);font-weight:400">+</span> <span style="font-weight:700;color:var(--txt)">${r2}</span>`):`${r1} <span style="color:var(--txt3);font-weight:400">+</span> ${r2}`;
 
     const row=document.createElement('div');
     row.className=`tl-row tl-${state}`;
     row.innerHTML=`
       <div class="tl-marker"><div class="tl-dot"></div><div class="tl-line"></div></div>
       <div class="tl-content">
-        <div class="tl-top"><span class="tl-legnum">LEG ${l['Leg']}</span><span class="tl-runners">${l['Runner 1 (Pacer)']} <span style="color:var(--txt3);font-weight:400">+</span> ${l['Runner 2']}</span>${badge}</div>
+        <div class="tl-top"><span class="tl-legnum">LEG ${l['Leg']}</span><span class="tl-runners">${highlight}</span>${runningBadge}</div>
         <div class="tl-summary">${summary}</div>
+        ${extra}
       </div>`;
     list.appendChild(row);
   });
-}
-
-// ─── UPCOMING LEGS DAY TABS ──────────────────────────────────────────────────
-function buildDayTabs(days){
-  const panel=document.getElementById('day-csel-panel');
-  if(!panel) return;
-  panel.innerHTML='';
-  days.forEach((day,i)=>{
-    const dateStr=day.date?new Date(day.date).toLocaleDateString('en-CA',{month:'short',day:'numeric'}):`Day ${i+1}`;
-    const label=`Day ${i+1} · ${dateStr}`;
-    const item=document.createElement('div');
-    item.className='csel-item'+(i===selectedDay?' selected':'');
-    item.textContent=label;
-    item.onclick=()=>{selectedDay=i;closeCsel('day-csel');setCselVal('day-csel',label);renderUpcoming();};
-    panel.appendChild(item);
-  });
-  const curLabel=panel.querySelectorAll('.csel-item')[selectedDay]?.textContent||'Day 1';
-  setCselVal('day-csel',curLabel);
-}
-
-function renderUpcoming(){
-  // Day selector state
-  const panel=document.getElementById('day-csel-panel');
-  if(panel){
-    panel.querySelectorAll('.csel-item').forEach((el,i)=>el.classList.toggle('selected',i===selectedDay));
-    const lbl=panel.querySelectorAll('.csel-item')[selectedDay]?.textContent;
-    if(lbl) setCselVal('day-csel',lbl);
-  }
-  const day=allDays[selectedDay];
-  if(!day) return;
-  const dateStr=day.date?new Date(day.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):`Day ${selectedDay+1}`;
-  document.getElementById('upcoming-day-label').textContent=dateStr;
-
-  // Populate runner dropdown on first render
-  const runnerSel=document.getElementById('runner-filter-select');
-  if(runnerSel&&runnerSel.options.length<=1){
-    const allRunners=[...new Set(legsData.flatMap(l=>[l['Runner 1 (Pacer)'],l['Runner 2']]).filter(Boolean))].sort();
-    allRunners.forEach(name=>{
-      const opt=document.createElement('option');
-      opt.value=name; opt.textContent=name;
-      runnerSel.appendChild(opt);
-    });
-  }
-  if(runnerSel) runnerSel.value=selectedRunner;
-
-  // Render cards, filtered by selected runner
-  const cards=document.getElementById('upcoming');
-  cards.innerHTML='';
-  const currentIdx=findCurrentIdx(legsData,trackerData);
-  let shown=0;
-  day.legs.forEach(({l,i})=>{
-    const r1=l['Runner 1 (Pacer)']||'';
-    const r2=l['Runner 2']||'';
-    if(selectedRunner&&r1!==selectedRunner&&r2!==selectedRunner) return;
-    shown++;
-    const lkm=parseFloat(l['Distance (km)'])||0;
-    const isCur=i===currentIdx;
-    const carUrl=(l['Car Start (Maps URL)']||'').trim();
-    const routeUrl=(l['Route URL']||l['Route Link']||l['Komoot URL']||'').trim();
-    const highlight=selectedRunner?(selectedRunner===r1?`<span style="font-weight:700;color:var(--txt)">${r1}</span> <span style="color:var(--txt3);font-weight:400">+</span> ${r2}`:`${r1} <span style="color:var(--txt3);font-weight:400">+</span> <span style="font-weight:700;color:var(--txt)">${r2}</span>`):`${r1} <span style="color:var(--txt3);font-weight:400">+</span> ${r2}`;
-    const links=[
-      routeUrl?`<a href="${routeUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">🗺 Route</a>`:'',
-      carUrl?`<a href="${carUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">📍 Car Start</a>`:''
-    ].filter(Boolean).join('');
-    const card=document.createElement('div');
-    card.className='up-card'+(isCur?' up-current':'');
-    card.innerHTML=`
-      <div class="up-top">
-        <span class="up-legnum">LEG ${l['Leg']}</span>
-        ${exposureBadge(l['Route Exposure'])}
-      </div>
-      <div class="up-runners">${highlight}</div>
-      <div class="up-meta"><span>${lkm} km</span><span>Planned <b>${fmt24(l['Exp. Start'],l['Date'])}</b></span></div>
-      ${links?`<div class="up-links">${links}</div>`:''}`;
-    cards.appendChild(card);
-  });
 
   if(shown===0){
-    cards.innerHTML=`<div style="text-align:center;color:var(--txt3);padding:20px;font-size:13px">${selectedRunner} has no legs on this day.</div>`;
+    list.innerHTML=`<div style="text-align:center;color:var(--txt3);padding:20px;font-size:13px">${selectedRunner} has no legs on this day.</div>`;
   }
 }
 
@@ -2868,22 +2799,17 @@ function render(legs,tracker){
   // Day grid
   buildDayGrid(legs,currentIdx);
 
-  // Build allDays and default tracker/upcoming to current day
+  // Build allDays and default the merged Live Tracker tab to the current day
   allDays=groupByDay(legs);
   allDays.forEach((day,di)=>{
     if(day.legs.some(({i})=>i===currentIdx)){
-      selectedDay=di;
       selectedTracker=di;
     }
   });
 
-  // Live tracker tabs
+  // Live tracker (merged with the former Upcoming tab)
   buildTrackerTabs(allDays);
   renderTracker();
-
-  // Upcoming tabs
-  buildDayTabs(allDays);
-  renderUpcoming();
 
   // ── Current leg card ──
   const legNum=parseInt(cur['Leg']||'');
