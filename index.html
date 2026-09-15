@@ -261,9 +261,6 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .rname{font-size:15px;font-weight:600}
 .rrole{font-size:11px;color:var(--txt3)}
 .links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.lbtn{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--txt2);background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);padding:6px 12px;text-decoration:none;font-family:'Share Tech Mono',monospace}
-@media(hover:hover){.lbtn:hover{opacity:.75}}
-.lbtn:active{opacity:.5;transform:scale(0.96)}
 .cdown-block{text-align:center;padding:10px 0}
 .cdown{font-family:'Share Tech Mono',monospace;font-size:36px;font-weight:700;line-height:1;color:var(--txt)}
 .cdown-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.07em;color:var(--txt3);margin-top:4px}
@@ -399,6 +396,21 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .tl-upcoming .tl-runners{color:var(--txt2);font-weight:500}
 .tl-summary{font-family:'Share Tech Mono',monospace;font-size:11.5px;color:var(--txt3)}
 .tl-summary b{color:var(--txt2);font-weight:700}
+
+/* ── Upcoming cards ── */
+.up-cards{display:flex;flex-direction:column;gap:10px}
+.up-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.up-card.up-current{border-color:rgba(255,178,62,.4);background:var(--abg)}
+.up-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.up-legnum{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.05em}
+.up-current .up-legnum{color:var(--atxt)}
+.up-runners{font-size:14px;font-weight:600;color:var(--txt)}
+.up-meta{display:flex;gap:14px;font-family:'Share Tech Mono',monospace;font-size:11.5px;color:var(--txt3)}
+.up-meta b{color:var(--txt2);font-weight:700}
+.up-links{display:flex;gap:6px;margin-top:2px}
+.up-link{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--txt2);background:var(--bg2);border:0.5px solid var(--bdr);border-radius:100px;padding:5px 11px;text-decoration:none;font-family:'Share Tech Mono',monospace}
+@media(hover:hover){.up-link:hover{border-color:var(--bdr2)}}
+
 .terrain{display:inline-flex;align-items:center;font-size:10px;padding:2px 7px;border-radius:4px;font-family:'Share Tech Mono',monospace}
 .t-protected{background:var(--gbg);color:var(--gtxt)}
 .t-mixed{background:var(--abg);color:var(--atxt)}
@@ -749,12 +761,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
             </div>
           </div>
         </div>
-        <div class="tbl-wrap" style="border:none;border-radius:0">
-          <table class="tbl">
-            <thead><tr><th>LEG</th><th>RUNNERS</th><th>DIST</th><th>EXPOSURE</th><th>PLANNED START</th><th>ROUTE MAP</th><th>CAR START</th></tr></thead>
-            <tbody id="upcoming"></tbody>
-          </table>
-        </div>
+        <div class="up-cards" id="upcoming" style="margin-top:10px"></div>
       </div>
 
       <!-- LIVE TRACKER -->
@@ -2148,36 +2155,40 @@ function renderUpcoming(){
   }
   if(runnerSel) runnerSel.value=selectedRunner;
 
-  // Render table rows, filtered by selected runner
-  const utbody=document.getElementById('upcoming');
-  utbody.innerHTML='';
+  // Render cards, filtered by selected runner
+  const cards=document.getElementById('upcoming');
+  cards.innerHTML='';
   const currentIdx=findCurrentIdx(legsData,trackerData);
+  let shown=0;
   day.legs.forEach(({l,i})=>{
     const r1=l['Runner 1 (Pacer)']||'';
     const r2=l['Runner 2']||'';
     if(selectedRunner&&r1!==selectedRunner&&r2!==selectedRunner) return;
+    shown++;
     const lkm=parseFloat(l['Distance (km)'])||0;
     const isCur=i===currentIdx;
     const carUrl=(l['Car Start (Maps URL)']||'').trim();
     const routeUrl=(l['Route URL']||l['Route Link']||l['Komoot URL']||'').trim();
-    const carCell=carUrl?`<a href="${carUrl}" class="lbtn" target="_blank" style="font-size:10px;padding:3px 8px">📍 Map</a>`:'<span style="color:var(--txt3);font-size:11px">—</span>';
-    const routeCell=routeUrl?`<a href="${routeUrl}" class="lbtn" target="_blank" style="font-size:10px;padding:3px 8px">🗺 Route</a>`:'<span style="color:var(--txt3);font-size:11px">—</span>';
-    const highlight=selectedRunner?(selectedRunner===r1?`<span style="font-weight:700;color:var(--txt)">${r1}</span> <span style="color:var(--txt3)">+</span> ${r2}`:`${r1} <span style="color:var(--txt3)">+</span> <span style="font-weight:700;color:var(--txt)">${r2}</span>`):`${r1} <span style="color:var(--txt3)">+</span> ${r2}`;
-    const tr=document.createElement('tr');
-    if(isCur) tr.style.background='var(--abg)';
-    tr.innerHTML=`
-      <td class="mono" style="color:var(--txt2);font-weight:${isCur?'700':'400'}">${l['Leg']}</td>
-      <td style="font-size:13px">${highlight}</td>
-      <td class="mono">${lkm} km</td>
-      <td>${exposureBadge(l['Route Exposure'])}</td>
-      <td class="mono" style="color:var(--txt2)">${fmt24(l['Exp. Start'],l['Date'])}</td>
-      <td>${routeCell}</td>
-      <td>${carCell}</td>`;
-    utbody.appendChild(tr);
+    const highlight=selectedRunner?(selectedRunner===r1?`<span style="font-weight:700;color:var(--txt)">${r1}</span> <span style="color:var(--txt3);font-weight:400">+</span> ${r2}`:`${r1} <span style="color:var(--txt3);font-weight:400">+</span> <span style="font-weight:700;color:var(--txt)">${r2}</span>`):`${r1} <span style="color:var(--txt3);font-weight:400">+</span> ${r2}`;
+    const links=[
+      routeUrl?`<a href="${routeUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">🗺 Route</a>`:'',
+      carUrl?`<a href="${carUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">📍 Car Start</a>`:''
+    ].filter(Boolean).join('');
+    const card=document.createElement('div');
+    card.className='up-card'+(isCur?' up-current':'');
+    card.innerHTML=`
+      <div class="up-top">
+        <span class="up-legnum">LEG ${l['Leg']}</span>
+        ${exposureBadge(l['Route Exposure'])}
+      </div>
+      <div class="up-runners">${highlight}</div>
+      <div class="up-meta"><span>${lkm} km</span><span>Planned <b>${fmt24(l['Exp. Start'],l['Date'])}</b></span></div>
+      ${links?`<div class="up-links">${links}</div>`:''}`;
+    cards.appendChild(card);
   });
 
-  if(!utbody.hasChildNodes()){
-    utbody.innerHTML=`<tr><td colspan="7" style="text-align:center;color:var(--txt3);padding:20px;font-size:13px">${selectedRunner} has no legs on this day.</td></tr>`;
+  if(shown===0){
+    cards.innerHTML=`<div style="text-align:center;color:var(--txt3);padding:20px;font-size:13px">${selectedRunner} has no legs on this day.</div>`;
   }
 }
 
