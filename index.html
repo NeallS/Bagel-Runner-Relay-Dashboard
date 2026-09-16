@@ -485,6 +485,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 @media(hover:hover){.csel-item:hover{background:var(--bg2);color:var(--txt)}}
 .csel-item:active{background:var(--bg3);transform:scale(0.98)}
 .csel-item.selected{color:var(--txt);background:var(--bg2)}
+.csel-backdrop{display:none}
 .section-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem .75rem;border-bottom:0.5px solid var(--bdr);flex-wrap:wrap;gap:8px}
 .section-title{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--txt)}
 .upcoming-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px}
@@ -529,7 +530,19 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   .elev-stats .estat-val{font-size:13px}
   #team-delta-svg,#team-pace-svg{height:auto}
   .elev-stats{font-size:10px;gap:6px;flex-wrap:wrap}
+
+  /* Custom dropdowns act like a native mobile picker: full-width bottom
+     sheet with a dimmed backdrop, instead of the desktop popover anchored
+     under the trigger button. Native <select> elements already get this
+     treatment for free from the OS, so this brings the hand-rolled .csel
+     widget (e.g. the Day filter) up to the same standard. */
+  .csel.open .csel-backdrop{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150;animation:cselFadeIn .18s ease both}
+  .csel-panel{position:fixed;left:10px;right:10px;top:auto!important;bottom:calc(10px + env(safe-area-inset-bottom));min-width:0;max-width:none;max-height:70vh;overflow-y:auto;border-radius:16px;transform-origin:center bottom;animation:cselSheetIn .22s cubic-bezier(0.16,1,0.3,1) both}
+  .csel-panel::before{content:'';display:block;width:36px;height:4px;border-radius:2px;background:var(--bdr2);margin:10px auto 2px}
+  .csel-item{padding:14px 18px;font-size:12px}
 }
+@keyframes cselSheetIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cselFadeIn{from{opacity:0}to{opacity:1}}
 /* ── Runner profile modal ── */
 .runner-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s ease}
 .runner-modal-overlay.open{opacity:1;pointer-events:all}
@@ -758,7 +771,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <div class="section-hdr" style="border-radius:0">
           <div class="section-title" id="tracker-day-label">Day --</div>
           <div style="display:flex;align-items:center;gap:8px">
-            <select id="runner-filter-select" onchange="selectedRunner=this.value;renderTracker()" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;padding:6px 10px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg);color:var(--txt);cursor:pointer;outline:none">
+            <select id="runner-filter-select" onchange="haptic();selectedRunner=this.value;renderTracker()" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;padding:6px 10px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg);color:var(--txt);cursor:pointer;outline:none">
               <option value="">All Runners</option>
             </select>
             <div class="csel" id="tracker-csel">
@@ -766,6 +779,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
                 <span class="csel-val" id="tracker-csel-val">Day 1</span>
                 <svg class="csel-chevron" width="10" height="6" fill="none" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
+              <div class="csel-backdrop" onclick="closeCsel('tracker-csel')"></div>
               <div class="csel-panel" id="tracker-csel-panel"></div>
             </div>
           </div>
@@ -813,7 +827,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <button class="mtab-btn active" data-mtab="tperf-delta" onclick="switchTeamChartTab('tperf-delta')">TIME VS PLAN</button>
         <button class="mtab-btn" data-mtab="tperf-pace" onclick="switchTeamChartTab('tperf-pace')">PACE PER LEG</button>
         </div>
-        <select id="team-chart-day-filter" onchange="_teamChartDay=this.value;if(_teamCompleted&&_teamFmtPace){const f=_teamChartDay?_teamCompleted.filter(d=>d.day===_teamChartDay):_teamCompleted;drawTeamDeltaChart(f,_teamFmtPace);drawTeamPaceChart(f,_teamFmtPace);document.dispatchEvent(new Event('chartsRedrawn'));}" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;padding:5px 8px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg);color:var(--txt);cursor:pointer;outline:none">
+        <select id="team-chart-day-filter" onchange="haptic();_teamChartDay=this.value;if(_teamCompleted&&_teamFmtPace){const f=_teamChartDay?_teamCompleted.filter(d=>d.day===_teamChartDay):_teamCompleted;drawTeamDeltaChart(f,_teamFmtPace);drawTeamPaceChart(f,_teamFmtPace);document.dispatchEvent(new Event('chartsRedrawn'));}" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;padding:5px 8px;border-radius:var(--r);border:0.5px solid var(--bdr2);background:var(--bg);color:var(--txt);cursor:pointer;outline:none">
           <option value="">All Days</option>
         </select>
       </div>
@@ -1038,7 +1052,7 @@ function toggleCsel(id){
   if(!el) return;
   const opening=!el.classList.contains('open');
   document.querySelectorAll('.csel.open').forEach(c=>c.classList.remove('open'));
-  if(opening) el.classList.add('open');
+  if(opening){ haptic(); el.classList.add('open'); }
 }
 document.addEventListener('click',e=>{
   if(!e.target.closest('.csel')) document.querySelectorAll('.csel.open').forEach(c=>c.classList.remove('open'));
@@ -2035,7 +2049,7 @@ function buildTrackerTabs(days){
     const item=document.createElement('div');
     item.className='csel-item'+(i===selectedTracker?' selected':'');
     item.textContent=label;
-    item.onclick=()=>{selectedTracker=i;closeCsel('tracker-csel');setCselVal('tracker-csel',label);renderTracker();};
+    item.onclick=()=>{haptic();selectedTracker=i;closeCsel('tracker-csel');setCselVal('tracker-csel',label);renderTracker();};
     panel.appendChild(item);
   });
   const firstLabel=panel.querySelector('.csel-item')?.textContent||'Day 1';
