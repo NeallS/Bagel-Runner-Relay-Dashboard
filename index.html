@@ -315,6 +315,19 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .poi-name{font-size:13px;font-weight:600;color:var(--txt)}
 .poi-desc{font-size:12px;color:var(--txt3);line-height:1.45}
 .poi-empty{text-align:center;color:var(--txt3);font-size:13px;padding:32px 0;grid-column:span 2}
+.pref-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:1rem}
+.pref-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:16px;box-shadow:var(--shadow)}
+.pref-card.current{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 0 16px rgba(123,92,255,.22)}
+.pref-hdr{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pref-kanji{font-size:13px;font-weight:700;line-height:1;flex-shrink:0;min-width:44px;height:44px;padding:0 6px;border-radius:12px;background:var(--bg2);border:0.5px solid var(--bdr2);display:flex;align-items:center;justify-content:center;white-space:nowrap}
+.pref-hdr-txt{flex:1;min-width:0}
+.pref-name{font-size:15px;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pref-leg-badge{font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--txt3)}
+.pref-now-badge{font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:900;letter-spacing:.06em;padding:2px 8px;border-radius:100px;background:var(--grad);color:var(--ink);white-space:nowrap}
+.pref-row{display:flex;gap:8px;font-size:12px;line-height:1.5;padding:6px 0;border-top:0.5px solid var(--bdr)}
+.pref-row-label{flex-shrink:0;width:76px;font-size:10px;font-weight:700;letter-spacing:.03em;color:var(--txt3);text-transform:uppercase;padding-top:1px}
+.pref-row-val{color:var(--txt2)}
+.pref-fact{margin-top:8px;padding:9px 11px;background:var(--bg2);border-radius:var(--r);font-size:11px;color:var(--txt2);line-height:1.5}
 .elev-wrap{background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);padding:12px 12px 8px}
 .elev-wrap svg{width:100%;height:170px;display:block}
 .elev-stats{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;padding:0 2px}
@@ -893,6 +906,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <button class="mtab-btn active" data-mtab="poi-now" onclick="switchPOITab('poi-now')">NOW</button>
         <button class="mtab-btn" data-mtab="poi-ahead" onclick="switchPOITab('poi-ahead')">AHEAD</button>
         <button class="mtab-btn" data-mtab="poi-all" onclick="switchPOITab('poi-all')">ALL STOPS</button>
+        <button class="mtab-btn" data-mtab="poi-prefectures" onclick="switchPOITab('poi-prefectures')">PREFECTURES</button>
       </div>
 
       <!-- Combined route + POI map -->
@@ -907,6 +921,10 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
       <!-- Card grid -->
       <div class="poi-cards" id="poi-list"></div>
+
+      <!-- Prefecture cards -->
+      <div id="pref-banner" class="banner info" style="display:none"><span>⏳</span><span>Loading prefecture guide…</span></div>
+      <div class="pref-cards" id="pref-list" style="display:none"></div>
 
       <!-- Google Maps link -->
       <div style="margin-top:4px">
@@ -999,6 +1017,7 @@ const RPASS_TAB  = 'Relay Passport';      // sheet tab: Category | Challenge | D
 const CI_TAB     = 'Contact Information';  // sheet tab name for contact information
 const FT_TAB     = 'Financial Tracker';    // sheet tab fed by the expenses Google Form
 const POI_TAB          = 'Points of Interest';   // sheet tab: Name | Category | Leg | Description | Maps URL
+const PREFECTURES_TAB  = 'Prefectures';   // sheet tab: Prefecture | Kanji | Start Leg | End Leg | Specialty Food | Culture | Wildlife & Nature | Fun Fact
 const COMMUNITY_PHOTOS_TAB = 'Community Photos';     // sheet tab fed by the photo submission form
 const COMMUNITY_PHOTOS_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdVczd63KU0yaBOPm1eBW-tSuOuu7XdBkN3taFqqXR88R03ew/viewform?usp=dialog';
 const csvURL     = tab => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
@@ -1410,6 +1429,8 @@ let poiActiveCat = 'All';
 let poiActiveTab = 'poi-now';
 let poiMiniMap = null;
 let poiMarkers = [];
+let prefData = [];
+let prefLoaded = false;
 
 async function loadPOIs(force){
   if(poiLoaded&&!force) return;
@@ -1504,7 +1525,15 @@ function switchPOITab(id){
     row.querySelector(`.mtab-btn[data-mtab="${id}"]`)?.classList.add('active');
     positionMtabPill(row);
   }
-  renderPOITab();
+  const isPref = id==='poi-prefectures';
+  document.getElementById('poi-chips').style.display = isPref?'none':'';
+  document.getElementById('poi-list').style.display = isPref?'none':'';
+  document.getElementById('pref-list').style.display = isPref?'':'none';
+  if(isPref){
+    if(!prefLoaded) loadPrefectures(false); else renderPrefectures();
+  } else {
+    renderPOITab();
+  }
 }
 
 function setPOICat(cat){
@@ -1549,6 +1578,78 @@ function renderPOITab(){
 
   // Update mini-map markers
   updatePOIMarkers(filtered);
+}
+
+async function loadPrefectures(force){
+  if(prefLoaded&&!force) return;
+  const banner = document.getElementById('pref-banner');
+  const list = document.getElementById('pref-list');
+  if(banner) banner.style.display='';
+  if(list) list.style.display='none';
+  try {
+    const res = await fetch(csvURL(PREFECTURES_TAB)+'&cachebust='+Date.now());
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    if(!rows.length) throw new Error('empty');
+    const headers = rows[0].map(h=>h.trim());
+    const get = (row,key) => {
+      const i = headers.findIndex(h=>h.toLowerCase()===key.toLowerCase());
+      return i>=0?(row[i]||'').trim():'';
+    };
+    prefData = rows.slice(1).filter(r=>r.some(c=>c.trim())).map(r=>({
+      name: get(r,'Prefecture'),
+      kanji: get(r,'Kanji'),
+      startLeg: parseInt(get(r,'Start Leg'))||0,
+      endLeg: parseInt(get(r,'End Leg'))||0,
+      food: get(r,'Specialty Food'),
+      culture: get(r,'Culture'),
+      nature: get(r,'Wildlife & Nature'),
+      fact: get(r,'Fun Fact'),
+    })).filter(p=>p.name).sort((a,b)=>a.startLeg-b.startLeg);
+
+    prefLoaded = true;
+    if(banner) banner.style.display='none';
+    if(list) list.style.display='';
+    renderPrefectures();
+  } catch(e){
+    if(banner){ banner.className='banner warn'; banner.innerHTML='<span>⚠️</span><span>Could not load prefecture guide. Add a "Prefectures" tab to your sheet with columns: Prefecture | Kanji | Start Leg | End Leg | Specialty Food | Culture | Wildlife & Nature | Fun Fact</span>'; }
+    if(list) list.style.display='none';
+  }
+}
+
+function prefCard(p,isCurrent){
+  const legRange = p.startLeg&&p.endLeg
+    ?(p.startLeg===p.endLeg?`Leg ${p.startLeg}`:`Legs ${p.startLeg}–${p.endLeg}`)
+    :'';
+  return `<div class="pref-card${isCurrent?' current':''}">
+    <div class="pref-hdr">
+      <div class="pref-kanji">${p.kanji||'🗾'}</div>
+      <div class="pref-hdr-txt">
+        <div class="pref-name">${p.name}${isCurrent?'<span class="pref-now-badge">YOU ARE HERE</span>':''}</div>
+        ${legRange?`<span class="pref-leg-badge">${legRange}</span>`:''}
+      </div>
+    </div>
+    ${p.food?`<div class="pref-row"><div class="pref-row-label">🍜 Food</div><div class="pref-row-val">${p.food}</div></div>`:''}
+    ${p.culture?`<div class="pref-row"><div class="pref-row-label">⛩️ Culture</div><div class="pref-row-val">${p.culture}</div></div>`:''}
+    ${p.nature?`<div class="pref-row"><div class="pref-row-label">🌿 Nature</div><div class="pref-row-val">${p.nature}</div></div>`:''}
+    ${p.fact?`<div class="pref-fact">💡 ${p.fact}</div>`:''}
+  </div>`;
+}
+
+function renderPrefectures(){
+  const listEl = document.getElementById('pref-list');
+  if(!listEl) return;
+  if(!prefData.length){
+    listEl.innerHTML = `<div class="poi-empty" style="grid-column:unset">No prefectures logged yet.</div>`;
+    return;
+  }
+  const currentIdx = findCurrentIdx(legsData, trackerData);
+  const currentLeg = parseInt((legsData[currentIdx]||{})['Leg']||'0');
+  listEl.innerHTML = prefData.map(p=>{
+    const isCurrent = currentLeg>0 && p.startLeg && p.endLeg && currentLeg>=p.startLeg && currentLeg<=p.endLeg;
+    return prefCard(p,isCurrent);
+  }).join('');
 }
 
 function parseMapsUrlCoords(url){
