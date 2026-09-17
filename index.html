@@ -19,6 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -914,7 +915,8 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
       <div class="poi-combined-map-wrap">
         <div id="poi-mini-map" style="width:100%;height:100%"></div>
       </div>
-      <div class="legend" id="poi-map-legend" style="margin-bottom:1rem"></div>
+      <div class="legend" id="poi-map-legend" style="margin-bottom:.35rem"></div>
+      <div style="font-size:9px;color:var(--txt3);margin-bottom:1rem">Prefecture boundaries: Global Map Japan (GSI) via dataofjapan/land</div>
 
       <!-- Category filter chips -->
       <div class="poi-chips" id="poi-chips"></div>
@@ -1471,6 +1473,36 @@ async function loadPOIs(force){
   }
 }
 
+// Prefecture boundary overlay — geographic polygons (not just leg ranges) so the
+// route can be visually cross-checked against real prefecture borders.
+// Source: dataofjapan/land (Global Map Japan / GSI Japan shapefiles, converted to TopoJSON).
+const PREF_TOPOJSON_URL = 'https://cdn.jsdelivr.net/gh/dataofjapan/land@master/japan.topojson';
+const RELAY_PREF_IDS = new Set([13,14,22,23,24,25,26,27]); // Tokyo, Kanagawa, Shizuoka, Aichi, Mie, Shiga, Kyoto, Osaka
+let prefBoundaryLayer = null;
+
+async function drawPrefectureBoundaries(map){
+  try{
+    const res = await fetch(PREF_TOPOJSON_URL);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const topology = await res.json();
+    const geo = topojson.feature(topology, topology.objects.japan);
+    prefBoundaryLayer = L.geoJSON(geo,{
+      style: feature => {
+        const onRoute = RELAY_PREF_IDS.has(feature.properties.id);
+        return onRoute
+          ? {color:'#7B5CFF', weight:1.5, opacity:.6, fillColor:'#7B5CFF', fillOpacity:.10}
+          : {color:'#8F8C89', weight:1, opacity:.25, fillColor:'#8F8C89', fillOpacity:.03};
+      },
+      onEachFeature: (feature, layer) => {
+        layer.bindTooltip(`${feature.properties.nam_ja} ${feature.properties.nam}`,{sticky:true,direction:'top'});
+      }
+    }).addTo(map);
+    prefBoundaryLayer.bringToBack();
+  } catch(e){
+    // Non-critical decoration layer — fail silently, route map still works without it.
+  }
+}
+
 function initPOIMap(){
   if(poiMiniMap) return;
   const el = document.getElementById('poi-mini-map');
@@ -1478,6 +1510,8 @@ function initPOIMap(){
   poiMiniMap = L.map('poi-mini-map',{zoomControl:false,attributionControl:false,scrollWheelZoom:true,dragging:true,touchZoom:true,doubleClickZoom:true});
   L.control.zoom({position:'bottomright'}).addTo(poiMiniMap);
   L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=4c5ab357-ef61-4d11-8517-287f147a34f9',{maxZoom:20,className:'map-tiles'}).addTo(poiMiniMap);
+
+  drawPrefectureBoundaries(poiMiniMap);
 
   // Build day→index mapping (same method as drawFullRouteMap)
   const dayByLegIdx={};
