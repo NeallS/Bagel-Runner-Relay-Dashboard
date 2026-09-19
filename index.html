@@ -437,6 +437,9 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .t-mixed{background:var(--abg);color:var(--atxt)}
 .t-exposed{background:var(--abg);color:var(--atxt)}
 .t-highexposure{background:var(--rbg);color:var(--rtxt)}
+.t-urban{background:rgba(123,92,255,.16);color:#B8A6FF}
+.t-suburban{background:rgba(47,211,197,.16);color:#2FD3C5}
+.t-rural{background:var(--bg2);color:var(--txt3)}
 
 /* ── Relay Passport ── */
 .tab-badge{display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;letter-spacing:0;padding:2px 6px;border-radius:100px;margin-left:6px;background:var(--bg2);color:var(--txt3);vertical-align:middle}
@@ -1942,6 +1945,13 @@ function exposureBadge(t){
   if(k.includes('protected')) return `<span class="terrain t-protected">🛡 Protected</span>`;
   return `<span style="color:var(--txt3);font-size:11px">—</span>`;
 }
+function areaBadge(t){
+  const k=(t||'').toLowerCase();
+  if(k.includes('urban')) return `<span class="terrain t-urban">🏙 Urban</span>`;
+  if(k.includes('suburban')) return `<span class="terrain t-suburban">🏘 Suburban</span>`;
+  if(k.includes('rural')) return `<span class="terrain t-rural">🌾 Rural</span>`;
+  return '';
+}
 // Format a time string (e.g. "6:05:00 AM", "06:05:00", "6:05 AM") → "06:05" (24-hr, no seconds)
 function fmt24(timeStr, dateStr){
   if(!timeStr) return '—';
@@ -2280,7 +2290,7 @@ function renderTracker(){
       const routeUrl=(l['Route URL']||l['Route Link']||l['Komoot URL']||'').trim();
       const routeLink=routeUrl?`<a href="${routeUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">🗺 Route</a>`:'';
       const carLink=carUrl?`<a href="${carUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">📍 Car Start</a>`:'';
-      extra=`<div class="tl-extra">${exposureBadge(l['Route Exposure'])}${routeLink}${carLink}</div>`;
+      extra=`<div class="tl-extra">${exposureBadge(l['Route Exposure'])}${areaBadge(l['Area Type'])}${routeLink}${carLink}</div>`;
     } else if(state==='done'){
       const stravaUrl=trackerStrava(t).trim();
       if(stravaActivityId(stravaUrl)) extra=`<div class="tl-extra"><a href="${stravaUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">🟠 Strava</a></div>`;
@@ -2539,10 +2549,13 @@ function drawElevationFromTrack(trackPoints, leg, svgId='elev-svg', statsId='ele
   const dropM=!isNaN(sheetDrop)?Math.round(sheetDrop):Math.round(tDrop);
   const avgGrad=maxD>0?(((gainM-dropM)/maxD)*100):0; // net elevation change / distance
   const gradStr=(avgGrad>=0?'+':'')+avgGrad.toFixed(1)+'%';
+  const effKm=parseFloat(leg['Eff. Distance (km)']||'');
+  const effStat=!isNaN(effKm)?`<div class="estat"><span class="estat-val" style="color:var(--txt2)">${effKm.toFixed(1)}km</span><span class="estat-lbl">effort dist.</span></div>`:'';
   if(statsEl) statsEl.innerHTML=
     `<div class="estat"><span class="estat-val" style="color:var(--gtxt)">▲ ${gainM}m</span><span class="estat-lbl">gain</span></div>`+
     `<div class="estat"><span class="estat-val" style="color:var(--txt3)">▼ ${dropM}m</span><span class="estat-lbl">drop</span></div>`+
-    `<div class="estat"><span class="estat-val" style="color:var(--txt2)">${gradStr}</span><span class="estat-lbl">avg grade</span></div>`;
+    `<div class="estat"><span class="estat-val" style="color:var(--txt2)">${gradStr}</span><span class="estat-lbl">avg grade</span></div>`+
+    effStat;
 }
 
 // ─── ELEVATION PROFILE — seeded fallback (no GPS data) ────────────────────────
@@ -2586,10 +2599,13 @@ function drawElevationFallback(leg, svgId='elev-svg', statsId='elev-stats'){
   const sheetDrop=parseFloat(leg['Elevation Drop (m)']||'');
   if(statsEl){
     if(!isNaN(sheetGain)&&!isNaN(sheetDrop)){
+      const effKm=parseFloat(leg['Eff. Distance (km)']||'');
+      const effStat=!isNaN(effKm)?`<div class="estat"><span class="estat-val" style="color:var(--txt2)">${effKm.toFixed(1)}km</span><span class="estat-lbl">effort dist.</span></div>`:'';
       statsEl.innerHTML=
         `<div class="estat"><span class="estat-val" style="color:var(--gtxt)">▲ ${Math.round(sheetGain)}m</span><span class="estat-lbl">gain</span></div>`+
         `<div class="estat"><span class="estat-val" style="color:var(--txt3)">▼ ${Math.round(sheetDrop)}m</span><span class="estat-lbl">drop</span></div>`+
-        `<div class="estat"><span class="estat-val" style="color:var(--txt3)">~ est.</span><span class="estat-lbl">profile</span></div>`;
+        `<div class="estat"><span class="estat-val" style="color:var(--txt3)">~ est.</span><span class="estat-lbl">profile</span></div>`+
+        effStat;
     } else {
       statsEl.innerHTML=`<div class="estat"><span class="estat-lbl" style="color:var(--txt3)">Elevation profile (estimated)</span></div>`;
     }
