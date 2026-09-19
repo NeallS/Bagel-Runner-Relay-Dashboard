@@ -1946,10 +1946,10 @@ function exposureBadge(t){
   return `<span style="color:var(--txt3);font-size:11px">—</span>`;
 }
 function areaBadge(t){
-  const k=(t||'').toLowerCase();
-  if(k.includes('urban')) return `<span class="terrain t-urban">🏙 Urban</span>`;
-  if(k.includes('suburban')) return `<span class="terrain t-suburban">🏘 Suburban</span>`;
-  if(k.includes('rural')) return `<span class="terrain t-rural">🌾 Rural</span>`;
+  const k=(t||'').trim().toLowerCase();
+  if(k==='suburban') return `<span class="terrain t-suburban">🏘 Suburban</span>`;
+  if(k==='urban') return `<span class="terrain t-urban">🏙 Urban</span>`;
+  if(k==='rural') return `<span class="terrain t-rural">🌾 Rural</span>`;
   return '';
 }
 // Format a time string (e.g. "6:05:00 AM", "06:05:00", "6:05 AM") → "06:05" (24-hr, no seconds)
