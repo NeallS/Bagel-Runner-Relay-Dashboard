@@ -195,11 +195,12 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .day-meta{text-align:right}
 .day-label{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.05em}
 .day-sub{font-size:10px;color:var(--txt3);margin-top:1px}
-.day-pips{display:flex;gap:3px;align-items:stretch;min-width:0}
+.day-pips{display:flex;gap:3px;align-items:stretch;min-width:0;border-radius:4px}
+.day-pips.has-progress{background:var(--grad)}
 .pip{height:16px;border-radius:4px;cursor:pointer;transition:all .15s ease;flex:1 1 0}
 @media(hover:hover){.pip:hover{opacity:.7;transform:scaleY(1.15)}}
 .pip:active{opacity:.5;transform:scaleY(0.95)}
-.pip.done{background:var(--grad)}
+.pip.done{background:transparent}
 .pip.active{background:var(--amber);animation:glow 1.5s infinite}
 .pip.todo{background:var(--bg2);border:0.5px solid var(--bdr2)}
 .day-stats{text-align:left;padding-left:4px}
@@ -2155,8 +2156,9 @@ function buildDayGrid(legs,currentIdx){
     meta.innerHTML=`<div class="day-label">DAY ${di+1}</div><div class="day-sub">${dateStr}</div>`;
     row.appendChild(meta);
 
+    const hasProgress=done>0||day.legs.some(({i})=>i===currentIdx);
     const pipsWrap=document.createElement('div');
-    pipsWrap.className='day-pips';
+    pipsWrap.className='day-pips'+(hasProgress?' has-progress':'');
     day.legs.forEach(({l,i})=>{
       const km=parseFloat(l['Distance (km)'])||4;
       const pip=document.createElement('div');
