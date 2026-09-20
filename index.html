@@ -31,7 +31,7 @@
   --shadow-lg:0 1px 0 rgba(255,255,255,.06) inset,0 10px 30px rgba(0,0,0,.5),0 0 0 1px rgba(247,37,133,.12);
   --bg-glass:rgba(35,35,39,.78);
   --green:#3CFFA6;--gbg:rgba(60,255,166,.12);--gtxt:#3CFFA6;
-  --amber:#FCEE0A;--abg:rgba(252,238,10,.14);--atxt:#FFF35C;
+  --amber:#D9B916;--abg:rgba(217,185,22,.14);--atxt:#E8D573;
   --rbg:rgba(255,64,109,.14);--rtxt:#FF406D;
   --accent:#F72585;--accent2:#4CC9F0;
   --ink:#1B1B1F;
@@ -159,7 +159,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
 /* ── Banner ── */
 .banner{border-radius:var(--r);padding:11px 16px;font-size:12px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
-.banner.info{background:var(--abg);color:var(--atxt);border:0.5px solid rgba(252,238,10,.3)}
+.banner.info{background:var(--abg);color:var(--atxt);border:0.5px solid rgba(217,185,22,.3)}
 .banner.ok{background:var(--gbg);color:var(--gtxt);border:0.5px solid rgba(60,255,166,.3)}
 .banner.err{background:var(--rbg);color:var(--rtxt);border:0.5px solid rgba(255,64,109,.3)}
 
@@ -257,7 +257,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .av-sm img{width:28px;height:28px}
 .av-t{background:rgba(60,255,166,.16);color:#3CFFA6}
 .av-b{background:rgba(76,201,240,.16);color:#4CC9F0}
-.av-a{background:rgba(252,238,10,.18);color:#FFF35C}
+.av-a{background:rgba(217,185,22,.18);color:#E8D573}
 .av-p{background:rgba(67,97,238,.18);color:#8FA6FF}
 .av-c{background:rgba(255,64,109,.18);color:#FF7A98}
 .rname{font-size:15px;font-weight:600}
@@ -278,7 +278,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .tap-chevron{color:var(--txt3);font-size:13px;font-weight:700;flex-shrink:0;line-height:1}
 .runner-tap-card{transition:transform .1s ease,opacity .15s ease,border-color .15s ease}
 .runner-tap-card:active{transform:scale(0.97);opacity:.85}
-@media(hover:hover){.runner-tap-card:hover{border-color:rgba(252,238,10,.55)}.runner-tap-card:hover .tap-chevron{color:var(--atxt)}}
+@media(hover:hover){.runner-tap-card:hover{border-color:rgba(217,185,22,.55)}.runner-tap-card:hover .tap-chevron{color:var(--atxt)}}
 .cur-timing{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);overflow:hidden}
 .cur-timing .t-cell{padding:11px 10px;border-left:0.5px solid var(--bdr)}
 .cur-timing .t-cell:first-child{border-left:none}
@@ -417,9 +417,9 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .tl-row:last-child .tl-line{display:none}
 .tl-done .tl-dot{background:var(--green);box-shadow:0 0 8px rgba(60,255,166,.5)}
 .tl-done .tl-line{background:rgba(60,255,166,.25)}
-.tl-running .tl-dot{background:var(--amber);box-shadow:0 0 0 4px rgba(252,238,10,.25);animation:tl-pulse 1.6s ease-in-out infinite}
+.tl-running .tl-dot{background:var(--amber);box-shadow:0 0 0 4px rgba(217,185,22,.25);animation:tl-pulse 1.6s ease-in-out infinite}
 .tl-upcoming .tl-dot{background:var(--bg2);border-color:var(--bdr2)}
-@keyframes tl-pulse{0%,100%{box-shadow:0 0 0 4px rgba(252,238,10,.25)}50%{box-shadow:0 0 0 8px rgba(252,238,10,.12)}}
+@keyframes tl-pulse{0%,100%{box-shadow:0 0 0 4px rgba(217,185,22,.25)}50%{box-shadow:0 0 0 8px rgba(217,185,22,.12)}}
 @media(prefers-reduced-motion:reduce){.tl-running .tl-dot{animation:none}}
 .tl-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:3px}
 .tl-legnum{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.04em}
@@ -509,8 +509,8 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .upcoming-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px}
 
 /* ── Form / Google Form ── */
-.form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:var(--atxt);background:var(--abg);border:0.5px solid rgba(252,238,10,.28);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(252,238,10,.1)}
-@media(hover:hover){.form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 10px rgba(252,238,10,.2)}}
+.form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:var(--atxt);background:var(--abg);border:0.5px solid rgba(217,185,22,.28);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(217,185,22,.1)}
+@media(hover:hover){.form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 10px rgba(217,185,22,.2)}}
 .form-glink:active{transform:scale(0.97);opacity:.8}
 
 .tbd{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--bg2);border:0.5px dashed var(--bdr2);border-radius:var(--r);padding:20px;font-size:13px;color:var(--txt2);font-style:italic}
@@ -1055,7 +1055,7 @@ let nextLegPoly     = null; // stored poly for re-fitting after tab reveal
 let poiMapDrawn     = false;
 
 const DAY_COLORS = {
-  1:'#3CFFA6', 2:'#4CC9F0', 3:'#FCEE0A', 4:'#FF406D', 5:'#4361EE', 6:'#FF7AC0'
+  1:'#3CFFA6', 2:'#4CC9F0', 3:'#D9B916', 4:'#FF406D', 5:'#4361EE', 6:'#FF7AC0'
 };
 
 const AV = ['av-t','av-b','av-a','av-p','av-c','av-t','av-b','av-a','av-p'];
@@ -1421,7 +1421,7 @@ async function loadContacts(force){
 // ─── FINANCIAL TRACKER ───────────────────────────────────────────────────────
 // ── Category colours for POI badges ──────────────────────────────────────
 const POI_CAT_STYLE = {
-  'Temple/Shrine': {bg:'rgba(252,238,10,.16)',color:'#FFF35C'},
+  'Temple/Shrine': {bg:'rgba(217,185,22,.16)',color:'#E8D573'},
   'Food & Drink':  {bg:'rgba(255,64,109,.16)',color:'#FF7A98'},
   'Viewpoint':     {bg:'rgba(76,201,240,.16)',color:'#4CC9F0'},
   'Market':        {bg:'rgba(67,97,238,.16)',color:'#8FA6FF'},
@@ -2478,7 +2478,7 @@ function drawElevationFromTrack(trackPoints, leg, svgId='elev-svg', statsId='ele
   function gradeColor(pct){
     const a=Math.abs(pct);
     if(a<4)  return ['#3CFFA6',0.28]; // green — flat/gentle
-    if(a<8)  return ['#FCEE0A',0.38]; // amber — moderate
+    if(a<8)  return ['#D9B916',0.38]; // amber — moderate
     if(a<14) return ['#FF406D',0.42]; // red — steep
     return          ['#C2185B',0.50]; // deep magenta — very steep
   }
@@ -3167,7 +3167,7 @@ function render(legs,tracker){
     const avClass=runnerColors[name];
     const initials=name.slice(0,2).toUpperCase();
     const photoUrl=contactPhotos[name];
-    const roleCol='#FFF35C';
+    const roleCol='#E8D573';
     const kana=roleKana[role]||'';
     const avHTML=photoUrl
       ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
@@ -3175,7 +3175,7 @@ function render(legs,tracker){
             onerror="const p=this.parentElement;p.className='av ${avClass}';p.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
-    return `<div class="runner-tap-card" style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(252,238,10,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div class="runner-tap-card" style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(217,185,22,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       ${avHTML}
       <div style="overflow:hidden;min-width:0">
         <div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">
@@ -3514,7 +3514,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
     const avClass=runnerColors[name];
     const initials=name.slice(0,2).toUpperCase();
     const photo=contactPhotos[name];
-    const roleCol='#FFF35C';
+    const roleCol='#E8D573';
     const kana=roleKana[role]||'';
     const avHTML=photo
       ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
@@ -3522,7 +3522,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
             onerror="const p=this.parentElement;p.className='av ${avClass}';p.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
-    return `<div class="runner-tap-card" style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(252,238,10,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div class="runner-tap-card" style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(217,185,22,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       ${avHTML}
       <div style="overflow:hidden;min-width:0">
         <div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">
