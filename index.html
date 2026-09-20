@@ -33,6 +33,8 @@
   --green:#3CFFA6;--gbg:rgba(60,255,166,.12);--gtxt:#3CFFA6;
   --amber:#FF7A1A;--abg:rgba(255,122,26,.14);--atxt:#FFA96A;
   --rbg:rgba(255,64,109,.14);--rtxt:#FF406D;
+  --violet:#B388FF;--vbg:rgba(179,136,255,.14);--vtxt:#C9A6FF;
+  --peri:#7C89F5;--pbg:rgba(124,137,245,.14);--ptxt:#A9B2FF;
   --accent:#F72585;--accent2:#4CC9F0;
   --ink:#1B1B1F;
   --grad:linear-gradient(135deg,var(--accent2) 0%,var(--accent) 100%);
@@ -72,9 +74,6 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   .tl-label{display:none}
   .tab-badge{display:none!important}
 }
-.countdown-timer{font-family:'Share Tech Mono',monospace;font-size:24px;font-weight:700;color:var(--txt);letter-spacing:.02em}
-.countdown-timer .cd-unit{font-size:10px;font-weight:400;color:var(--txt3);letter-spacing:.04em}
-@media(max-width:600px){.countdown-timer{font-size:20px}}
 /* ── Mission sub-tabs ── */
 .mtab-row{display:flex;position:relative;gap:0;padding:4px;background:var(--bg-glass);backdrop-filter:blur(12px);border-radius:100px;margin-bottom:0;border:0.5px solid var(--bdr);box-shadow:0 2px 10px rgba(0,0,0,.3)}
 .mtab-pill{position:absolute;top:4px;height:calc(100% - 8px);background:var(--grad);border-radius:100px;transition:left .38s cubic-bezier(.34,1.56,.64,1),width .38s cubic-bezier(.34,1.56,.64,1);z-index:0;pointer-events:none;box-shadow:0 0 14px rgba(247,37,133,.4)}
@@ -110,7 +109,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .rest-timeline{display:flex;align-items:center;gap:6px;width:100%}
 .rest-chip{font-family:'Share Tech Mono',monospace;font-size:10px;padding:3px 8px;border-radius:100px;white-space:nowrap;flex-shrink:0}
 .rest-chip-done{background:var(--gbg);color:var(--gtxt)}
-.rest-chip-next{background:var(--abg);color:var(--atxt)}
+.rest-chip-next{background:var(--pbg);color:var(--ptxt)}
 .rest-chip-rest{background:var(--bg2);color:var(--txt3);font-size:10px}
 .rest-line{flex:1;height:1px;background:var(--bdr2);min-width:8px}
 .theme-toggle{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:var(--r);border:0.5px solid var(--bdr);background:var(--bg2);cursor:pointer;font-size:16px;transition:all .25s ease}
@@ -121,7 +120,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .settle-row:last-child{border-bottom:none}
 .settle-name{font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:600;color:var(--txt)}
 .settle-arrow{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--txt3);flex-shrink:0}
-.settle-amount{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--atxt)}
+.settle-amount{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--ptxt)}
 .tab-btn.active{background:var(--grad);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.4)}
 .tab-panel{display:none}
 .tab-panel.active{display:block}
@@ -136,31 +135,29 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .hdr-left,.hdr-right{position:relative;z-index:2}
 .hdr-left{display:flex;flex-direction:column;gap:5px;min-width:0}
 .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
-.hdr-countdown{text-align:right}
 .hdr-controls{display:flex;align-items:center;gap:12px}
+.hdr-topright{position:absolute;top:12px;right:12px;z-index:3;display:flex;align-items:center;gap:10px}
+@media(max-width:600px){.hdr-topright.hdr-topright-flow{position:static;align-self:flex-end;margin-bottom:2px}}
 .eyebrow{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--txt2)}
 .pg-title{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:.9;letter-spacing:.01em;color:var(--txt)}
 .pg-title span{font-family:'Bebas Neue',sans-serif;color:var(--accent);font-weight:400;font-size:28px;margin-left:6px}
 @media(min-width:600px){.pg-title,.pg-title span{font-size:34px}}
 /* ── Mission Control hero title (glass-torus shader fills the header behind it) ── */
 .hero-lockup{margin:2px 0 6px}
-.kanji-tag{position:absolute;top:12px;right:12px;z-index:3;font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:11px;letter-spacing:.05em;color:var(--rtxt);background:var(--rbg);border:1px solid rgba(255,64,109,.4);border-radius:4px;padding:4px 6px;writing-mode:vertical-rl}
+.kanji-tag{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:15px;letter-spacing:.08em;color:var(--rtxt);background:var(--rbg);border:1px solid rgba(255,64,109,.4);border-radius:4px;padding:6px 8px;writing-mode:vertical-rl;flex-shrink:0}
+.sec-jp{font-family:'Zen Kaku Gothic New',sans-serif;font-size:11px;font-weight:700;letter-spacing:.03em;color:var(--txt3);text-transform:none}
 .hero-title{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:.86;letter-spacing:.01em;color:var(--txt);margin:0;text-shadow:0 2px 12px rgba(0,0,0,.5)}
 @media(min-width:600px){.hero-title{font-size:36px}}
 .hero-title span{color:var(--accent)}
-.hero-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);letter-spacing:.05em;margin-bottom:8px;display:block}
-.day-pill{display:inline-block;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--green);background:var(--gbg);border:0.5px solid rgba(60,255,166,.35);border-radius:100px;padding:3px 10px;width:fit-content}
 .live{display:flex;align-items:center;gap:7px;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;color:var(--green);letter-spacing:.06em}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(60,255,166,.8);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.countdown-label{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--txt3)}
-.countdown-timer{font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;color:var(--txt);letter-spacing:.02em;line-height:1.1;text-shadow:0 0 14px rgba(247,37,133,.35),0 0 26px rgba(76,201,240,.15)}
-.countdown-timer .cd-unit{font-size:10px;font-weight:400;color:var(--txt3);letter-spacing:.04em;text-shadow:none}
 
 /* ── Banner ── */
 .banner{border-radius:var(--r);padding:11px 16px;font-size:12px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
-.banner.info{background:var(--abg);color:var(--atxt);border:0.5px solid rgba(255,122,26,.3)}
+.banner.info{background:var(--pbg);color:var(--ptxt);border:0.5px solid rgba(124,137,245,.3)}
 .banner.ok{background:var(--gbg);color:var(--gtxt);border:0.5px solid rgba(60,255,166,.3)}
+.banner.warn{background:var(--abg);color:var(--atxt);border:0.5px solid rgba(255,122,26,.3)}
 .banner.err{background:var(--rbg);color:var(--rtxt);border:0.5px solid rgba(255,64,109,.3)}
 
 /* ── Stat grid ── */
@@ -200,7 +197,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 @media(hover:hover){.pip:hover{opacity:.7;transform:scaleY(1.15)}}
 .pip:active{opacity:.5;transform:scaleY(0.95)}
 .pip.done{background:var(--accent2)}
-.pip.active{background:var(--amber);animation:glow 1.5s infinite}
+.pip.active{background:var(--peri);animation:glow 1.5s infinite}
 .pip.todo{background:var(--bg2);border:0.5px solid var(--bdr2)}
 .day-stats{text-align:left;padding-left:4px}
 .day-stat-km{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--txt2)}
@@ -229,10 +226,10 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 /* ── Pills ── */
 .pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;font-family:'Share Tech Mono',monospace}
 #status-pill .pill{font-size:18px;padding:8px 18px;border-radius:100px}
-.pill-on{background:var(--abg);color:var(--atxt)}
+.pill-on{background:var(--pbg);color:var(--ptxt)}
 .pill-ok{background:var(--gbg);color:var(--gtxt)}
 .pill-beh{background:var(--rbg);color:var(--rtxt)}
-.pill-run{background:var(--abg);color:var(--atxt)}
+.pill-run{background:var(--pbg);color:var(--ptxt)}
 .pill-up{background:var(--bg2);color:var(--txt3)}
 
 /* ── Current leg ── */
@@ -278,20 +275,20 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .tap-chevron{color:var(--txt3);font-size:13px;font-weight:700;flex-shrink:0;line-height:1}
 .runner-tap-card{transition:transform .1s ease,opacity .15s ease,border-color .15s ease}
 .runner-tap-card:active{transform:scale(0.97);opacity:.85}
-@media(hover:hover){.runner-tap-card:hover{border-color:rgba(255,122,26,.55)}.runner-tap-card:hover .tap-chevron{color:var(--atxt)}}
+@media(hover:hover){.runner-tap-card:hover{border-color:rgba(124,137,245,.55)}.runner-tap-card:hover .tap-chevron{color:var(--ptxt)}}
 .cur-timing{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);overflow:hidden}
 .cur-timing .t-cell{padding:11px 10px;border-left:0.5px solid var(--bdr)}
 .cur-timing .t-cell:first-child{border-left:none}
 .cur-timing .t-label{font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.06em;color:var(--txt3);margin-bottom:4px;text-transform:uppercase}
 .cur-timing .t-val{font-family:'Share Tech Mono',monospace;font-size:13px;font-weight:700;color:var(--txt);font-variant-numeric:tabular-nums}
-.cur-timing .t-val.accent{color:var(--atxt)}
+.cur-timing .t-val.accent{color:var(--ptxt)}
 .cur-timing .t-sub{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--txt3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:640px){
   .cur-timing{grid-template-columns:1fr 1fr}
   .cur-timing .t-cell:nth-child(3){border-left:none}
   .cur-timing .t-cell:nth-child(n+3){border-top:0.5px solid var(--bdr)}
 }
-.map-chip{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:5px;background:rgba(27,27,31,.82);backdrop-filter:blur(6px);border:0.5px solid var(--bdr2);border-radius:100px;padding:6px 12px;font-family:'Share Tech Mono',monospace;font-size:9.5px;font-weight:700;color:var(--atxt);text-decoration:none;z-index:400}
+.map-chip{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:5px;background:rgba(27,27,31,.82);backdrop-filter:blur(6px);border:0.5px solid var(--bdr2);border-radius:100px;padding:6px 12px;font-family:'Share Tech Mono',monospace;font-size:9.5px;font-weight:700;color:var(--ptxt);text-decoration:none;z-index:400}
 .map-chip-bottom{top:auto;bottom:10px}
 @media(hover:hover){.map-chip:hover{opacity:.85}}
 .cur-map-wrap.cur-map-lg{height:220px;flex:none}
@@ -362,7 +359,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .cc-field{display:flex;flex-direction:column;gap:3px}
 .cc-label{font-family:'Share Tech Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.07em;color:var(--txt3);text-transform:uppercase}
 .cc-value{font-size:13px;color:var(--txt2)}
-.cc-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--atxt);background:var(--abg);border-radius:100px;padding:6px 12px;text-decoration:none;width:fit-content;font-weight:600}
+.cc-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ptxt);background:var(--pbg);border-radius:100px;padding:6px 12px;text-decoration:none;width:fit-content;font-weight:600}
 @media(hover:hover){.cc-link:hover{opacity:.85}}
 .cc-link:active{transform:scale(0.97)}
 
@@ -372,7 +369,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .fc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .fc-item{font-size:14px;font-weight:600;color:var(--txt)}
 .fc-date{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);margin-top:3px}
-.fc-amount{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:700;color:var(--atxt);white-space:nowrap}
+.fc-amount{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:700;color:var(--ptxt);white-space:nowrap}
 .fc-meta{font-size:12px;color:var(--txt3);display:flex;flex-wrap:wrap;gap:6px 14px}
 .fc-meta b{color:var(--txt2);font-weight:600}
 .fc-pills{display:flex;flex-wrap:wrap;gap:4px}
@@ -395,7 +392,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .hl-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 @media(max-width:600px){.hl-strip{grid-template-columns:repeat(2,1fr)}}
 .hl-card{background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);padding:14px 10px;box-shadow:var(--shadow);text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px}
-.hl-icon{font-size:19px;line-height:1}
+.hl-icon{display:flex;align-items:center;justify-content:center;line-height:1}
 .hl-val{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:700;color:var(--txt);line-height:1.15;margin-top:3px}
 .hl-lbl{font-family:'Share Tech Mono',monospace;font-size:8.5px;letter-spacing:.06em;color:var(--txt3);text-transform:uppercase;margin-top:2px}
 .hl-sub{font-size:10px;color:var(--txt2);margin-top:3px}
@@ -404,7 +401,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 /* ── Strava embed card ── */
 .strava-embed-card{background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);overflow:hidden}
 .strava-embed-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;font-family:'Share Tech Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.06em;color:var(--txt3);border-bottom:0.5px solid var(--bdr)}
-.strava-embed-hdr a{color:var(--atxt);text-decoration:none}
+.strava-embed-hdr a{color:var(--ptxt);text-decoration:none}
 .strava-embed-placeholder{min-height:190px}
 .rp-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--accent))}
 
@@ -417,9 +414,9 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .tl-row:last-child .tl-line{display:none}
 .tl-done .tl-dot{background:var(--green);box-shadow:0 0 8px rgba(60,255,166,.5)}
 .tl-done .tl-line{background:rgba(60,255,166,.25)}
-.tl-running .tl-dot{background:var(--amber);box-shadow:0 0 0 4px rgba(255,122,26,.25);animation:tl-pulse 1.6s ease-in-out infinite}
+.tl-running .tl-dot{background:var(--peri);box-shadow:0 0 0 4px rgba(124,137,245,.25);animation:tl-pulse 1.6s ease-in-out infinite}
 .tl-upcoming .tl-dot{background:var(--bg2);border-color:var(--bdr2)}
-@keyframes tl-pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,122,26,.25)}50%{box-shadow:0 0 0 8px rgba(255,122,26,.12)}}
+@keyframes tl-pulse{0%,100%{box-shadow:0 0 0 4px rgba(124,137,245,.25)}50%{box-shadow:0 0 0 8px rgba(124,137,245,.12)}}
 @media(prefers-reduced-motion:reduce){.tl-running .tl-dot{animation:none}}
 .tl-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:3px}
 .tl-legnum{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.04em}
@@ -435,7 +432,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
 .terrain{display:inline-flex;align-items:center;font-size:10px;padding:2px 7px;border-radius:4px;font-family:'Share Tech Mono',monospace}
 .t-protected{background:var(--gbg);color:var(--gtxt)}
-.t-mixed{background:var(--abg);color:var(--atxt)}
+.t-mixed{background:var(--vbg);color:var(--vtxt)}
 .t-exposed{background:var(--abg);color:var(--atxt)}
 .t-highexposure{background:var(--rbg);color:var(--rtxt)}
 .t-urban{background:rgba(247,37,133,.16);color:#FF9EC7}
@@ -509,15 +506,12 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .upcoming-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px}
 
 /* ── Form / Google Form ── */
-.form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:var(--atxt);background:var(--abg);border:0.5px solid rgba(255,122,26,.28);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(255,122,26,.1)}
-@media(hover:hover){.form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 10px rgba(255,122,26,.2)}}
+.form-glink{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:500;color:var(--ptxt);background:var(--pbg);border:0.5px solid rgba(124,137,245,.28);border-radius:var(--r);padding:10px 18px;text-decoration:none;transition:all .2s ease;box-shadow:0 1px 2px rgba(124,137,245,.1)}
+@media(hover:hover){.form-glink:hover{opacity:.85;transform:translateY(-1px);box-shadow:0 2px 10px rgba(124,137,245,.2)}}
 .form-glink:active{transform:scale(0.97);opacity:.8}
 
 .tbd{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--bg2);border:0.5px dashed var(--bdr2);border-radius:var(--r);padding:20px;font-size:13px;color:var(--txt2);font-style:italic}
 .footer{text-align:center;margin-top:2rem;padding-top:1rem;border-top:0.5px solid var(--bdr);font-size:11px;color:var(--txt3);font-family:'Share Tech Mono',monospace}
-.refresh-btn{font-family:'Share Tech Mono',monospace;font-size:11px;background:var(--bg2);border:0.5px solid var(--bdr2);border-radius:var(--r);padding:0 14px;height:36px;cursor:pointer;color:var(--txt2);transition:all .2s ease}
-@media(hover:hover){.refresh-btn:hover{background:var(--bg3)}}
-.refresh-btn:active{transform:scale(0.96);background:var(--bg3)}
 
 /* ── Coming soon panels ── */
 .coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:12px;color:var(--txt3);font-family:'Share Tech Mono',monospace;font-size:12px;text-align:center}
@@ -527,11 +521,8 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   .hdr{padding:.875rem 1rem;flex-wrap:wrap;gap:10px}
   .hdr{flex-direction:column;align-items:flex-start;gap:10px;padding:.875rem 1rem}
   .hdr-right{flex-direction:row;align-items:center;justify-content:space-between;width:100%;gap:10px}
-  .hdr-countdown{text-align:left}
   .eyebrow{display:none}
   .pg-title,.pg-title span{font-size:24px}
-  .countdown-timer{font-size:16px}
-  .refresh-btn{font-size:11px;padding:0 10px;height:32px}
   .theme-toggle{width:32px;height:32px}
   .live{font-size:10px}
   .card{padding:.875rem 1rem}
@@ -653,24 +644,14 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
     <!-- Header -->
     <div class="hdr">
       <div class="hdr-shader" id="hdr-shader"></div>
-      <div class="kanji-tag" title="Ekiden — Japanese long-distance relay race">駅伝</div>
+      <div class="hdr-topright">
+        <div class="live"><div class="dot"></div>LIVE</div>
+        <div class="kanji-tag" title="Ekiden — Japanese long-distance relay race">駅伝</div>
+      </div>
       <div class="hdr-left">
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; MISSION CONTROL</div>
         <div class="hero-lockup">
           <h1 class="hero-title">TOKYO<br><span>&rarr; OSAKA</span></h1>
-        </div>
-        <div class="hero-sub">NOV 1–6</div>
-        <div class="day-pill" id="day-pill">DAY 1 OF 6</div>
-      </div>
-      <div class="hdr-right">
-        <div class="hdr-countdown">
-          <div class="countdown-label" id="countdown-label">RACE BEGINS IN</div>
-          <div class="countdown-timer" id="countdown-timer">--</div>
-        </div>
-        <div class="hdr-controls">
-
-          <button class="refresh-btn" onclick="haptic();loadData()">↻ Refresh</button>
-          <div class="live"><div class="dot"></div>LIVE</div>
         </div>
       </div>
     </div>
@@ -697,7 +678,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
     </div>
 
     <!-- Route progress -->
-    <div class="sec">ROUTE PROGRESS</div>
+    <div class="sec">ROUTE PROGRESS <span class="sec-jp">行程</span></div>
     <div class="card">
       <div class="prog-hdr">
         <span>Tokyo &rarr; Osaka</span>
@@ -715,7 +696,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
     </div>
 
     <!-- Current Leg / Next Leg tabbed card -->
-    <div class="sec">LEG INFORMATION</div>
+    <div class="sec">LEG INFORMATION <span class="sec-jp">区間</span></div>
     <div style="background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);overflow:hidden;box-shadow:var(--shadow)">
       <div style="padding:8px 8px 0">
         <div class="mtab-row" id="leg-mtab-row">
@@ -770,7 +751,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
     </div>
 
     <!-- Tabbed detail section -->
-    <div class="sec">DETAILS</div>
+    <div class="sec">DETAILS <span class="sec-jp">詳細</span></div>
     <div id="detail-card" style="background:var(--bg);border:0.5px solid var(--bdr);border-radius:var(--rl);overflow:hidden">
       <!-- Tab row -->
       <div style="padding:8px 8px 0">
@@ -819,13 +800,13 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
     </div><!-- /tabbed detail -->
 
     <!-- Highlights -->
-    <div class="sec">HIGHLIGHTS</div>
+    <div class="sec">HIGHLIGHTS <span class="sec-jp">見所</span></div>
     <div class="hl-strip" id="hl-strip">
       <div class="hl-empty">Loading…</div>
     </div>
 
     <!-- Team performance -->
-    <div class="sec">TEAM PERFORMANCE</div>
+    <div class="sec">TEAM PERFORMANCE <span class="sec-jp">成績</span></div>
     <div class="g2" id="team-perf-grid">
       <div class="scard">
         <div class="slabel">RUNNING TIME</div>
@@ -866,7 +847,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
     <div class="footer">
       Bagel Relay Japan 2026 &nbsp;·&nbsp; Tokyo → Osaka &nbsp;·&nbsp;
-      Data: <a href="https://docs.google.com/spreadsheets/d/1FHnJZUYvD2Rr7VKjm1T4MFt6slirT3KloUHcT3m-C2E" style="color:var(--atxt)" target="_blank">Google Sheets</a>
+      Data: <a href="https://docs.google.com/spreadsheets/d/1FHnJZUYvD2Rr7VKjm1T4MFt6slirT3KloUHcT3m-C2E" style="color:var(--ptxt)" target="_blank">Google Sheets</a>
       &nbsp;·&nbsp; <span id="last-refresh">Never refreshed</span>
     </div>
 
@@ -875,11 +856,13 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ RELAY PASSPORT TAB ═══════════════ -->
   <div id="tab-challenges" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
+      <div class="hdr-topright hdr-topright-flow">
+        <div class="kanji-tag" title="Ryoken — passport">旅券</div>
+      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; RELAY PASSPORT</div>
         <div class="pg-title">Relay Passport &nbsp;<span>Challenges &amp; Stamps</span></div>
       </div>
-      <button class="refresh-btn" onclick="haptic();loadPassport(true)">↻ Refresh</button>
     </div>
     <div id="rp-banner" class="banner info"><span>⏳</span><span>Loading relay passport…</span></div>
     <div id="rp-passport" class="passport" style="display:none">
@@ -895,11 +878,13 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ POINTS OF INTEREST TAB ═══════════════ -->
   <div id="tab-poi" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
+      <div class="hdr-topright hdr-topright-flow">
+        <div class="kanji-tag" title="Meisho — noted place">名所</div>
+      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; POINTS OF INTEREST</div>
         <div class="pg-title">Route POIs &nbsp;<span>Places to Explore</span></div>
       </div>
-      <button class="refresh-btn" onclick="haptic();loadPOIs(true)">↻ Refresh</button>
     </div>
 
     <div id="poi-banner" class="banner info"><span>⏳</span><span>Loading points of interest…</span></div>
@@ -916,7 +901,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
       </div>
 
       <!-- Combined route + POI map -->
-      <div class="sec">ROUTE MAP</div>
+      <div class="sec">ROUTE MAP <span class="sec-jp">地図</span></div>
       <div class="poi-combined-map-wrap">
         <div id="poi-mini-map" style="width:100%;height:100%"></div>
       </div>
@@ -946,21 +931,21 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ FINANCIALS TAB ═══════════════ -->
   <div id="tab-financials" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
+      <div class="hdr-topright hdr-topright-flow">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdN9C_6bfChBL8LJrlDLhjJODgXIEfiUhFIyTTcddvYYoJbjg/viewform?usp=dialog" target="_blank" rel="noopener" class="form-glink">📝 Log Expense</a>
+        <div class="kanji-tag" title="Seisan — settling accounts">精算</div>
+      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; FINANCIALS</div>
         <div class="pg-title">Financial Tracker &nbsp;<span>Expenses &amp; Splits</span></div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdN9C_6bfChBL8LJrlDLhjJODgXIEfiUhFIyTTcddvYYoJbjg/viewform?usp=dialog" target="_blank" rel="noopener" class="form-glink">📝 Log Expense</a>
-        <button class="refresh-btn" onclick="haptic();loadFinances(true)">↻ Refresh</button>
-      </div>
     </div>
     <div id="ft-banner" class="banner info"><span>⏳</span><span>Loading financial tracker…</span></div>
-    <div class="sec">SETTLE BALANCES</div>
+    <div class="sec">SETTLE BALANCES <span class="sec-jp">精算</span></div>
     <div class="card" id="ft-settle" style="padding:0;overflow:hidden">
       <div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px">Loading…</div>
     </div>
-    <div class="sec" style="margin-top:1rem">EXPENSE LOG</div>
+    <div class="sec" style="margin-top:1rem">EXPENSE LOG <span class="sec-jp">経費</span></div>
     <div id="ft-cards" class="fin-cards">
       <div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px">Loading…</div>
     </div>
@@ -969,11 +954,13 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ CONTACT INFO TAB ═══════════════ -->
   <div id="tab-contacts" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
+      <div class="hdr-topright hdr-topright-flow">
+        <div class="kanji-tag" title="Renraku — contact">連絡</div>
+      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; CONTACT INFO</div>
         <div class="pg-title">Contacts &nbsp;<span>Runners &amp; Support</span></div>
       </div>
-      <button class="refresh-btn" onclick="haptic();loadContacts(true)">↻ Refresh</button>
     </div>
     <div id="ci-banner" class="banner info"><span>⏳</span><span>Loading contact info…</span></div>
     <div id="ci-cards" class="contact-cards">
@@ -984,13 +971,13 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ PHOTO GALLERY TAB ═══════════════ -->
   <div id="tab-game" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
+      <div class="hdr-topright hdr-topright-flow">
+        <a id="gallery-submit-btn" href="#" target="_blank" rel="noopener" class="form-glink">📷 Submit Photo</a>
+        <div class="kanji-tag" title="Shashin — photograph">写真</div>
+      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; PHOTO GALLERY</div>
         <div class="pg-title">Race Photos &nbsp;<span>Nov 1–6 · Tokyo → Osaka</span></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <a id="gallery-submit-btn" href="#" target="_blank" rel="noopener" class="form-glink">📷 Submit Photo</a>
-        <button class="refresh-btn" onclick="haptic();loadCommunityPhotos(true)">↻ Refresh</button>
       </div>
     </div>
     <div id="gallery-day-filter" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem"></div>
@@ -1055,7 +1042,7 @@ let nextLegPoly     = null; // stored poly for re-fitting after tab reveal
 let poiMapDrawn     = false;
 
 const DAY_COLORS = {
-  1:'#3CFFA6', 2:'#4CC9F0', 3:'#FF7A1A', 4:'#FF406D', 5:'#4361EE', 6:'#FF7AC0'
+  1:'#3CFFA6', 2:'#4CC9F0', 3:'#7C89F5', 4:'#FF406D', 5:'#4361EE', 6:'#FF7AC0'
 };
 
 const AV = ['av-t','av-b','av-a','av-p','av-c','av-t','av-b','av-a','av-p'];
@@ -1242,7 +1229,7 @@ function buildPassportPageHTML(page){
           <div class="prog-hdr"><span>Overall progress</span><span class="mono">${totalDone} / ${totalChallenges}</span></div>
           <div class="track"><div class="fill" style="width:${totalChallenges?(totalDone/totalChallenges*100):0}%"></div></div>
         </div>
-        <div class="sec" style="margin-top:1.25rem">BADGES &nbsp;·&nbsp; ${badgesUnlocked} / ${passportData.length}</div>
+        <div class="sec" style="margin-top:1.25rem">BADGES <span class="sec-jp">記章</span> &nbsp;·&nbsp; ${badgesUnlocked} / ${passportData.length}</div>
         <div class="badge-case">
           ${passportData.map((cat,ci)=>{
             const total=cat.challenges.length;
@@ -1759,7 +1746,7 @@ function poiCard(p,i){
   const s = poiCatStyle(p.category);
   const legBadge = p.leg?`<span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--txt3)">Leg ${p.leg}</span>`:'';
   const link = p.mapsUrl
-    ?`<a href="${p.mapsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--atxt);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:2px">📍 Open in Maps ↗</a>`
+    ?`<a href="${p.mapsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--ptxt);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:2px">📍 Open in Maps ↗</a>`
     :'';
   return `<div class="poi-card" id="poi-card-${i}" onclick="highlightPOIMarker(${i})">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
@@ -1941,17 +1928,17 @@ function setBanner(type,msg){
 }
 function exposureBadge(t){
   const k=(t||'').toLowerCase();
-  if(k.includes('high exposure')) return `<span class="terrain t-highexposure">⛔ High Exposure</span>`;
-  if(k.includes('exposed')) return `<span class="terrain t-exposed">⚠️ Exposed</span>`;
+  if(k.includes('high exposure')) return `<span class="terrain t-highexposure">▲ High Exposure</span>`;
+  if(k.includes('exposed')) return `<span class="terrain t-exposed">◇ Exposed</span>`;
   if(k.includes('mixed')) return `<span class="terrain t-mixed">◐ Mixed</span>`;
-  if(k.includes('protected')) return `<span class="terrain t-protected">🛡 Protected</span>`;
+  if(k.includes('protected')) return `<span class="terrain t-protected">◆ Protected</span>`;
   return `<span style="color:var(--txt3);font-size:11px">—</span>`;
 }
 function areaBadge(t){
   const k=(t||'').trim().toLowerCase();
-  if(k==='suburban') return `<span class="terrain t-suburban">🏘 Suburban</span>`;
-  if(k==='urban') return `<span class="terrain t-urban">🏙 Urban</span>`;
-  if(k==='rural') return `<span class="terrain t-rural">🌾 Rural</span>`;
+  if(k==='suburban') return `<span class="terrain t-suburban">Suburban</span>`;
+  if(k==='urban') return `<span class="terrain t-urban">Urban</span>`;
+  if(k==='rural') return `<span class="terrain t-rural">Rural</span>`;
   return '';
 }
 // Format a time string (e.g. "6:05:00 AM", "06:05:00", "6:05 AM") → "06:05" (24-hr, no seconds)
@@ -2774,23 +2761,31 @@ function buildHighlights(legs,tracker){
     return;
   }
 
+  const svg=p=>`<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  const HL_ICONS={
+    zap:svg('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+    trend:svg('<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>'),
+    mountain:svg('<path d="M3 20 9.5 9 14 16.5 17 11.5 21 20"/>'),
+    flag:svg('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>')
+  };
+
   const cards=[];
 
   const fastest=rows.filter(r=>!isNaN(r.actPace)&&r.actPace>0).sort((a,b)=>a.actPace-b.actPace)[0];
-  if(fastest) cards.push({icon:'⚡',val:`${fmtPace(fastest.actPace)}/km`,lbl:'Fastest Pace',sub:`Leg ${fastest.legNum} · ${fastest.runners}`});
+  if(fastest) cards.push({icon:HL_ICONS.zap,color:'var(--accent2)',val:`${fmtPace(fastest.actPace)}/km`,lbl:'Fastest Pace',sub:`Leg ${fastest.legNum} · ${fastest.runners}`});
 
   const biggestGain=rows.filter(r=>!isNaN(r.lag)&&r.lag<-0.5).sort((a,b)=>a.lag-b.lag)[0];
-  if(biggestGain) cards.push({icon:'🚀',val:`${Math.abs(Math.round(biggestGain.lag))}m under`,lbl:'Biggest Leg-Up',sub:`Leg ${biggestGain.legNum} · ${biggestGain.runners}`});
+  if(biggestGain) cards.push({icon:HL_ICONS.trend,color:'var(--accent)',val:`${Math.abs(Math.round(biggestGain.lag))}m under`,lbl:'Biggest Leg-Up',sub:`Leg ${biggestGain.legNum} · ${biggestGain.runners}`});
 
   const toughest=rows.filter(r=>!isNaN(r.elevGain)&&r.elevGain>0).sort((a,b)=>b.elevGain-a.elevGain)[0];
-  if(toughest) cards.push({icon:'⛰️',val:`${Math.round(toughest.elevGain)}m gain`,lbl:'Toughest Conquered',sub:`Leg ${toughest.legNum} · ${toughest.runners}`});
+  if(toughest) cards.push({icon:HL_ICONS.mountain,color:'var(--peri)',val:`${Math.round(toughest.elevGain)}m gain`,lbl:'Toughest Conquered',sub:`Leg ${toughest.legNum} · ${toughest.runners}`});
 
   const longest=rows.filter(r=>!isNaN(r.distKm)&&r.distKm>0).sort((a,b)=>b.distKm-a.distKm)[0];
-  if(longest) cards.push({icon:'🏁',val:`${longest.distKm.toFixed(1)} km`,lbl:'Longest Haul',sub:`Leg ${longest.legNum} · ${longest.runners}`});
+  if(longest) cards.push({icon:HL_ICONS.flag,color:'var(--green)',val:`${longest.distKm.toFixed(1)} km`,lbl:'Longest Haul',sub:`Leg ${longest.legNum} · ${longest.runners}`});
 
   strip.innerHTML=cards.length?cards.map(c=>`
     <div class="hl-card">
-      <div class="hl-icon">${c.icon}</div>
+      <div class="hl-icon" style="color:${c.color}">${c.icon}</div>
       <div class="hl-val">${c.val}</div>
       <div class="hl-lbl">${c.lbl}</div>
       <div class="hl-sub">${c.sub}</div>
@@ -3048,7 +3043,7 @@ function drawTeamPaceChart(completed,fmtPace){
     const y=toY(d.actPace);
     const bH=Math.max(2,baseY-y);
     const tip=`Leg ${d.legNum}: ${fmtPace(d.actPace)}/km`;
-    const bar=`<rect x="${(x-barW/2).toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${bH.toFixed(1)}" fill="var(--abg)" stroke="var(--atxt)" stroke-width="0.75" rx="2" data-tip="${tip}" style="cursor:pointer"/>`;
+    const bar=`<rect x="${(x-barW/2).toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${bH.toFixed(1)}" fill="var(--pbg)" stroke="var(--ptxt)" stroke-width="0.75" rx="2" data-tip="${tip}" style="cursor:pointer"/>`;
     const tick=!isNaN(d.projPace)
       ?`<line x1="${(x-barW/2-2).toFixed(1)}" y1="${toY(d.projPace).toFixed(1)}" x2="${(x+barW/2+2).toFixed(1)}" y2="${toY(d.projPace).toFixed(1)}" stroke="var(--txt2)" stroke-width="2" stroke-linecap="round"/>`
       :'';
@@ -3167,7 +3162,7 @@ function render(legs,tracker){
     const avClass=runnerColors[name];
     const initials=name.slice(0,2).toUpperCase();
     const photoUrl=contactPhotos[name];
-    const roleCol='#FFA96A';
+    const roleCol='#A9B2FF';
     const kana=roleKana[role]||'';
     const avHTML=photoUrl
       ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
@@ -3175,7 +3170,7 @@ function render(legs,tracker){
             onerror="const p=this.parentElement;p.className='av ${avClass}';p.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
-    return `<div class="runner-tap-card" style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(255,122,26,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div class="runner-tap-card" style="background:var(--pbg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(124,137,245,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       ${avHTML}
       <div style="overflow:hidden;min-width:0">
         <div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">
@@ -3514,7 +3509,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
     const avClass=runnerColors[name];
     const initials=name.slice(0,2).toUpperCase();
     const photo=contactPhotos[name];
-    const roleCol='#FFA96A';
+    const roleCol='#A9B2FF';
     const kana=roleKana[role]||'';
     const avHTML=photo
       ?`<div class="av" style="background:var(--bg2);width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">
@@ -3522,7 +3517,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
             onerror="const p=this.parentElement;p.className='av ${avClass}';p.style.cssText='width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)';p.innerHTML='${initials}'"/>
         </div>`
       :`<div class="av ${avClass}" style="width:60px;height:60px;font-size:20px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.14)">${initials}</div>`;
-    return `<div class="runner-tap-card" style="background:var(--abg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(255,122,26,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
+    return `<div class="runner-tap-card" style="background:var(--pbg);border-radius:var(--r);padding:14px 16px;cursor:pointer;border:1px solid rgba(124,137,245,.30);box-shadow:0 4px 16px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;overflow:hidden" onclick="openRunnerModal('${name.replace(/'/g,"\\'")}')">
       ${avHTML}
       <div style="overflow:hidden;min-width:0">
         <div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">
