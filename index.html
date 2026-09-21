@@ -137,7 +137,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
 .hdr-controls{display:flex;align-items:center;gap:12px}
 .hdr-topright{position:absolute;top:12px;right:12px;z-index:3;display:flex;align-items:center;gap:10px}
-@media(max-width:600px){.hdr-topright.hdr-topright-flow{position:static;align-self:flex-end;margin-bottom:2px}}
+@media(max-width:600px){.hdr-topright.hdr-topright-flow{position:static;align-self:flex-start;margin-top:8px}}
 .eyebrow{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--txt2)}
 .pg-title{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:.9;letter-spacing:.01em;color:var(--txt)}
 .pg-title span{font-family:'Bebas Neue',sans-serif;color:var(--accent);font-weight:400;font-size:28px;margin-left:6px}
@@ -856,12 +856,12 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ RELAY PASSPORT TAB ═══════════════ -->
   <div id="tab-challenges" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div class="hdr-topright hdr-topright-flow">
-        <div class="kanji-tag" title="Ryoken — passport">旅券</div>
-      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; RELAY PASSPORT</div>
         <div class="pg-title">Relay Passport &nbsp;<span>Challenges &amp; Stamps</span></div>
+      </div>
+      <div class="hdr-topright hdr-topright-flow">
+        <div class="kanji-tag" title="Ryoken — passport">旅券</div>
       </div>
     </div>
     <div id="rp-banner" class="banner info"><span>⏳</span><span>Loading relay passport…</span></div>
@@ -878,12 +878,12 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ POINTS OF INTEREST TAB ═══════════════ -->
   <div id="tab-poi" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div class="hdr-topright hdr-topright-flow">
-        <div class="kanji-tag" title="Meisho — noted place">名所</div>
-      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; POINTS OF INTEREST</div>
         <div class="pg-title">Route POIs &nbsp;<span>Places to Explore</span></div>
+      </div>
+      <div class="hdr-topright hdr-topright-flow">
+        <div class="kanji-tag" title="Meisho — noted place">名所</div>
       </div>
     </div>
 
@@ -931,13 +931,13 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ FINANCIALS TAB ═══════════════ -->
   <div id="tab-financials" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div class="hdr-topright hdr-topright-flow">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdN9C_6bfChBL8LJrlDLhjJODgXIEfiUhFIyTTcddvYYoJbjg/viewform?usp=dialog" target="_blank" rel="noopener" class="form-glink">📝 Log Expense</a>
-        <div class="kanji-tag" title="Seisan — settling accounts">精算</div>
-      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; FINANCIALS</div>
         <div class="pg-title">Financial Tracker &nbsp;<span>Expenses &amp; Splits</span></div>
+      </div>
+      <div class="hdr-topright hdr-topright-flow">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdN9C_6bfChBL8LJrlDLhjJODgXIEfiUhFIyTTcddvYYoJbjg/viewform?usp=dialog" target="_blank" rel="noopener" class="form-glink">📝 Log Expense</a>
+        <div class="kanji-tag" title="Seisan — settling accounts">精算</div>
       </div>
     </div>
     <div id="ft-banner" class="banner info"><span>⏳</span><span>Loading financial tracker…</span></div>
@@ -954,12 +954,12 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ CONTACT INFO TAB ═══════════════ -->
   <div id="tab-contacts" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div class="hdr-topright hdr-topright-flow">
-        <div class="kanji-tag" title="Renraku — contact">連絡</div>
-      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; CONTACT INFO</div>
         <div class="pg-title">Contacts &nbsp;<span>Runners &amp; Support</span></div>
+      </div>
+      <div class="hdr-topright hdr-topright-flow">
+        <div class="kanji-tag" title="Renraku — contact">連絡</div>
       </div>
     </div>
     <div id="ci-banner" class="banner info"><span>⏳</span><span>Loading contact info…</span></div>
@@ -971,13 +971,13 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ PHOTO GALLERY TAB ═══════════════ -->
   <div id="tab-game" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div class="hdr-topright hdr-topright-flow">
-        <a id="gallery-submit-btn" href="#" target="_blank" rel="noopener" class="form-glink">📷 Submit Photo</a>
-        <div class="kanji-tag" title="Shashin — photograph">写真</div>
-      </div>
       <div>
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; PHOTO GALLERY</div>
         <div class="pg-title">Race Photos &nbsp;<span>Nov 1–6 · Tokyo → Osaka</span></div>
+      </div>
+      <div class="hdr-topright hdr-topright-flow">
+        <a id="gallery-submit-btn" href="#" target="_blank" rel="noopener" class="form-glink">📷 Submit Photo</a>
+        <div class="kanji-tag" title="Shashin — photograph">写真</div>
       </div>
     </div>
     <div id="gallery-day-filter" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem"></div>
