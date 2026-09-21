@@ -137,11 +137,14 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
 .hdr-controls{display:flex;align-items:center;gap:12px}
 .hdr-topright{position:absolute;top:12px;right:12px;z-index:3;display:flex;align-items:center;gap:10px}
-@media(max-width:600px){.hdr-topright.hdr-topright-flow{position:static;align-self:flex-start;margin-top:8px}}
+.hdr-title-block{padding-right:52px}
+.hdr-action{align-self:flex-end}
 .eyebrow{font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--txt2)}
-.pg-title{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:.9;letter-spacing:.01em;color:var(--txt)}
-.pg-title span{font-family:'Bebas Neue',sans-serif;color:var(--accent);font-weight:400;font-size:28px;margin-left:6px}
-@media(min-width:600px){.pg-title,.pg-title span{font-size:34px}}
+.pg-title{font-family:'Bebas Neue',sans-serif;display:flex;flex-direction:column;gap:1px}
+.pg-title-main,.pg-title-sub{font-size:28px;line-height:.95;letter-spacing:.01em}
+.pg-title-main{color:var(--txt)}
+.pg-title-sub{color:var(--accent);font-weight:400}
+@media(min-width:600px){.pg-title-main,.pg-title-sub{font-size:34px}}
 /* ── Mission Control hero title (glass-torus shader fills the header behind it) ── */
 .hero-lockup{margin:2px 0 6px}
 .kanji-tag{font-family:'Zen Kaku Gothic New',sans-serif;font-weight:900;font-size:15px;letter-spacing:.08em;color:var(--rtxt);background:var(--rbg);border:1px solid rgba(255,64,109,.4);border-radius:4px;padding:6px 8px;writing-mode:vertical-rl;flex-shrink:0}
@@ -522,7 +525,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   .hdr{flex-direction:column;align-items:flex-start;gap:10px;padding:.875rem 1rem}
   .hdr-right{flex-direction:row;align-items:center;justify-content:space-between;width:100%;gap:10px}
   .eyebrow{display:none}
-  .pg-title,.pg-title span{font-size:24px}
+  .pg-title-main,.pg-title-sub{font-size:22px}
   .theme-toggle{width:32px;height:32px}
   .live{font-size:10px}
   .card{padding:.875rem 1rem}
@@ -856,11 +859,14 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ RELAY PASSPORT TAB ═══════════════ -->
   <div id="tab-challenges" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div>
+      <div class="hdr-title-block">
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; RELAY PASSPORT</div>
-        <div class="pg-title">Relay Passport &nbsp;<span>Challenges &amp; Stamps</span></div>
+        <div class="pg-title">
+          <div class="pg-title-main">Relay Passport</div>
+          <div class="pg-title-sub">Challenges &amp; Stamps</div>
+        </div>
       </div>
-      <div class="hdr-topright hdr-topright-flow">
+      <div class="hdr-topright">
         <div class="kanji-tag" title="Ryoken — passport">旅券</div>
       </div>
     </div>
@@ -878,11 +884,14 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ POINTS OF INTEREST TAB ═══════════════ -->
   <div id="tab-poi" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div>
+      <div class="hdr-title-block">
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; POINTS OF INTEREST</div>
-        <div class="pg-title">Route POIs &nbsp;<span>Places to Explore</span></div>
+        <div class="pg-title">
+          <div class="pg-title-main">Route POIs</div>
+          <div class="pg-title-sub">Places to Explore</div>
+        </div>
       </div>
-      <div class="hdr-topright hdr-topright-flow">
+      <div class="hdr-topright">
         <div class="kanji-tag" title="Meisho — noted place">名所</div>
       </div>
     </div>
@@ -931,14 +940,17 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ FINANCIALS TAB ═══════════════ -->
   <div id="tab-financials" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div>
+      <div class="hdr-title-block">
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; FINANCIALS</div>
-        <div class="pg-title">Financial Tracker &nbsp;<span>Expenses &amp; Splits</span></div>
+        <div class="pg-title">
+          <div class="pg-title-main">Financial Tracker</div>
+          <div class="pg-title-sub">Expenses &amp; Splits</div>
+        </div>
       </div>
-      <div class="hdr-topright hdr-topright-flow">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdN9C_6bfChBL8LJrlDLhjJODgXIEfiUhFIyTTcddvYYoJbjg/viewform?usp=dialog" target="_blank" rel="noopener" class="form-glink">📝 Log Expense</a>
+      <div class="hdr-topright">
         <div class="kanji-tag" title="Seisan — settling accounts">精算</div>
       </div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdN9C_6bfChBL8LJrlDLhjJODgXIEfiUhFIyTTcddvYYoJbjg/viewform?usp=dialog" target="_blank" rel="noopener" class="form-glink hdr-action">📝 Log Expense</a>
     </div>
     <div id="ft-banner" class="banner info"><span>⏳</span><span>Loading financial tracker…</span></div>
     <div class="sec">SETTLE BALANCES <span class="sec-jp">精算</span></div>
@@ -954,11 +966,14 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ CONTACT INFO TAB ═══════════════ -->
   <div id="tab-contacts" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div>
+      <div class="hdr-title-block">
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; CONTACT INFO</div>
-        <div class="pg-title">Contacts &nbsp;<span>Runners &amp; Support</span></div>
+        <div class="pg-title">
+          <div class="pg-title-main">Contacts</div>
+          <div class="pg-title-sub">Runners &amp; Support</div>
+        </div>
       </div>
-      <div class="hdr-topright hdr-topright-flow">
+      <div class="hdr-topright">
         <div class="kanji-tag" title="Renraku — contact">連絡</div>
       </div>
     </div>
@@ -971,14 +986,17 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
   <!-- ═══════════════ PHOTO GALLERY TAB ═══════════════ -->
   <div id="tab-game" class="tab-panel">
     <div class="hdr" style="margin-bottom:1rem">
-      <div>
+      <div class="hdr-title-block">
         <div class="eyebrow">BAGEL RELAY JAPAN 2026 &nbsp;·&nbsp; PHOTO GALLERY</div>
-        <div class="pg-title">Race Photos &nbsp;<span>Nov 1–6 · Tokyo → Osaka</span></div>
+        <div class="pg-title">
+          <div class="pg-title-main">Race Photos</div>
+          <div class="pg-title-sub">Nov 1–6</div>
+        </div>
       </div>
-      <div class="hdr-topright hdr-topright-flow">
-        <a id="gallery-submit-btn" href="#" target="_blank" rel="noopener" class="form-glink">📷 Submit Photo</a>
+      <div class="hdr-topright">
         <div class="kanji-tag" title="Shashin — photograph">写真</div>
       </div>
+      <a id="gallery-submit-btn" href="#" target="_blank" rel="noopener" class="form-glink hdr-action">📷 Submit Photo</a>
     </div>
     <div id="gallery-day-filter" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem"></div>
     <div id="gallery-grid" style="columns:3 220px;column-gap:12px;row-gap:0">
