@@ -1015,7 +1015,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
 <!-- Install-app hint (iOS "Add to Home Screen" nudge / Android install button) -->
 <div class="pwa-banner" id="pwa-banner">
-  <div class="pwa-banner-icon">📲</div>
+  <div class="pwa-banner-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
   <div class="pwa-banner-body">
     <div class="pwa-banner-title" id="pwa-banner-title">Install this app</div>
     <div class="pwa-banner-sub" id="pwa-banner-sub">Add it to your home screen for quick access on the go.</div>
@@ -1208,6 +1208,9 @@ const MAP_ICON=(size=14)=>uiIcon('<polygon points="1 6 1 22 8 18 16 22 23 18 23 
 const CAR_ICON=(size=14)=>uiIcon('<path d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13"/><rect x="2" y="13" width="20" height="5" rx="1"/><circle cx="7" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/>',size);
 const PHONE_ICON=(size=14)=>uiIcon('<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',size);
 const MAIL_ICON=(size=14)=>uiIcon('<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/>',size);
+const LEAF_ICON=(size=14)=>uiIcon('<path d="M12 3c-4 4-7 7-7 11a7 7 0 0 0 14 0c0-4-3-7-7-11z"/><path d="M12 10v11"/>',size);
+const BULB_ICON=(size=14)=>uiIcon('<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2.3h6c0-1.1.4-1.8 1-2.3A7 7 0 0 0 12 2z"/>',size);
+const DOWNLOAD_ICON=(size=14)=>uiIcon('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',size);
 const STAR_ICON=(size=24)=>uiIcon('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',size);
 const FLAG_ICON=(size=24)=>uiIcon('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>',size);
 const TREND_ICON=(size=24)=>uiIcon('<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',size);
@@ -1701,8 +1704,8 @@ function prefCard(p,isCurrent){
     </div>
     ${p.food?`<div class="pref-row"><div class="pref-row-label">${CATEGORY_ICONS['Food']} Food</div><div class="pref-row-val">${p.food}</div></div>`:''}
     ${p.culture?`<div class="pref-row"><div class="pref-row-label">${CATEGORY_ICONS['Culture']} Culture</div><div class="pref-row-val">${p.culture}</div></div>`:''}
-    ${p.nature?`<div class="pref-row"><div class="pref-row-label">🌿 Nature</div><div class="pref-row-val">${p.nature}</div></div>`:''}
-    ${p.fact?`<div class="pref-fact">💡 ${p.fact}</div>`:''}
+    ${p.nature?`<div class="pref-row"><div class="pref-row-label">${LEAF_ICON(13)} Nature</div><div class="pref-row-val">${p.nature}</div></div>`:''}
+    ${p.fact?`<div class="pref-fact">${BULB_ICON(13)} ${p.fact}</div>`:''}
   </div>`;
 }
 
