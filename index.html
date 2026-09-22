@@ -3457,50 +3457,6 @@ async function loadData(){
 }
 
 
-// ─── COUNTDOWN TIMER ─────────────────────────────────────────────────────────
-const RACE_START = new Date('2026-11-01T06:00:00+09:00');
-const RACE_END   = new Date('2026-11-06T18:00:00+09:00');
-function updateCountdown(){
-  const now=new Date();
-  const label=document.getElementById('countdown-label');
-  const timer=document.getElementById('countdown-timer');
-  if(!timer) return;
-  let diff,labelText;
-  if(now<RACE_START){
-    diff=RACE_START-now; labelText='RACE BEGINS IN';
-  } else if(now<RACE_END){
-    diff=RACE_END-now; labelText='RACE ENDS IN';
-  } else {
-    label.textContent='RACE COMPLETE';
-    timer.innerHTML='🎉 Tokyo → Osaka';
-    return;
-  }
-  label.textContent=labelText;
-  const d=Math.floor(diff/86400000);
-  const h=Math.floor((diff%86400000)/3600000);
-  const m=Math.floor((diff%3600000)/60000);
-  const s=Math.floor((diff%60000)/1000);
-  const parts=[];
-  if(d>0) parts.push(`${d}<span class="cd-unit">d</span>`);
-  parts.push(`${String(h).padStart(2,'0')}<span class="cd-unit">h</span>`);
-  parts.push(`${String(m).padStart(2,'0')}<span class="cd-unit">m</span>`);
-  parts.push(`${String(s).padStart(2,'0')}<span class="cd-unit">s</span>`);
-  timer.innerHTML=parts.join(' ');
-}
-function updateDayPill(){
-  const pill=document.getElementById('day-pill');
-  if(!pill) return;
-  const now=new Date();
-  if(now<RACE_START){pill.textContent='STARTS NOV 1';return;}
-  if(now>=RACE_END){pill.textContent='RACE COMPLETE';return;}
-  const dayNum=Math.min(Math.floor((now-RACE_START)/86400000)+1,6);
-  pill.textContent=`DAY ${dayNum} OF 6`;
-}
-updateCountdown();
-updateDayPill();
-setInterval(updateCountdown,1000);
-setInterval(updateDayPill,60000);
-
 // ─── WEATHER STRIP ───────────────────────────────────────────────────────────
 const wxIcon=p=>`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px">${p}</svg>`;
 const WX_SUN=wxIcon('<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/>');
