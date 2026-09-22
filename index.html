@@ -485,7 +485,8 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 @media(hover:hover){.badge:hover{opacity:.75;transform:translateY(-2px)}}
 .badge:active{transform:scale(0.95);opacity:.6}
 .badge.unlocked{opacity:1;filter:none;background:var(--gbg);border-color:var(--green);box-shadow:0 0 0 2px rgba(60,255,166,.18),var(--shadow)}
-.badge-icon{font-size:28px;line-height:1}
+.badge-icon{font-size:28px;line-height:1;color:var(--txt2)}
+.badge.unlocked .badge-icon{color:var(--gtxt)}
 .badge-name{font-size:10px;font-family:'Share Tech Mono',monospace;font-weight:700;letter-spacing:.04em;color:var(--txt2);text-align:center}
 .lag-positive{color:var(--rtxt)}
 .lag-negative{color:var(--gtxt)}
@@ -1185,10 +1186,16 @@ function splitNames(v){
 let passportData = null;   // [{name, challenges:[{challenge}]}]
 let passportPage = 0;      // 0 = instructions/cover page, 1..N = category pages
 const PASSPORT_STAMPS_KEY = 'bagelRelayPassportStamps';
+const catIconSvg=p=>`<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-0.15em">${p}</svg>`;
 const CATEGORY_ICONS = {
-  'Food':'🍜','Connection':'🤝','Culture':'⛩️','Discovery':'🔍',
-  'Relay Spirit':'🎌','Comfort Zone':'🌱'
+  'Food':catIconSvg('<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>'),
+  'Connection':catIconSvg('<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+  'Culture':catIconSvg('<path d="M3 8h18M4 8l1.5-4h13L20 8M6 8v13M18 8v13M9 13h6"/>'),
+  'Discovery':catIconSvg('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>'),
+  'Relay Spirit':catIconSvg('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>'),
+  'Comfort Zone':catIconSvg('<path d="M12 22V8"/><path d="M12 8c0-3 2-5 5-5 0 3-2 5-5 5z"/><path d="M12 12c0-3-2-5-5-5 0 3 2 5 5 5z"/>')
 };
+const CATEGORY_ICON_FALLBACK=catIconSvg('<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>');
 
 function getStamps(){
   try{ return JSON.parse(localStorage.getItem(PASSPORT_STAMPS_KEY)||'{}'); }catch(e){ return {}; }
@@ -1231,7 +1238,7 @@ function buildPassportPageHTML(page){
     passportData.forEach((cat,ci)=>cat.challenges.forEach((c,xi)=>{totalChallenges++;if(stamps[`${ci}-${xi}`])totalDone++;}));
     return `
       <div class="passport-cover">
-        <div class="passport-stamp-icon">🥯📔</div>
+        <div class="passport-stamp-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
         <div class="passport-cover-title">Relay Passport</div>
         <div class="passport-cover-sub">BAGEL RELAY JAPAN 2026</div>
       </div>
@@ -1255,7 +1262,7 @@ function buildPassportPageHTML(page){
             const total=cat.challenges.length;
             const done=cat.challenges.filter((c,xi)=>stamps[`${ci}-${xi}`]).length;
             const unlocked=total>0&&done===total;
-            const icon=CATEGORY_ICONS[cat.name]||'🏅';
+            const icon=CATEGORY_ICONS[cat.name]||CATEGORY_ICON_FALLBACK;
             return `<div class="badge ${unlocked?'unlocked':''}" onclick="passportGoTo(${ci+1})" title="${cat.name}: ${done}/${total}">
               <div class="badge-icon">${icon}</div><div class="badge-name">${cat.name}</div></div>`;
           }).join('')}
@@ -1267,7 +1274,7 @@ function buildPassportPageHTML(page){
   return `
     <div class="passport-page">
       <div class="eyebrow">PAGE ${page+1} OF ${totalPages+1} &nbsp;·&nbsp; CATEGORY</div>
-      <div class="passport-page-title">${CATEGORY_ICONS[cat.name]||'🏅'} ${cat.name}</div>
+      <div class="passport-page-title">${CATEGORY_ICONS[cat.name]||CATEGORY_ICON_FALLBACK} ${cat.name}</div>
       <div style="margin:12px 0 4px">
         <div class="prog-hdr"><span>Stamps collected</span><span class="mono">${done} / ${cat.challenges.length}</span></div>
         <div class="track"><div class="fill" style="width:${cat.challenges.length?(done/cat.challenges.length*100):0}%"></div></div>
