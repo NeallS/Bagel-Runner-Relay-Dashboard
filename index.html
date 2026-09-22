@@ -238,6 +238,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .pill-beh{background:var(--rbg);color:var(--rtxt)}
 .pill-run{background:var(--pbg);color:var(--ptxt)}
 .pill-up{background:var(--bg2);color:var(--txt3)}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.5s infinite}
 
 /* ── Current leg ── */
 .cur-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
@@ -409,6 +410,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .strava-embed-card{background:var(--bg2);border:0.5px solid var(--bdr);border-radius:var(--r);overflow:hidden}
 .strava-embed-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;font-family:'Share Tech Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.06em;color:var(--txt3);border-bottom:0.5px solid var(--bdr)}
 .strava-embed-hdr a{color:var(--ptxt);text-decoration:none}
+.strava-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#FC4C02;vertical-align:middle;margin-bottom:1px}
 .strava-embed-placeholder{min-height:190px}
 .rp-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--accent))}
 
@@ -728,7 +730,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
           <div class="cur-runner-row" id="cur-runners"></div>
 
           <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAqkOiJ_z22ngwbgc-RrCNzEK_AzLStlgD7tGDN1eW9m8dew/viewform" target="_blank" onclick="haptic()" style="display:flex;align-items:center;justify-content:center;gap:7px;padding:12px;background:var(--rtxt);border:none;border-radius:var(--r);color:#FFFFFF;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;text-decoration:none;transition:opacity .15s,box-shadow .15s,transform .1s;box-shadow:0 3px 10px rgba(255,64,109,.35),0 1px 3px rgba(255,64,109,.2)" class="log-leg-btn">
-            📋 &nbsp;LOG LEG TIME
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>&nbsp;LOG LEG TIME
           </a>
 
           <div class="cur-timing" id="cur-timing"></div>
@@ -737,7 +739,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
             <div id="cur-map" style="width:100%;height:100%">
               <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
             </div>
-            <a class="map-chip" id="cur-map-link" href="#" target="_blank" rel="noopener" onclick="haptic()" style="display:none">📍 Open in Maps ↗</a>
+            <a class="map-chip" id="cur-map-link" href="#" target="_blank" rel="noopener" onclick="haptic()" style="display:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Open in Maps ↗</a>
           </div>
 
           <div class="elev-wrap">
@@ -1198,7 +1200,18 @@ const CATEGORY_ICONS = {
   'Comfort Zone':catIconSvg('<path d="M12 22V8"/><path d="M12 8c0-3 2-5 5-5 0 3-2 5-5 5z"/><path d="M12 12c0-3-2-5-5-5 0 3 2 5 5 5z"/>')
 };
 const CATEGORY_ICON_FALLBACK=catIconSvg('<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>');
-const MAP_PIN_ICON='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+const mapPinIcon=(size=20)=>`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
+const MAP_PIN_ICON=mapPinIcon(20);
+const uiIcon=(p,size=14)=>`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const CLIPBOARD_ICON=(size=14)=>uiIcon('<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>',size);
+const MAP_ICON=(size=14)=>uiIcon('<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>',size);
+const CAR_ICON=(size=14)=>uiIcon('<path d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13"/><rect x="2" y="13" width="20" height="5" rx="1"/><circle cx="7" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/>',size);
+const PHONE_ICON=(size=14)=>uiIcon('<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',size);
+const MAIL_ICON=(size=14)=>uiIcon('<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/>',size);
+const STAR_ICON=(size=24)=>uiIcon('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',size);
+const FLAG_ICON=(size=24)=>uiIcon('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>',size);
+const TREND_ICON=(size=24)=>uiIcon('<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',size);
+const AWARD_ICON=(size=24)=>uiIcon('<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>',size);
 
 function getStamps(){
   try{ return JSON.parse(localStorage.getItem(PASSPORT_STAMPS_KEY)||'{}'); }catch(e){ return {}; }
@@ -1409,10 +1422,10 @@ async function loadContacts(force){
 
         // Phone — tappable call button
         if(/^[\+\d\s\-\(\)]{7,}$/.test(v)&&v.replace(/\D/g,'').length>=7)
-          return `<div class="cc-field"><span class="cc-label">${h}</span><a class="cc-link" href="tel:${v.replace(/\s/g,'')}" onclick="haptic()">📞 ${v}</a></div>`;
+          return `<div class="cc-field"><span class="cc-label">${h}</span><a class="cc-link" href="tel:${v.replace(/\s/g,'')}" onclick="haptic()">${PHONE_ICON(13)} ${v}</a></div>`;
         // Email — tappable mail button
         if(/@/.test(v))
-          return `<div class="cc-field"><span class="cc-label">${h}</span><a class="cc-link" href="mailto:${v}" onclick="haptic()">✉️ ${v}</a></div>`;
+          return `<div class="cc-field"><span class="cc-label">${h}</span><a class="cc-link" href="mailto:${v}" onclick="haptic()">${MAIL_ICON(13)} ${v}</a></div>`;
 
         return `<div class="cc-field"><span class="cc-label">${h}</span><span class="cc-value">${v}</span></div>`;
       }).join('');
@@ -1776,7 +1789,7 @@ function poiCard(p,i){
   const s = poiCatStyle(p.category);
   const legBadge = p.leg?`<span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--txt3)">Leg ${p.leg}</span>`:'';
   const link = p.mapsUrl
-    ?`<a href="${p.mapsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--ptxt);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:2px">📍 Open in Maps ↗</a>`
+    ?`<a href="${p.mapsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--ptxt);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:2px">${mapPinIcon(11)} Open in Maps ↗</a>`
     :'';
   return `<div class="poi-card" id="poi-card-${i}" onclick="highlightPOIMarker(${i})">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
@@ -2317,7 +2330,7 @@ function renderTracker(){
     } else {
       summary=`<span${plannedTitle}>Planned start <b>${plannedStr}</b></span>`;
     }
-    const runningBadge=state==='running'?`<span class="pill pill-run">🏃 Running</span>`:'';
+    const runningBadge=state==='running'?`<span class="pill pill-run"><span class="pill-dot"></span>Running</span>`:'';
 
     // Exposure + route/car links only matter before a leg is actually done —
     // once it's completed you no longer need directions to it.
@@ -2325,12 +2338,12 @@ function renderTracker(){
     if(isIncomplete){
       const carUrl=(l['Car Start (Maps URL)']||'').trim();
       const routeUrl=(l['Route URL']||l['Route Link']||l['Komoot URL']||'').trim();
-      const routeLink=routeUrl?`<a href="${routeUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">🗺 Route</a>`:'';
-      const carLink=carUrl?`<a href="${carUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">📍 Car Start</a>`:'';
+      const routeLink=routeUrl?`<a href="${routeUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">${MAP_ICON()} Route</a>`:'';
+      const carLink=carUrl?`<a href="${carUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">${CAR_ICON()} Car Start</a>`:'';
       extra=`<div class="tl-extra">${exposureBadge(l['Route Exposure'])}${areaBadge(l['Area Type'])}${routeLink}${carLink}</div>`;
     } else if(state==='done'){
       const stravaUrl=trackerStrava(t).trim();
-      if(stravaActivityId(stravaUrl)) extra=`<div class="tl-extra"><a href="${stravaUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()">🟠 Strava</a></div>`;
+      if(stravaActivityId(stravaUrl)) extra=`<div class="tl-extra"><a href="${stravaUrl}" class="up-link" target="_blank" rel="noopener" onclick="haptic()"><span class="strava-dot"></span> Strava</a></div>`;
     }
 
     const highlight=selectedRunner?(selectedRunner===r1?`<span style="font-weight:700;color:var(--txt)">${r1}</span> <span style="color:var(--txt3);font-weight:400">+</span> ${r2}`:`${r1} <span style="color:var(--txt3);font-weight:400">+</span> <span style="font-weight:700;color:var(--txt)">${r2}</span>`):`${r1} <span style="color:var(--txt3);font-weight:400">+</span> ${r2}`;
@@ -2673,7 +2686,7 @@ function renderMap(leg){
       justify-content:center;gap:8px;height:180px;background:var(--bg2);border-radius:var(--r);
       font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3);text-align:center;
       padding:12px">
-      <span style="font-size:22px">📍</span>
+      <span style="color:var(--txt3)">${mapPinIcon(24)}</span>
       No coordinates loaded for Leg ${legNum}<br>
       <span style="font-size:9px;margin-top:4px">Add rows to the Coordinates sheet tab</span>
     </div>`;
@@ -2850,7 +2863,7 @@ function renderStravaCard(containerId,stravaUrl,show){
   if(!show||!activityId){ card.style.display='none'; card.innerHTML=''; return; }
   card.style.display='block';
   card.innerHTML=`
-    <div class="strava-embed-hdr"><span>🟠 LIVE FROM STRAVA</span><a href="${stravaUrl}" target="_blank" rel="noopener" onclick="haptic()">Open on Strava ↗</a></div>
+    <div class="strava-embed-hdr"><span><span class="strava-dot"></span> LIVE FROM STRAVA</span><a href="${stravaUrl}" target="_blank" rel="noopener" onclick="haptic()">Open on Strava ↗</a></div>
     <div class="strava-embed-placeholder" data-embed-type="activity" data-embed-id="${activityId}" data-style="standard"></div>`;
   ensureStravaEmbedScript(()=>window.__STRAVA_EMBED_BOOTSTRAP__&&window.__STRAVA_EMBED_BOOTSTRAP__());
 }
@@ -3486,7 +3499,17 @@ setInterval(updateCountdown,1000);
 setInterval(updateDayPill,60000);
 
 // ─── WEATHER STRIP ───────────────────────────────────────────────────────────
-const WMO_EMOJI={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌧️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'❄️',75:'❄️',77:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',85:'🌨️',86:'❄️',95:'⛈️',96:'⛈️',99:'⛈️'};
+const wxIcon=p=>`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px">${p}</svg>`;
+const WX_SUN=wxIcon('<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/>');
+const WX_CLOUD_SUN=wxIcon('<path d="M9 2v2M3.5 5.5l1.4 1.4M2 10h2M15.5 5.5l-1.4 1.4"/><circle cx="9" cy="9" r="2.5"/><path d="M18 20H8a4 4 0 1 1 .9-7.9A5 5 0 0 1 19 14a3 3 0 0 1-1 6z"/>');
+const WX_CLOUD=wxIcon('<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>');
+const WX_FOG=wxIcon('<path d="M16 17H7a4 4 0 1 1 1-7.9A5.5 5.5 0 0 1 18 10a3.5 3.5 0 0 1-1 6.9"/><line x1="5" y1="21" x2="19" y2="21"/>');
+const WX_DRIZZLE=wxIcon('<line x1="8" y1="19" x2="8" y2="21"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="16" y1="19" x2="16" y2="21"/><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/>');
+const WX_RAIN=wxIcon('<line x1="16" y1="13" x2="16" y2="21"/><line x1="8" y1="13" x2="8" y2="21"/><line x1="12" y1="15" x2="12" y2="23"/><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/>');
+const WX_SNOW=wxIcon('<path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="8" y1="20" x2="8.01" y2="20"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="12" y1="22" x2="12.01" y2="22"/><line x1="16" y1="16" x2="16.01" y2="16"/><line x1="16" y1="20" x2="16.01" y2="20"/>');
+const WX_STORM=wxIcon('<path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 9"/><polyline points="13 11 9 17 15 17 11 23"/>');
+const WX_THERMO=wxIcon('<path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0z"/>');
+const WMO_EMOJI={0:WX_SUN,1:WX_CLOUD_SUN,2:WX_CLOUD_SUN,3:WX_CLOUD,45:WX_FOG,48:WX_FOG,51:WX_DRIZZLE,53:WX_RAIN,55:WX_RAIN,61:WX_RAIN,63:WX_RAIN,65:WX_RAIN,71:WX_SNOW,73:WX_SNOW,75:WX_SNOW,77:WX_SNOW,80:WX_DRIZZLE,81:WX_RAIN,82:WX_STORM,85:WX_SNOW,86:WX_SNOW,95:WX_STORM,96:WX_STORM,99:WX_STORM};
 const WMO_DESC={0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Fog',48:'Icy fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',80:'Light showers',81:'Showers',82:'Heavy showers',85:'Snow showers',86:'Heavy snow showers',95:'Thunderstorm',96:'Thunderstorm + hail',99:'Thunderstorm + hail'};
 async function fetchWeather(lat,lng,legName){
   try{
@@ -3497,7 +3520,7 @@ async function fetchWeather(lat,lng,legName){
     const c=d.current||{};
     const code=c.weather_code??0;
     const el=id=>document.getElementById(id);
-    if(el('weather-emoji')) el('weather-emoji').textContent=WMO_EMOJI[code]??'🌡️';
+    if(el('weather-emoji')) el('weather-emoji').innerHTML=WMO_EMOJI[code]??WX_THERMO;
     if(el('weather-desc'))  el('weather-desc').textContent=WMO_DESC[code]??'';
     if(el('weather-temp'))  el('weather-temp').textContent=`${Math.round(c.temperature_2m??0)}°C`;
     if(el('weather-wind'))  el('weather-wind').textContent=`${Math.round(c.wind_speed_10m??0)} km/h`;
@@ -3517,7 +3540,7 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
     if(!trackerActEnd(t)){nextIdx=i;break;}
   }
   if(nextIdx===-1){
-    card.innerHTML=`<div style="color:var(--txt3);font-size:12px;text-align:center;padding:8px">All legs complete 🎉</div>`;
+    card.innerHTML=`<div style="color:var(--txt3);font-size:12px;text-align:center;padding:8px;display:flex;align-items:center;justify-content:center;gap:6px">${FLAG_ICON(16)} All legs complete</div>`;
     return;
   }
 
@@ -3602,8 +3625,8 @@ function buildNextRunnerCard(legs,currentIdx,tracker){
       <div id="next-cur-map" style="width:100%;height:100%">
         <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--txt3)">map loading…</span>
       </div>
-      <a class="map-chip" href="${routeUrl}" target="_blank" rel="noopener" onclick="haptic()" style="display:${routeUrl?'flex':'none'}">📍 Open in Maps ↗</a>
-      <a class="map-chip map-chip-bottom" href="${carUrl}" target="_blank" rel="noopener" onclick="haptic()" style="display:${carUrl?'flex':'none'}">🚗 Car Start ↗</a>
+      <a class="map-chip" href="${routeUrl}" target="_blank" rel="noopener" onclick="haptic()" style="display:${routeUrl?'flex':'none'}">${mapPinIcon(11)} Open in Maps ↗</a>
+      <a class="map-chip map-chip-bottom" href="${carUrl}" target="_blank" rel="noopener" onclick="haptic()" style="display:${carUrl?'flex':'none'}">${CAR_ICON(11)} Car Start ↗</a>
     </div>
 
     <div class="elev-wrap">
@@ -3873,9 +3896,9 @@ function checkMilestones(legs,tracker,distCovered,currentIdx){
   const pct=distCovered/totalKm;
 
   const pctMilestones=[
-    {key:'pct25',thresh:0.25,icon:'🏅',title:'25% Complete!',sub:`${distCovered.toFixed(1)} km down · ${(totalKm-distCovered).toFixed(1)} km to go`},
-    {key:'pct50',thresh:0.50,icon:'🎉',title:'Halfway there!',sub:`${distCovered.toFixed(1)} km of ${totalKm.toFixed(1)} km done`},
-    {key:'pct75',thresh:0.75,icon:'🔥',title:'75% Complete!',sub:`Only ${(totalKm-distCovered).toFixed(1)} km left — keep pushing!`},
+    {key:'pct25',thresh:0.25,icon:AWARD_ICON(),title:'25% Complete!',sub:`${distCovered.toFixed(1)} km down · ${(totalKm-distCovered).toFixed(1)} km to go`},
+    {key:'pct50',thresh:0.50,icon:FLAG_ICON(),title:'Halfway there!',sub:`${distCovered.toFixed(1)} km of ${totalKm.toFixed(1)} km done`},
+    {key:'pct75',thresh:0.75,icon:TREND_ICON(),title:'75% Complete!',sub:`Only ${(totalKm-distCovered).toFixed(1)} km left — keep pushing!`},
   ];
   pctMilestones.forEach(({key,thresh,icon,title,sub})=>{
     if(pct>=thresh&&!_shownMilestones.has(key)){
@@ -3896,7 +3919,7 @@ function checkMilestones(legs,tracker,distCovered,currentIdx){
       localStorage.setItem('shownMilestones',JSON.stringify([..._shownMilestones]));
       const dayLabel=day.date?new Date(day.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}):`Day ${di+1}`;
       const dayKm=day.legs.reduce((s,{l})=>s+(parseFloat(l['Distance (km)'])||0),0);
-      showToast('🌟',`Day ${di+1} Complete!`,`${dayLabel} · ${dayKm.toFixed(1)} km done`,7000);
+      showToast(STAR_ICON(),`Day ${di+1} Complete!`,`${dayLabel} · ${dayKm.toFixed(1)} km done`,7000);
     }
   });
 }
