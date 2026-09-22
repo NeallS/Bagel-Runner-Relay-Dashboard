@@ -160,6 +160,8 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
 /* ── Banner ── */
 .banner{border-radius:var(--r);padding:11px 16px;font-size:12px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.banner-spin{animation:banner-spin 1s linear infinite;transform-origin:center}
+@keyframes banner-spin{to{transform:rotate(360deg)}}
 .banner.info{background:var(--pbg);color:var(--ptxt);border:0.5px solid rgba(124,137,245,.3)}
 .banner.ok{background:var(--gbg);color:var(--gtxt);border:0.5px solid rgba(60,255,166,.3)}
 .banner.warn{background:var(--abg);color:var(--atxt);border:0.5px solid rgba(255,122,26,.3)}
@@ -663,7 +665,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
     </div>
 
     <div id="banner" class="banner info">
-      <span>⏳</span><span id="banner-msg">Loading data from Google Sheets…</span>
+      <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span id="banner-msg">Loading data from Google Sheets…</span>
     </div>
 
     <!-- Countdown banner -->
@@ -873,7 +875,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <div class="kanji-tag" title="Ryoken — passport">旅券</div>
       </div>
     </div>
-    <div id="rp-banner" class="banner info"><span>⏳</span><span>Loading relay passport…</span></div>
+    <div id="rp-banner" class="banner info"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading relay passport…</span></div>
     <div id="rp-passport" class="passport" style="display:none">
       <div class="rp-content" id="rp-face-front"></div>
       <div class="passport-footer">
@@ -899,7 +901,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
       </div>
     </div>
 
-    <div id="poi-banner" class="banner info"><span>⏳</span><span>Loading points of interest…</span></div>
+    <div id="poi-banner" class="banner info"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading points of interest…</span></div>
 
     <div id="poi-main" style="display:none">
       <!-- Sub-tabs -->
@@ -927,7 +929,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
       <div class="poi-cards" id="poi-list"></div>
 
       <!-- Prefecture cards -->
-      <div id="pref-banner" class="banner info" style="display:none"><span>⏳</span><span>Loading prefecture guide…</span></div>
+      <div id="pref-banner" class="banner info" style="display:none"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading prefecture guide…</span></div>
       <div class="pref-cards" id="pref-list" style="display:none"></div>
 
       <!-- Google Maps link -->
@@ -955,7 +957,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <div class="kanji-tag" title="Seisan — settling accounts">精算</div>
       </div>
     </div>
-    <div id="ft-banner" class="banner info"><span>⏳</span><span>Loading financial tracker…</span></div>
+    <div id="ft-banner" class="banner info"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading financial tracker…</span></div>
     <div class="sec">SETTLE BALANCES <span class="sec-jp">精算</span></div>
     <div class="card" id="ft-settle" style="padding:0;overflow:hidden">
       <div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px">Loading…</div>
@@ -980,7 +982,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
         <div class="kanji-tag" title="Renraku — contact">連絡</div>
       </div>
     </div>
-    <div id="ci-banner" class="banner info"><span>⏳</span><span>Loading contact info…</span></div>
+    <div id="ci-banner" class="banner info"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading contact info…</span></div>
     <div id="ci-cards" class="contact-cards">
       <div style="text-align:center;color:var(--txt3);padding:24px;font-size:13px;grid-column:1/-1">Loading…</div>
     </div>
@@ -1196,6 +1198,7 @@ const CATEGORY_ICONS = {
   'Comfort Zone':catIconSvg('<path d="M12 22V8"/><path d="M12 8c0-3 2-5 5-5 0 3-2 5-5 5z"/><path d="M12 12c0-3-2-5-5-5 0 3 2 5 5 5z"/>')
 };
 const CATEGORY_ICON_FALLBACK=catIconSvg('<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>');
+const MAP_PIN_ICON='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
 function getStamps(){
   try{ return JSON.parse(localStorage.getItem(PASSPORT_STAMPS_KEY)||'{}'); }catch(e){ return {}; }
@@ -1322,7 +1325,7 @@ async function loadPassport(force){
   const banner=document.getElementById('rp-banner');
   const wrap=document.getElementById('rp-passport');
   banner.className='banner info';
-  banner.innerHTML='<span>⏳</span><span>Loading relay passport…</span>';
+  banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading relay passport…</span>';
   try{
     const res=await fetch(csvURL(RPASS_TAB)+'&cachebust='+Date.now());
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1347,7 +1350,7 @@ async function loadPassport(force){
   }catch(err){
     wrap.style.display='none';
     banner.className='banner err';
-    banner.innerHTML=`<span>⚠️</span><span>Could not load relay passport: ${err.message}</span>`;
+    banner.innerHTML=`<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span>Could not load relay passport: ${err.message}</span>`;
     console.error(err);
   }
 }
@@ -1369,7 +1372,7 @@ async function loadContacts(force){
   const banner=document.getElementById('ci-banner');
   const cards =document.getElementById('ci-cards');
   banner.className='banner info';
-  banner.innerHTML='<span>⏳</span><span>Loading contact info…</span>';
+  banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading contact info…</span>';
   try{
     const res=await fetch(csvURL(CI_TAB)+'&cachebust='+Date.now());
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1423,11 +1426,11 @@ async function loadContacts(force){
       cards.appendChild(card);
     });
     banner.className='banner ok';
-    banner.innerHTML=`<span>✅</span><span>Loaded — ${rows.length-1} contacts.</span>`;
+    banner.innerHTML=`<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 10.5 15 16 9"/></svg></span><span>Loaded — ${rows.length-1} contacts.</span>`;
     contactsLoaded=true;
   }catch(err){
     banner.className='banner err';
-    banner.innerHTML=`<span>⚠️</span><span>Could not load contact info: ${err.message}</span>`;
+    banner.innerHTML=`<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span>Could not load contact info: ${err.message}</span>`;
     console.error(err);
   }
 }
@@ -1487,7 +1490,7 @@ async function loadPOIs(force){
     renderPOITab();
     positionMtabPill(document.getElementById('poi-tab-row'));
   } catch(e){
-    if(banner){ banner.className='banner warn'; banner.innerHTML='<span>⚠️</span><span>Could not load POI data. Add a "Points of Interest" tab to your sheet with columns: Name | Category | Leg | Description | Maps URL</span>'; }
+    if(banner){ banner.className='banner warn'; banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span>Could not load POI data. Add a "Points of Interest" tab to your sheet with columns: Name | Category | Leg | Description | Maps URL</span>'; }
     if(main) main.style.display='none';
   }
 }
@@ -1666,7 +1669,7 @@ async function loadPrefectures(force){
     if(list) list.style.display='';
     renderPrefectures();
   } catch(e){
-    if(banner){ banner.className='banner warn'; banner.innerHTML='<span>⚠️</span><span>Could not load prefecture guide. Add a "Prefectures" tab to your sheet with columns: Prefecture | Kanji | Start Leg | End Leg | Specialty Food | Culture | Wildlife & Nature | Fun Fact</span>'; }
+    if(banner){ banner.className='banner warn'; banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span>Could not load prefecture guide. Add a "Prefectures" tab to your sheet with columns: Prefecture | Kanji | Start Leg | End Leg | Specialty Food | Culture | Wildlife & Nature | Fun Fact</span>'; }
     if(list) list.style.display='none';
   }
 }
@@ -1677,14 +1680,14 @@ function prefCard(p,isCurrent){
     :'';
   return `<div class="pref-card${isCurrent?' current':''}">
     <div class="pref-hdr">
-      <div class="pref-kanji">${p.kanji||'🗾'}</div>
+      <div class="pref-kanji">${p.kanji||MAP_PIN_ICON}</div>
       <div class="pref-hdr-txt">
         <div class="pref-name">${p.name}${isCurrent?'<span class="pref-now-badge">YOU ARE HERE</span>':''}</div>
         ${legRange?`<span class="pref-leg-badge">${legRange}</span>`:''}
       </div>
     </div>
-    ${p.food?`<div class="pref-row"><div class="pref-row-label">🍜 Food</div><div class="pref-row-val">${p.food}</div></div>`:''}
-    ${p.culture?`<div class="pref-row"><div class="pref-row-label">⛩️ Culture</div><div class="pref-row-val">${p.culture}</div></div>`:''}
+    ${p.food?`<div class="pref-row"><div class="pref-row-label">${CATEGORY_ICONS['Food']} Food</div><div class="pref-row-val">${p.food}</div></div>`:''}
+    ${p.culture?`<div class="pref-row"><div class="pref-row-label">${CATEGORY_ICONS['Culture']} Culture</div><div class="pref-row-val">${p.culture}</div></div>`:''}
     ${p.nature?`<div class="pref-row"><div class="pref-row-label">🌿 Nature</div><div class="pref-row-val">${p.nature}</div></div>`:''}
     ${p.fact?`<div class="pref-fact">💡 ${p.fact}</div>`:''}
   </div>`;
@@ -1791,7 +1794,7 @@ async function loadFinances(force){
   const banner = document.getElementById('ft-banner');
   const cards  = document.getElementById('ft-cards');
   banner.className='banner info';
-  banner.innerHTML='<span>⏳</span><span>Loading financial tracker…</span>';
+  banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading financial tracker…</span>';
   try{
     const res=await fetch(csvURL(FT_TAB)+'&cachebust='+Date.now());
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1923,11 +1926,11 @@ async function loadFinances(force){
     }
 
     banner.className='banner ok';
-    banner.innerHTML=`<span>✅</span><span>Loaded — ${dataRows.length} expense${dataRows.length===1?'':'s'} · ${fmtMoney(grandTotal)} total.</span>`;
+    banner.innerHTML=`<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 10.5 15 16 9"/></svg></span><span>Loaded — ${dataRows.length} expense${dataRows.length===1?'':'s'} · ${fmtMoney(grandTotal)} total.</span>`;
     financeLoaded=true;
   }catch(err){
     banner.className='banner err';
-    banner.innerHTML=`<span>⚠️</span><span>Could not load financial tracker: ${err.message}</span>`;
+    banner.innerHTML=`<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span>Could not load financial tracker: ${err.message}</span>`;
     console.error(err);
   }
 }
@@ -1948,10 +1951,15 @@ function parseCSV(text){
 }
 
 // ─── UTILS ───────────────────────────────────────────────────────────────────
+const BANNER_ICONS={
+  ok:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 10.5 15 16 9"/></svg>',
+  err:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  info:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg>'
+};
 function setBanner(type,msg){
   const el=document.getElementById('banner');
   el.className='banner '+type;
-  el.innerHTML=`<span>${type==='ok'?'✅':type==='err'?'⚠️':'⏳'}</span><span>${msg}</span>`;
+  el.innerHTML=`<span>${BANNER_ICONS[type]||BANNER_ICONS.info}</span><span>${msg}</span>`;
 }
 function exposureBadge(t){
   const k=(t||'').toLowerCase();
