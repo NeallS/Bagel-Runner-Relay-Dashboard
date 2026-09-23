@@ -1997,7 +1997,7 @@ function fmt24(timeStr, dateStr){
   if(!timeStr) return '—';
   const d=parseDateTime(dateStr||'2000-01-01', timeStr);
   if(!d) return timeStr; // fallback: show as-is if unparseable
-  return d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+  return d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Tokyo'});
 }
 function fmtLag(min, isCompleted){
   if(min===''||min===null||min===undefined) return '—';
@@ -2047,6 +2047,29 @@ function startCountdown(secs,countUp){
   tick();
   cdInterval=setInterval(tick,1000);
 }
+// All sheet times are entered in Tokyo (JST, UTC+9, no DST) wall-clock time.
+// Build the actual UTC instant for a Tokyo y/mo/d h:mi so every viewer — regardless
+// of their own device's timezone — is comparing and displaying the same real moment.
+function tokyoInstant(y,mo,d,h,mi,s){
+  return new Date(Date.UTC(y,mo,d,h,mi,s||0)-9*3600000);
+}
+// Today's calendar date in Tokyo (not the viewer's local "today", which can differ
+// from Tokyo's near the day boundary).
+function todayInTokyoYMD(){
+  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+  const get=t=>parseInt(parts.find(p=>p.type===t).value);
+  return {y:get('year'),mo:get('month')-1,d:get('day')};
+}
+// Sheet dates are "M/D/YYYY" (e.g. "11/1/2026"); parse those digits directly rather
+// than handing the string to Date() and inheriting the runtime's local-time guess.
+function parseMDY(str){
+  if(!str) return null;
+  const m=String(str).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(m) return {y:parseInt(m[3]),mo:parseInt(m[1])-1,d:parseInt(m[2])};
+  const d0=new Date(str);
+  if(isNaN(d0)) return null;
+  return {y:d0.getFullYear(),mo:d0.getMonth(),d:d0.getDate()};
+}
 function parseTimeToday(str){
   if(!str) return null;
   const match=str.trim().match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?/i);
@@ -2056,8 +2079,8 @@ function parseTimeToday(str){
   const ampm=(match[4]||'').toUpperCase();
   if(ampm==='PM'&&h!==12) h+=12;
   if(ampm==='AM'&&h===12) h=0;
-  const now=new Date();
-  return new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0);
+  const t=todayInTokyoYMD();
+  return tokyoInstant(t.y,t.mo,t.d,h,m,0);
 }
 function parseDateTime(dateStr,timeStr){
   if(!timeStr) return null;
@@ -2068,12 +2091,18 @@ function parseDateTime(dateStr,timeStr){
   const ampm=(match[4]||'').toUpperCase();
   if(ampm==='PM'&&h!==12) h+=12;
   if(ampm==='AM'&&h===12) h=0;
-  if(dateStr){
-    const base=new Date(dateStr);
-    if(!isNaN(base)) return new Date(base.getFullYear(),base.getMonth(),base.getDate(),h,m,0);
-  }
-  const now=new Date();
-  return new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0);
+  const ymd=parseMDY(dateStr)||todayInTokyoYMD();
+  return tokyoInstant(ymd.y,ymd.mo,ymd.d,h,m,0);
+}
+// A leg's actual start/finish is parsed onto its sheet "Date" cell, which doesn't
+// advance if the leg actually ran past midnight (the schedule plans for legs to
+// finish well before midnight, but a leg running badly behind schedule still could).
+// If a same-leg time comes out implausibly earlier than its own reference time,
+// it almost certainly landed past midnight — nudge it into the next calendar day.
+function rollPastMidnight(date,ref,thresholdHours){
+  if(!date||!ref) return date;
+  if((ref-date)>(thresholdHours||6)*3600000) return new Date(date.getTime()+86400000);
+  return date;
 }
 
 // ─── HAVERSINE DISTANCE ──────────────────────────────────────────────────────
@@ -2120,8 +2149,9 @@ function calcTotalLag(legs,tracker){
   const lastT=tracker[lastLegNum]||{};
   const dateStr=lastLeg['Date']||'';
 
-  const actEnd=parseDateTime(dateStr,trackerActEnd(lastT));
+  let actEnd=parseDateTime(dateStr,trackerActEnd(lastT));
   const expStart=parseDateTime(dateStr,lastLeg['Exp. Start']||'');
+  actEnd=rollPastMidnight(actEnd,expStart);
   const expDur=parseFloat(lastLeg['Exp. Duration (min)']||'');
   if(actEnd&&expStart&&!isNaN(expDur)){
     const expEnd=new Date(expStart.getTime()+expDur*60000);
@@ -2135,8 +2165,9 @@ function calcTotalLag(legs,tracker){
     const t=tracker[legNum]||{};
     if(!trackerActEnd(t)) return;
     if(firstDone){
-      const actS=parseDateTime(l['Date']||'',trackerActStart(t));
+      let actS=parseDateTime(l['Date']||'',trackerActStart(t));
       const expS=parseDateTime(l['Date']||'',l['Exp. Start']||'');
+      actS=rollPastMidnight(actS,expS);
       if(actS&&expS) total+=(actS-expS)/60000;
       firstDone=false;
     }
@@ -2309,7 +2340,7 @@ function renderTracker(){
       const expSDate=parseDateTime(l['Date']||'',l['Exp. Start']||'');
       if(expSDate){
         const revS=new Date(expSDate.getTime()+currentLagTotal*60000);
-        plannedStr='~'+revS.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+        plannedStr='~'+revS.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Tokyo'});
         const lagDir=currentLagTotal>0?'behind':'ahead';
         plannedTitle=` title="Planned: ${fmt24(l['Exp. Start'],l['Date'])} · shifted ${Math.round(Math.abs(currentLagTotal))} min ${lagDir}"`;
       }
@@ -2325,7 +2356,7 @@ function renderTracker(){
       let estFinStr='—';
       if(expSDate&&!isNaN(expDurVal)){
         const estFin=new Date(expSDate.getTime()+(expDurVal+currentLagTotal)*60000);
-        estFinStr=estFin.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+        estFinStr=estFin.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Tokyo'});
       }
       summary=actStart
         ? `Started <b>${fmt24(actStart,l['Date'])}</b> &middot; est. finish <b>${estFinStr}</b>`
@@ -3202,7 +3233,7 @@ function render(legs,tracker){
   let revFinStr=null;
   if(expSDate){
     const revFin=new Date(expSDate.getTime()+(dur+currentLagTotal)*60000);
-    revFinStr=revFin.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+    revFinStr=revFin.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Tokyo'});
   }
 
   // Runner cards — card-style, placed side by side in the runner row
@@ -3345,7 +3376,7 @@ function render(legs,tracker){
     rgrid.appendChild(card);
   });
 
-  document.getElementById('last-refresh').textContent='Last refreshed: '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
+  document.getElementById('last-refresh').textContent='Last refreshed: '+new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Tokyo'});
 }
 
 // ─── LOAD DATA ───────────────────────────────────────────────────────────────
@@ -3639,7 +3670,7 @@ function buildRestTracker(legs,currentIdx,tracker){
     if(!timeStr) return null;
     const dt=parseDateTime(dateStr,timeStr);
     if(!dt) return timeStr;
-    return dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+    return dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Tokyo'});
   }
   function restDuration(fromDt,toDt){
     if(!fromDt||!toDt) return null;
