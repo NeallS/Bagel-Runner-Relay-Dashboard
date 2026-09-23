@@ -1336,6 +1336,34 @@ function renderPassport(){
   updatePassportNav();
 }
 
+// Generic per-tab "last successful fetch" cache — same idea as Mission Control's
+// own fallback, but shared by every tab that loads its own Sheet tab independently
+// (Passport, Contacts, POI, Prefectures, Financials, Community Photos), so switching
+// to any tab while offline still shows the last synced data instead of just an error.
+function saveTabCache(key,text){
+  try{ localStorage.setItem('bagelRelayCache_'+key,JSON.stringify({text,savedAt:Date.now()})); }
+  catch(e){ console.warn('Could not cache '+key,e); }
+}
+function loadTabCache(key){
+  try{ const raw=localStorage.getItem('bagelRelayCache_'+key); return raw?JSON.parse(raw):null; }
+  catch(e){ return null; }
+}
+// Fetches url and caches the raw response text under cacheKey. If the fetch fails
+// (offline, HTTP error), falls back to the last cached text for that key instead of
+// throwing, so callers can keep rendering — just note {fromCache:true} in the result.
+async function fetchOrCached(url,cacheKey){
+  try{
+    const res=await fetch(url);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text=await res.text();
+    saveTabCache(cacheKey,text);
+    return {text,fromCache:false};
+  }catch(err){
+    const cached=loadTabCache(cacheKey);
+    if(cached) return {text:cached.text,fromCache:true,savedAt:cached.savedAt};
+    throw err;
+  }
+}
 async function loadPassport(force){
   if(passportLoaded&&!force) return;
   const banner=document.getElementById('rp-banner');
@@ -1343,9 +1371,8 @@ async function loadPassport(force){
   banner.className='banner info';
   banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading relay passport…</span>';
   try{
-    const res=await fetch(csvURL(RPASS_TAB)+'&cachebust='+Date.now());
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const rows=parseCSV(await res.text());
+    const {text,fromCache,savedAt}=await fetchOrCached(csvURL(RPASS_TAB)+'&cachebust='+Date.now(),'passport');
+    const rows=parseCSV(text);
     if(rows.length<2) throw new Error('No data found in relay passport.');
     const categories=[];
     const byName={};
@@ -1359,10 +1386,16 @@ async function loadPassport(force){
     if(!categories.length) throw new Error('No categories found in relay passport.');
     passportData=categories;
     passportPage=0;
-    banner.style.display='none';
     wrap.style.display='flex';
     renderPassport();
     passportLoaded=true;
+    if(fromCache){
+      banner.style.display='';
+      banner.className='banner warn';
+      banner.innerHTML=`<span>${BANNER_ICONS.warn}</span><span>Offline — showing passport from last sync (${agoStr(Date.now()-savedAt)}).</span>`;
+    } else {
+      banner.style.display='none';
+    }
   }catch(err){
     wrap.style.display='none';
     banner.className='banner err';
@@ -1390,9 +1423,8 @@ async function loadContacts(force){
   banner.className='banner info';
   banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading contact info…</span>';
   try{
-    const res=await fetch(csvURL(CI_TAB)+'&cachebust='+Date.now());
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const rows=parseCSV(await res.text());
+    const {text,fromCache,savedAt}=await fetchOrCached(csvURL(CI_TAB)+'&cachebust='+Date.now(),'contacts');
+    const rows=parseCSV(text);
     if(rows.length<2) throw new Error('No data found in contact info tab.');
     const hdr=rows[0].map(c=>c.replace(/^"|"$/g,'').trim());
 
@@ -1441,8 +1473,13 @@ async function loadContacts(force){
       `;
       cards.appendChild(card);
     });
-    banner.className='banner ok';
-    banner.innerHTML=`<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 10.5 15 16 9"/></svg></span><span>Loaded — ${rows.length-1} contacts.</span>`;
+    if(fromCache){
+      banner.className='banner warn';
+      banner.innerHTML=`<span>${BANNER_ICONS.warn}</span><span>Offline — showing ${rows.length-1} contacts from last sync (${agoStr(Date.now()-savedAt)}).</span>`;
+    } else {
+      banner.className='banner ok';
+      banner.innerHTML=`<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 10.5 15 16 9"/></svg></span><span>Loaded — ${rows.length-1} contacts.</span>`;
+    }
     contactsLoaded=true;
   }catch(err){
     banner.className='banner err';
@@ -1479,9 +1516,7 @@ async function loadPOIs(force){
   if(banner) banner.style.display='';
   if(main) main.style.display='none';
   try {
-    const res = await fetch(csvURL(POI_TAB)+'&cachebust='+Date.now());
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const text = await res.text();
+    const {text,fromCache,savedAt} = await fetchOrCached(csvURL(POI_TAB)+'&cachebust='+Date.now(),'poi');
     const rows = parseCSV(text);
     if(!rows.length) throw new Error('empty');
     const headers = rows[0].map(h=>h.trim());
@@ -1500,11 +1535,19 @@ async function loadPOIs(force){
     })).filter(p=>p.name);
 
     poiLoaded = true;
-    if(banner) banner.style.display='none';
     if(main) main.style.display='';
     initPOIMap();
     renderPOITab();
     positionMtabPill(document.getElementById('poi-tab-row'));
+    if(banner){
+      if(fromCache){
+        banner.style.display='';
+        banner.className='banner warn';
+        banner.innerHTML=`<span>${BANNER_ICONS.warn}</span><span>Offline — showing points of interest from last sync (${agoStr(Date.now()-savedAt)}).</span>`;
+      } else {
+        banner.style.display='none';
+      }
+    }
   } catch(e){
     if(banner){ banner.className='banner warn'; banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span>Could not load POI data. Add a "Points of Interest" tab to your sheet with columns: Name | Category | Leg | Description | Maps URL</span>'; }
     if(main) main.style.display='none';
@@ -1659,9 +1702,7 @@ async function loadPrefectures(force){
   if(banner) banner.style.display='';
   if(list) list.style.display='none';
   try {
-    const res = await fetch(csvURL(PREFECTURES_TAB)+'&cachebust='+Date.now());
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const text = await res.text();
+    const {text,fromCache,savedAt} = await fetchOrCached(csvURL(PREFECTURES_TAB)+'&cachebust='+Date.now(),'prefectures');
     const rows = parseCSV(text);
     if(!rows.length) throw new Error('empty');
     const headers = rows[0].map(h=>h.trim());
@@ -1681,9 +1722,17 @@ async function loadPrefectures(force){
     })).filter(p=>p.name).sort((a,b)=>a.startLeg-b.startLeg);
 
     prefLoaded = true;
-    if(banner) banner.style.display='none';
     if(list) list.style.display='';
     renderPrefectures();
+    if(banner){
+      if(fromCache){
+        banner.style.display='';
+        banner.className='banner warn';
+        banner.innerHTML=`<span>${BANNER_ICONS.warn}</span><span>Offline — showing prefecture guide from last sync (${agoStr(Date.now()-savedAt)}).</span>`;
+      } else {
+        banner.style.display='none';
+      }
+    }
   } catch(e){
     if(banner){ banner.className='banner warn'; banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span>Could not load prefecture guide. Add a "Prefectures" tab to your sheet with columns: Prefecture | Kanji | Start Leg | End Leg | Specialty Food | Culture | Wildlife & Nature | Fun Fact</span>'; }
     if(list) list.style.display='none';
@@ -1812,9 +1861,8 @@ async function loadFinances(force){
   banner.className='banner info';
   banner.innerHTML='<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="banner-spin"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg></span><span>Loading financial tracker…</span>';
   try{
-    const res=await fetch(csvURL(FT_TAB)+'&cachebust='+Date.now());
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const rows=parseCSV(await res.text());
+    const {text,fromCache,savedAt}=await fetchOrCached(csvURL(FT_TAB)+'&cachebust='+Date.now(),'financials');
+    const rows=parseCSV(text);
     if(rows.length<2) throw new Error('No data found in financial tracker tab.');
     const hdr=rows[0].map(c=>c.replace(/^"|"$/g,'').trim());
 
@@ -1941,8 +1989,13 @@ async function loadFinances(force){
       }
     }
 
-    banner.className='banner ok';
-    banner.innerHTML=`<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 10.5 15 16 9"/></svg></span><span>Loaded — ${dataRows.length} expense${dataRows.length===1?'':'s'} · ${fmtMoney(grandTotal)} total.</span>`;
+    if(fromCache){
+      banner.className='banner warn';
+      banner.innerHTML=`<span>${BANNER_ICONS.warn}</span><span>Offline — showing ${dataRows.length} expense${dataRows.length===1?'':'s'} from last sync (${agoStr(Date.now()-savedAt)}).</span>`;
+    } else {
+      banner.className='banner ok';
+      banner.innerHTML=`<span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12.5 10.5 15 16 9"/></svg></span><span>Loaded — ${dataRows.length} expense${dataRows.length===1?'':'s'} · ${fmtMoney(grandTotal)} total.</span>`;
+    }
     financeLoaded=true;
   }catch(err){
     banner.className='banner err';
@@ -3950,9 +4003,7 @@ let _galleryFilter = 'all';
 async function loadCommunityPhotos(force){
   if(_communityLoaded&&!force) return;
   try {
-    const res = await fetch(csvURL(COMMUNITY_PHOTOS_TAB)+'&cachebust='+Date.now());
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const text = await res.text();
+    const {text} = await fetchOrCached(csvURL(COMMUNITY_PHOTOS_TAB)+'&cachebust='+Date.now(),'communityPhotos');
     const rows = parseCSV(text);
     if(!rows.length) return;
     const hdr = rows[0].map(h=>h.trim().toLowerCase());
