@@ -1,5 +1,5 @@
 // Bump this on every deploy that changes app-shell files so old caches get cleared.
-const CACHE_NAME = 'bagel-relay-shell-v3';
+const CACHE_NAME = 'bagel-relay-shell-v4';
 
 const APP_SHELL = [
   './',
