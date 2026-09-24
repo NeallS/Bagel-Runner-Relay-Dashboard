@@ -195,7 +195,7 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 
 /* ── Day rows — grid so stats are always pinned to the right ── */
 .days-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:4px}
-.day-row{display:grid;grid-template-columns:42px 1fr 88px;align-items:center;gap:8px}
+.day-row{display:grid;grid-template-columns:42px 1fr 56px;align-items:center;gap:8px}
 .day-meta{text-align:right}
 .day-label{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:.05em}
 .day-sub{font-size:10px;color:var(--txt3);margin-top:1px}
@@ -2281,7 +2281,6 @@ function buildDayGrid(legs,currentIdx){
 
   days.forEach((day,di)=>{
     const dayKm=day.legs.reduce((s,{l})=>s+(parseFloat(l['Distance (km)'])||0),0);
-    const done=day.legs.filter(({i})=>i<currentIdx).length;
     const dateStr=day.date?new Date(day.date).toLocaleDateString('en-CA',{month:'short',day:'numeric'}):`Day ${di+1}`;
 
     const row=document.createElement('div');
@@ -2321,7 +2320,7 @@ function buildDayGrid(legs,currentIdx){
 
     const stats=document.createElement('div');
     stats.className='day-stats';
-    stats.innerHTML=`<div class="day-stat-km">${dayKm.toFixed(1)} km</div><div class="day-stat-legs">${day.legs.length} legs${done>0?' · '+done+' done':''}</div>`;
+    stats.innerHTML=`<div class="day-stat-km">${dayKm.toFixed(1)} km</div><div class="day-stat-legs">${day.legs.length} legs</div>`;
     row.appendChild(stats);
     grid.appendChild(row);
   });
