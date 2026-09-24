@@ -302,6 +302,12 @@ body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg3);color:va
 .cur-map-wrap.cur-map-lg{height:220px;flex:none}
 
 /* ── Map + Elevation ── */
+/* Leaflet's default white zoom control, restyled to match the dashboard's dark HUD chrome */
+.leaflet-control-zoom{border:0.5px solid var(--bdr2)!important;border-radius:var(--r)!important;overflow:hidden;box-shadow:var(--shadow)!important}
+.leaflet-control-zoom a{width:28px!important;height:28px!important;line-height:28px!important;background:var(--bg2)!important;color:var(--txt2)!important;font-family:'Share Tech Mono',monospace!important;font-weight:700;font-size:16px!important}
+.leaflet-control-zoom a:first-child{border-bottom:0.5px solid var(--bdr2)!important}
+@media(hover:hover){.leaflet-control-zoom a:hover{background:var(--bg3)!important;color:var(--txt)!important}}
+.leaflet-control-zoom a.leaflet-disabled{background:var(--bg2)!important;color:var(--txt3)!important;opacity:.5}
 .cur-map-wrap{border-radius:var(--r);overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);flex:1;min-height:180px;position:relative}
 .cur-map-wrap iframe{display:block;width:100%;height:160px;border:none}
 .poi-map-wrap{border-radius:var(--rl);overflow:hidden;background:var(--bg2);border:0.5px solid var(--bdr);height:480px;position:relative;box-shadow:var(--shadow)}
